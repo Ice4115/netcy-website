@@ -367,9 +367,9 @@
 .pc-details {
   width: 100%;
   position: absolute;
-
   display: flex;
   flex-direction: column;
+
 }
 
 .pc-details h3 {
@@ -382,6 +382,7 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
+
 }
 
 .pc-details p {
@@ -396,6 +397,8 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
+
+
 }
 
 @keyframes glow-bg {
@@ -430,9 +433,6 @@
     max-height: 450px;
   }
 
-  .pc-details {
-    top: 2em;
-  }
 
   .pc-details h3 {
     font-size: min(4svh, 2.5em);
@@ -440,6 +440,7 @@
 
   .pc-details p {
     font-size: 14px;
+    top: -5px;
   }
 
   .pc-user-info {
@@ -476,9 +477,7 @@
     max-height: 380px;
   }
 
-  .pc-details {
-    top: 1.5em;
-  }
+ 
 
   .pc-details h3 {
     font-size: min(3.5svh, 2em);
@@ -557,5 +556,20 @@
     padding: 4px 8px;
     font-size: 9px;
     border-radius: 50px;
+  }
+
+  .pc-details {
+    justify-content: flex-start;
+    padding-top: 20px;
+  }
+
+  .pc-details h3 {
+    position: relative;
+    top: 0;
+  }
+
+  .pc-details p {
+    position: relative;
+    top: 0;
   }
 }
