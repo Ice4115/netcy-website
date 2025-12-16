@@ -74,11 +74,11 @@ export default function Home() {
       <div className="fixed inset-0 w-full h-full z-0">
         <LiquidEther 
           colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-          mouseForce={isMobile ? 0 : 20}
+          mouseForce={isMobile ? 25 : 20}
           autoDemo={true}
           autoSpeed={isMobile ? 0.8 : 0.5}
           autoIntensity={isMobile ? 3.5 : 2.2}
-          autoResumeDelay={isMobile ? 0 : 1000}
+          autoResumeDelay={isMobile ? 500 : 1000}
         />
       </div>
       
