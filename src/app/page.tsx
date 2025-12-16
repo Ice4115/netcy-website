@@ -150,7 +150,7 @@ export default function Home() {
               </ScrollFloat>
               <AnimatedContent distance={30} duration={0.6}>
                 <p className="text-center text-gray-300 mb-12 text-xl max-w-3xl mx-auto leading-relaxed">
-                  NETCY est une jeune entreprise dynamique, portée par la passion et l&apos;innovation. Riche de nombreuses idées, elle a pour ambition de proposer des services de haute qualité, adaptés aux besoins des PME. Notre volonté est de nous développer progressivement afin d&apos;offrir, à plus grande échelle, des solutions fiables en infogérance, en gestion de sites web et en sécurité réseau.
+                  NETCY est une jeune entreprise innovante, animée par la passion et dédiée à la qualité, proposant des solutions web et de sécurité adaptées aux PME.
                 </p>
               </AnimatedContent>
             </div>
