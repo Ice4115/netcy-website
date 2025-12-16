@@ -11,7 +11,7 @@ import ScrollFloat from "@/components/ScrollFloat.jsx";
 import ProfileCard from "@/components/ProfileCard";
 import AnimatedContent from "@/components/AnimatedContent";
 import GlareHover from "@/components/GlareHover";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 export default function Home() {
   const navItems = [
     {
