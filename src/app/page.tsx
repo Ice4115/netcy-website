@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import LiquidEther from "@/components/LiquidEther";
-import LightPillar from "@/components/LightPillar";
+import Aurora from "@/components/Aurora";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
 import CardNav from "@/components/CardNav";
@@ -74,20 +74,11 @@ export default function Home() {
     <div className="w-full text-white overflow-x-hidden relative">
       <div className="fixed inset-0 w-full h-full z-0">
         {isMobile ? (
-          <div className="opacity-50">
-            <LightPillar 
-              topColor="#6F3FFF"
-              bottomColor="#8FA5FF"
-              intensity={1.2}
-              rotationSpeed={0.4}
-              interactive={true}
-              glowAmount={0.008}
-              pillarWidth={2.5}
-              pillarHeight={0.5}
-              noiseIntensity={0.6}
-              mixBlendMode="screen"
-            />
-          </div>
+          <Aurora
+            colorStops={['#6F3FFF', '#8FA5FF', '#4A2FFF']}
+            amplitude={0.8}
+            blend={0.5}
+          />
         ) : (
           <LiquidEther 
             colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
