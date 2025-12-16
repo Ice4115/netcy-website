@@ -5,7 +5,7 @@ import LiquidEther from "@/components/LiquidEther";
 import Aurora from "@/components/Aurora";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
-import CardNav from "@/components/CardNav";
+import ResponsiveCardNav from "@/components/ResponsiveCardNav";
 import SpotlightCard from "@/components/SpotlightCard";
 import DecryptedText from "@/components/DecryptedText";
 import TrueFocus from "@/components/TrueFocus";
@@ -13,9 +13,12 @@ import ScrollFloat from "@/components/ScrollFloat.jsx";
 import ProfileCard from "@/components/ProfileCard";
 import AnimatedContent from "@/components/AnimatedContent";
 import GlareHover from "@/components/GlareHover";
+import LogoLoop from "@/components/LogoLoop";
+import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
+  const initGooey = useGooeyEffect();
 
   useEffect(() => {
     const checkMobile = () => {
@@ -37,15 +40,24 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    initGooey({
+      colors: [1, 2, 3, 1, 2, 3, 1, 4],
+      particleCount: 15,
+      animationTime: 600,
+      timeVariance: 300
+    });
+  }, [initGooey]);
+
   const navItems = [
     {
       label: 'Services',
       bgColor: '#1a0f3a',
       textColor: '#8FA5FF',
       links: [
-        { label: 'Création Web', href: '#services', ariaLabel: 'Voir création web' },
-        { label: 'Sécurité Réseau', href: '#services', ariaLabel: 'Voir sécurité réseau' },
-        { label: 'Maintenance & Support', href: '#services', ariaLabel: 'Voir maintenance' }
+        { label: 'Création Web', href: '#creation', ariaLabel: 'Voir création web' },
+        { label: 'Sécurité Réseau', href: '#securite', ariaLabel: 'Voir sécurité réseau' },
+        { label: 'Maintenance & Support', href: '#maintenance', ariaLabel: 'Voir maintenance' }
       ]
     },
     {
@@ -53,9 +65,9 @@ export default function Home() {
       bgColor: '#0f0a20',
       textColor: '#7A8FFF',
       links: [
-        { label: 'Qui suis-je', href: '#about', ariaLabel: 'En savoir plus sur moi' },
-        { label: 'Mes Compétences', href: '#about', ariaLabel: 'Voir compétences' },
-        { label: 'Netcy c\'est quoi', href: '#about', ariaLabel: 'En savoir plus sur Netcy' }
+        { label: 'Qui suis-je', href: '#me', ariaLabel: 'En savoir plus sur moi' },
+        { label: 'Mes Compétences', href: '#skill', ariaLabel: 'Voir compétences' },
+        { label: 'Netcy c\'est quoi', href: '#netcy', ariaLabel: 'En savoir plus sur Netcy' }
       ]
     },
     {
@@ -63,7 +75,7 @@ export default function Home() {
       bgColor: '#140820',
       textColor: '#6F3FFF',
       links: [
-        { label: 'Stack Technologique', href: '#services', ariaLabel: 'Voir stack technologique' },
+        { label: 'Stack Technologique', href: '#tech', ariaLabel: 'Voir stack technologique' },
         { label: 'Services Détaillés', href: '#services', ariaLabel: 'Voir services détaillés' },
         { label: 'Nous Contacter', href: '#contact', ariaLabel: 'Nous contacter' }
       ]
@@ -95,7 +107,7 @@ export default function Home() {
       
         <div className="fixed top-0 w-full z-50 flex items-center">
           <div className="w-full">
-            <CardNav
+            <ResponsiveCardNav
               logo="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%236F3FFF' width='40' height='40' rx='8'/%3E%3Ctext x='50%25' y='50%25' font-size='24' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'%3EN%3C/text%3E%3C/svg%3E"
               logoAlt="NETCY"
               items={navItems}
@@ -144,7 +156,7 @@ export default function Home() {
 
         <section id="about" className="py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto">
-            <div className="mb-12">
+            <div className="mb-12" id="netcy">
               <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
                 À Propos de NETCY
               </ScrollFloat>
@@ -174,7 +186,7 @@ export default function Home() {
                   <h4 className="font-semibold mb-4 text-lg md:text-lg">Compétences Principales :</h4>
                   <div className="bg-[#0f0a20]/50 rounded-lg p-4 mb-4 border border-[#7A8FFF]/20">
                     <TrueFocus 
-                      sentence="Web Réseaux Sécurité Cloud"
+                      sentence="Web Réseaux Sécurité Données"
                       separator=" "
                       blurAmount={3}
                       borderColor="#6F3FFF"
@@ -182,7 +194,7 @@ export default function Home() {
                     />
                   </div>
                   
-                  <ul className="space-y-3 text-gray-300 text-base md:text-sm">
+                  <ul className="space-y-3 text-gray-300 text-base md:text-sm" id="skill">
                     <li className="flex items-start">
                       <span className="text-[#8FA5FF] mr-3 font-bold">→</span>
                       <span><strong>Développement</strong> : HTML, CSS, Next.js, React, TypeScript, Tailwind CSS, PHP</span>
@@ -231,11 +243,34 @@ export default function Home() {
                 </div>
               </AnimatedContent>
             </div>
+            
+            <div className="mt-20" id="tech">
+              <h3 className="text-center text-4xl md:text-4xl font-bold mb-12 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Notre Stack Technologique</h3>
+              <LogoLoop
+                logos={[
+                  { src: 'images/html5.png', alt: 'HTML5', title: 'HTML5' },
+                  { src: 'images/css3.png', alt: 'CSS3', title: 'CSS3' },
+                  { src: 'images/js.png', alt: 'JavaScript', title: 'JavaScript' },
+                  { src: 'https://www.php.net/favicon.ico', alt: 'PHP', title: 'PHP' },
+                  { src: 'https://nextjs.org/favicon.ico', alt: 'Next.js', title: 'Next.js' },
+                  { src: 'https://www.typescriptlang.org/favicon.ico', alt: 'TypeScript', title: 'TypeScript' },
+                  { src: 'https://react.dev/favicon.ico', alt: 'React', title: 'React' },
+                  { src: 'https://tailwindcss.com/favicon.ico', alt: 'Tailwind CSS', title: 'Tailwind CSS' }
+                ]}
+                speed={100}
+                direction="left"
+                pauseOnHover={true}
+                logoHeight={45}
+                gap={40}
+                fadeOut={false}
+                className="my-8"
+              />
+            </div>
           </div>
         </section>
 
         <section className="py-20 px-4 md:px-8">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto" id="me">
             <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
               Qui Suis-Je ?
             </ScrollFloat>
@@ -284,13 +319,16 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
               {[
                 { 
+                  id: 'creation',
                   title: 'Création de Sites', 
                   desc: 'Site vitrine, portfolio ou e-commerce performant et moderne',
                   items: ['Design responsive', 'Performance web', 'SEO optimisé', 'Sécurisé par défaut'],
                   icon: '💻',
                   accentColor: '#6F3FFF'
+                  
                 },
                 { 
+                  id: 'maintenance',
                   title: 'Maintenance & Support', 
                   desc: 'Suivi, mises à jour et support pour vos projets web',
                   items: ['Mises à jour', 'Monitoring', 'Sauvegardes', 'Support technique'],
@@ -298,6 +336,7 @@ export default function Home() {
                   accentColor: '#7A8FFF'
                 },
                 { 
+                  id: 'securite',
                   title: 'Conseil en Sécurité', 
                   desc: 'Évaluation et recommandations pour sécuriser votre infrastructure',
                   items: ['Audit de sécurité', 'Conformité RGPD', 'Bonnes pratiques', 'Documentation'],
@@ -315,11 +354,9 @@ export default function Home() {
                     glareOpacity={0.3}
                     glareSize={300}
                   >
-                    <div className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border rounded-lg p-6 h-full flex flex-col" style={{borderColor: service.accentColor + '50'}}>
+                    <div id={service.id} className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border rounded-lg p-6 h-full flex flex-col" style={{borderColor: service.accentColor + '50'}}>
                       <div className="text-4xl mb-3">{service.icon}</div>
-                      <ScrollFloat scrollContainerRef={null} containerClassName="mb-2">
-                        <h3 className="text-xl md:text-xl font-bold transition" style={{color: service.accentColor}}>{service.title}</h3>
-                      </ScrollFloat>
+                      <h3 className="text-xl md:text-xl font-bold mb-2 transition" style={{color: service.accentColor}}>{service.title}</h3>
                       <p className="text-gray-300 text-base md:text-sm mb-4 flex-grow">{service.desc}</p>
                       <ul className="space-y-2 text-gray-300 text-base md:text-sm">
                         {service.items.map((item, j) => (
@@ -375,7 +412,7 @@ export default function Home() {
                 <div className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border border-[#7A8FFF]/30 rounded-lg p-6 text-center hover:border-[#7A8FFF] transition shadow-lg shadow-blue-500/10">
                   <div className="text-4xl mb-4">📱</div>
                   <h3 className="font-bold mb-2">Instagram</h3>
-                  <a id="contact" href="#" className="text-[#8FA5FF] hover:text-[#7A8FFF] transition">
+                  <a className="text-[#8FA5FF] hover:text-[#7A8FFF] transition">
                     @netcy.dev
                   </a>
                 </div>
@@ -383,7 +420,7 @@ export default function Home() {
             </div>
 
             <AnimatedContent distance={50} duration={0.8} className="w-full">
-              <form className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md relative z-20">
+              <form id="contact" className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md relative z-20">
               <div className="mb-8">
                 <h3 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#8FA5FF] to-[#6F3FFF]">
                   📋 Formulaire de Contact
