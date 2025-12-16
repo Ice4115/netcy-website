@@ -317,7 +317,9 @@ export default function Home() {
                   >
                     <div className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border rounded-lg p-6 h-full flex flex-col" style={{borderColor: service.accentColor + '50'}}>
                       <div className="text-4xl mb-3">{service.icon}</div>
-                      <h3 className="text-xl md:text-xl font-bold mb-2 transition" style={{color: service.accentColor}}>{service.title}</h3>
+                      <ScrollFloat scrollContainerRef={null} containerClassName="mb-2">
+                        <h3 className="text-xl md:text-xl font-bold transition" style={{color: service.accentColor}}>{service.title}</h3>
+                      </ScrollFloat>
                       <p className="text-gray-300 text-base md:text-sm mb-4 flex-grow">{service.desc}</p>
                       <ul className="space-y-2 text-gray-300 text-base md:text-sm">
                         {service.items.map((item, j) => (
