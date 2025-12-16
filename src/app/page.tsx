@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import LiquidEther from "@/components/LiquidEther";
+import LightPillar from "@/components/LightPillar";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
 import CardNav from "@/components/CardNav";
@@ -72,14 +73,31 @@ export default function Home() {
   return (
     <div className="w-full text-white overflow-x-hidden relative">
       <div className="fixed inset-0 w-full h-full z-0">
-        <LiquidEther 
-          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-          mouseForce={isMobile ? 25 : 20}
-          autoDemo={true}
-          autoSpeed={isMobile ? 0.8 : 0.5}
-          autoIntensity={isMobile ? 3.5 : 2.2}
-          autoResumeDelay={isMobile ? 500 : 1000}
-        />
+        {isMobile ? (
+          <div className="opacity-50">
+            <LightPillar 
+              topColor="#6F3FFF"
+              bottomColor="#8FA5FF"
+              intensity={1.2}
+              rotationSpeed={0.4}
+              interactive={true}
+              glowAmount={0.008}
+              pillarWidth={2.5}
+              pillarHeight={0.5}
+              noiseIntensity={0.6}
+              mixBlendMode="screen"
+            />
+          </div>
+        ) : (
+          <LiquidEther 
+            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+            mouseForce={20}
+            autoDemo={true}
+            autoSpeed={0.5}
+            autoIntensity={2.2}
+            autoResumeDelay={1000}
+          />
+        )}
       </div>
       
       <div className="relative z-10">
@@ -103,8 +121,8 @@ export default function Home() {
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-4">
             <TextType 
               text="NETCY"
-              className="text-4xl md:text-6xl font-bold mb-4"
-              typingSpeed={50}
+              className="text-4xl md:text-6xl font-bold mb-25"
+              typingSpeed={500}
               cursorCharacter="_"
             />
             <div className="text-2xl md:text-3xl mb-8 max-w-2xl">
@@ -127,7 +145,7 @@ export default function Home() {
                 href="#services" 
                 className="px-8 py-3 border border-[#8FA5FF] hover:bg-[#8FA5FF]/10 rounded-lg font-semibold transition"
               >
-                Services & Expertise
+                Services & Prestations
               </a>
             </div>
           </div>
@@ -136,14 +154,12 @@ export default function Home() {
         <section id="about" className="py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto">
             <div className="mb-12">
-              <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced">
+              <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
                 À Propos de NETCY
               </ScrollFloat>
               <AnimatedContent distance={30} duration={0.6}>
                 <p className="text-center text-gray-300 mb-12 text-xl max-w-3xl mx-auto leading-relaxed">
-                  NETCY est une jeune entreprise de passionnés, créée pour accompagner les PME avec des solutions web modernes 
-                  et une sécurité robuste. Notre objectif : grandir progressivement et proposer à plus grande échelle 
-                  l&apos;infogérence, la gestion de sites et la sécurité réseau.
+                  NETCY est une jeune entreprise dynamique, portée par la passion et l&apos;innovation. Riche de nombreuses idées, elle a pour ambition de proposer des services de haute qualité, adaptés aux besoins des PME. Notre volonté est de nous développer progressivement afin d&apos;offrir, à plus grande échelle, des solutions fiables en infogérance, en gestion de sites web et en sécurité réseau.
                 </p>
               </AnimatedContent>
             </div>
@@ -151,20 +167,20 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <AnimatedContent distance={40} duration={0.8}>
                 <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-lg p-8 hover:border-[#6F3FFF]/60 transition shadow-lg shadow-violet-500/10">
-                  <h3 className="text-2xl font-bold mb-6">Jung Jean-Marie</h3>
-                  <p className="text-[#8FA5FF] text-sm mb-6">Étudiant BTS SIO SISR - Montpellier | Développeur Passionné</p>
+                  <h3 className="text-2xl md:text-2xl font-bold mb-6">Jung Jean-Marie</h3>
+                  <p className="text-[#8FA5FF] text-base md:text-sm mb-6">Étudiant BTS SIO SISR - Montpellier | Développeur Passionné</p>
                   
-                  <p className="text-gray-300 mb-6 leading-relaxed">
+                  <p className="text-gray-300 mb-6 leading-relaxed text-base md:text-base">
                     Étudiant en 2ème année de BTS SIO option SISR à Montpellier. Bien que ma formation soit axée sur <DecryptedText text="les réseaux et la sécurité" speed={80} animateOn="view" />, 
                     je suis aussi passionné par <DecryptedText text="le développement web moderne" speed={80} animateOn="view" />. Je combine ces deux domaines pour créer des solutions digitales complètes.
                   </p>
 
-                  <p className="text-gray-400 mb-6 leading-relaxed">
+                  <p className="text-gray-400 mb-6 leading-relaxed text-base md:text-base">
                     Curieux et autodidacte, j&apos;explore constamment les nouvelles technologies pour élargir mes compétences. 
                     Je crois que le développement et la sécurité vont de pair pour créer des solutions fiables.
                   </p>
                   
-                  <h4 className="font-semibold mb-4 text-lg">Compétences Principales :</h4>
+                  <h4 className="font-semibold mb-4 text-lg md:text-lg">Compétences Principales :</h4>
                   <div className="bg-[#0f0a20]/50 rounded-lg p-4 mb-4 border border-[#7A8FFF]/20">
                     <TrueFocus 
                       sentence="Web Réseaux Sécurité Cloud"
@@ -175,7 +191,7 @@ export default function Home() {
                     />
                   </div>
                   
-                  <ul className="space-y-3 text-gray-300 text-sm">
+                  <ul className="space-y-3 text-gray-300 text-base md:text-sm">
                     <li className="flex items-start">
                       <span className="text-[#8FA5FF] mr-3 font-bold">→</span>
                       <span><strong>Développement</strong> : HTML, CSS, Next.js, React, TypeScript, Tailwind CSS, PHP</span>
@@ -229,7 +245,7 @@ export default function Home() {
 
         <section className="py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto">
-            <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced">
+            <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
               Qui Suis-Je ?
             </ScrollFloat>
             <p className="text-center text-gray-300 mb-12 text-xl max-w-2xl mx-auto leading-relaxed">
@@ -263,7 +279,7 @@ export default function Home() {
 
         <section id="services" className="py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto">
-              <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced">
+              <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
                 Services & Prestations
               </ScrollFloat>
             
@@ -310,9 +326,9 @@ export default function Home() {
                   >
                     <div className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border rounded-lg p-6 h-full flex flex-col" style={{borderColor: service.accentColor + '50'}}>
                       <div className="text-4xl mb-3">{service.icon}</div>
-                      <h3 className="text-xl font-bold mb-2 transition" style={{color: service.accentColor}}>{service.title}</h3>
-                      <p className="text-gray-300 text-sm mb-4 flex-grow">{service.desc}</p>
-                      <ul className="space-y-2 text-gray-300 text-sm">
+                      <h3 className="text-xl md:text-xl font-bold mb-2 transition" style={{color: service.accentColor}}>{service.title}</h3>
+                      <p className="text-gray-300 text-base md:text-sm mb-4 flex-grow">{service.desc}</p>
+                      <ul className="space-y-2 text-gray-300 text-base md:text-sm">
                         {service.items.map((item, j) => (
                           <li key={j} className="flex items-center">
                             <span className="w-2 h-2 rounded-full mr-2" style={{backgroundColor: service.accentColor}}></span>
