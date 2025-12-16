@@ -25,7 +25,7 @@ const CardNav = ({
   const tlRef = useRef(null);
   const hoverTimeoutRef = useRef(null);
 
-  const COLLAPSED_WIDTH = 225;
+  const COLLAPSED_WIDTH = 325;
   const EXPANDED_WIDTH = 800;
 
   const calculateHeight = () => {

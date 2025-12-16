@@ -78,7 +78,9 @@
 }
 
 .mobile-logo {
-  height: 28px;
+  height: 150px;
+  max-height: 300px;
+  object-fit: contain;
 }
 
 .mobile-card-nav-cta-button {
@@ -260,7 +262,8 @@
   }
 
   .mobile-logo {
-    height: 24px;
+    height: 70px;
+  
   }
 }
 

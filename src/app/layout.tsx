@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "NETCY",
   description: "NETCY - Création de Sites Internet Sécurisé et Sécurité Réseau",
+  icons: {
+    icon: "/images/logo_tab.svg",
+  },
 };
 
 export default function RootLayout({

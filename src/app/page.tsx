@@ -108,7 +108,7 @@ export default function Home() {
         <div className="fixed top-0 w-full z-50 flex items-center">
           <div className="w-full">
             <ResponsiveCardNav
-              logo="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%236F3FFF' width='40' height='40' rx='8'/%3E%3Ctext x='50%25' y='50%25' font-size='24' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'%3EN%3C/text%3E%3C/svg%3E"
+              logo="/images/logo_netcy.png"
               logoAlt="NETCY"
               items={navItems}
               baseColor="#000"
