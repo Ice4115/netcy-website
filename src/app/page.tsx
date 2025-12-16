@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import LiquidEther from "@/components/LiquidEther";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
@@ -13,6 +14,28 @@ import AnimatedContent from "@/components/AnimatedContent";
 import GlareHover from "@/components/GlareHover";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 export default function Home() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = () => {
+        return (
+          (typeof window !== 'undefined' && typeof navigator !== 'undefined') &&
+          (navigator.maxTouchPoints > 0 ||
+            (navigator as any).msMaxTouchPoints > 0 ||
+            (typeof window !== 'undefined' && 'ontouchstart' in window))
+        );
+      };
+      
+      const isSmallScreen = window.innerWidth < 1024;
+      setIsMobile(isTouchDevice() && isSmallScreen);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const navItems = [
     {
       label: 'Services',
@@ -51,7 +74,11 @@ export default function Home() {
       <div className="fixed inset-0 w-full h-full z-0">
         <LiquidEther 
           colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-          mouseForce={20}
+          mouseForce={isMobile ? 0 : 20}
+          autoDemo={true}
+          autoSpeed={isMobile ? 0.8 : 0.5}
+          autoIntensity={isMobile ? 3.5 : 2.2}
+          autoResumeDelay={isMobile ? 0 : 1000}
         />
       </div>
       
