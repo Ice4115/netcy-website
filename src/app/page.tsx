@@ -132,7 +132,7 @@ export default function Home() {
                     je suis aussi passionné par <DecryptedText text="le développement web moderne" speed={80} animateOn="view" />. Je combine ces deux domaines pour créer des solutions digitales complètes.
                   </p>
 
-                  <p className="text-gray-400 mb-6 text-sm leading-relaxed">
+                  <p className="text-gray-400 mb-6 leading-relaxed">
                     Curieux et autodidacte, j&apos;explore constamment les nouvelles technologies pour élargir mes compétences. 
                     Je crois que le développement et la sécurité vont de pair pour créer des solutions fiables.
                   </p>
@@ -151,7 +151,7 @@ export default function Home() {
                   <ul className="space-y-3 text-gray-300 text-sm">
                     <li className="flex items-start">
                       <span className="text-[#8FA5FF] mr-3 font-bold">→</span>
-                      <span><strong>Développement</strong> : Next.js, React, TypeScript, Tailwind CSS</span>
+                      <span><strong>Développement</strong> : HTML, CSS, Next.js, React, TypeScript, Tailwind CSS, PHP</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-[#7A8FFF] mr-3 font-bold">→</span>
@@ -159,7 +159,7 @@ export default function Home() {
                     </li>
                     <li className="flex items-start">
                       <span className="text-[#6F3FFF] mr-3 font-bold">→</span>
-                      <span><strong>Infrastructure</strong> : AWS, Docker, Hébergement sécurisé</span>
+                      <span><strong>Infrastructure</strong> : Hébergement sécurisé</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-[#4A2FFF] mr-3 font-bold">→</span>
@@ -236,12 +236,13 @@ export default function Home() {
 
         <section id="services" className="py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto">
-            <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced">
-              Services & Expertise
-            </ScrollFloat>
+              <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced">
+                Services & Prestations
+              </ScrollFloat>
+            
 
             <p className="text-center text-gray-300 mb-12 text-xl max-w-3xl mx-auto leading-relaxed">
-              Je propose des solutions en <DecryptedText text="création web et sécurité réseau" speed={80} animateOn="view" /> 
+              Je propose des solutions en <DecryptedText text="création web et sécurité réseau " speed={80} animateOn="view" /> 
               pour donner à votre entreprise une présence digitale solide et sécurisée.
             </p>
 

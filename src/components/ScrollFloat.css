@@ -1,20 +1,29 @@
 .scroll-float {
-  overflow: hidden;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: visible; /* 🔴 IMPORTANT */
 }
 
 .scroll-float-text {
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  white-space: nowrap;       /* 1 seule ligne */
+  text-align: center;
+
   font-size: clamp(1.6rem, 8vw, 10rem);
   font-weight: 900;
-  text-align: center;
-  line-height: 1.5;
+  line-height: 1.1;          /* évite les coupes verticales */
 }
 
 .scroll-float.reduced {
   transform: scale(0.8);
-  transform-origin: center top;
+  transform-origin: center center;
 }
 
 .char {
   display: inline-block;
+  white-space: pre;          /* 🔥 empêche la casse des lettres */
 }
