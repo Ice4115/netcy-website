@@ -4,6 +4,7 @@ interface LogoItem {
   src: string;
   alt: string;
   title?: string;
+  height?: number;
 }
 
 interface LogoLoopProps {
