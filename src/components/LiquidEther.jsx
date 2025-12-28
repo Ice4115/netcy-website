@@ -1,7 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import * as THREE from 'three';
+import './LiquidEther.css';
+
+const isMobileDevice = () => {
+  if (typeof window === 'undefined') return false;
+  const ua = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isSmallScreen = window.innerWidth <= 1024;
+  return ua || isSmallScreen;
+};
 
 /**
  * @param {Object} props
@@ -46,23 +54,10 @@ export default function LiquidEther({
   autoResumeDelay = 1000,
   autoRampDuration = 0.6
 } = {}) {
-  const [isMobile, setIsMobile] = useState(false);
   const mountRef = useRef(null);
-  const webglRef = useRef(null);
   const rafRef = useRef(null);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const isSmallScreen = window.innerWidth <= 1024;
-      setIsMobile(isMobileDevice || isSmallScreen);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const isMobile = useMemo(() => isMobileDevice(), []);
 
   const finalMouseForce = mouseForce ?? (isMobile ? 28 : 20);
   const finalCursorSize = cursorSize ?? (isMobile ? 140 : 100);
@@ -919,7 +914,7 @@ export default function LiquidEther({
         Common.renderer.dispose();
       }
     };
-  }, [finalMouseForce, finalCursorSize, finalIterationsViscous, finalIterationsPoisson, finalResolution, isViscous, viscous, dt, BFECC, isBounce, colors, isMobile]);
+  }, [finalMouseForce, finalCursorSize, finalIterationsViscous, finalIterationsPoisson, finalResolution, isViscous, viscous, dt, BFECC, isBounce, colors]);
 
   return (
     <div
