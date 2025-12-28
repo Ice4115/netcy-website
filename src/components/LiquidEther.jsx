@@ -59,8 +59,8 @@ export default function LiquidEther({
 
   const isMobile = useMemo(() => isMobileDevice(), []);
 
-  const finalMouseForce = mouseForce ?? (isMobile ? 28 : 20);
-  const finalCursorSize = cursorSize ?? (isMobile ? 140 : 100);
+  const finalMouseForce = mouseForce ?? (isMobile ? 35 : 20);
+  const finalCursorSize = cursorSize ?? (isMobile ? 180 : 100);
   const finalIterationsViscous = iterationsViscous ?? (isMobile ? 16 : 32);
   const finalIterationsPoisson = iterationsPoisson ?? (isMobile ? 16 : 32);
   const finalResolution = resolution ?? (isMobile ? 0.35 : 0.5);
@@ -175,7 +175,7 @@ export default function LiquidEther({
         this.coords_old = new THREE.Vector2();
         this.diff = new THREE.Vector2();
         this.velocity = new THREE.Vector2();
-        this.inertia = isMobile ? 0.88 : 0.95;
+        this.inertia = isMobile ? 0.92 : 0.95;
         this.container = null;
         this.touches = [];
         this.isAutoActive = false;
@@ -237,6 +237,7 @@ export default function LiquidEther({
 
         if (this.touches.length === 1) {
           this.setFromEvent(this.touches[0].clientX, this.touches[0].clientY);
+          this.hasUserControl = true;
         }
 
         if (this.touches.length === 2) {
@@ -248,8 +249,9 @@ export default function LiquidEther({
 
           const dx = a.clientX - b.clientX;
           const dy = a.clientY - b.clientY;
-          this.velocity.x += -dy * 0.0006;
-          this.velocity.y += dx * 0.0006;
+          this.velocity.x += -dy * 0.0012;
+          this.velocity.y += dx * 0.0012;
+          this.hasUserControl = true;
         }
       }
 
@@ -262,7 +264,7 @@ export default function LiquidEther({
         this.coords_old.copy(this.coords);
         
         if (isMobile) {
-          this.velocity.add(this.diff);
+          this.velocity.add(this.diff.clone().multiplyScalar(1.5));
           this.velocity.multiplyScalar(this.inertia);
           this.diff.copy(this.velocity);
         }
