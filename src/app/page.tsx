@@ -41,14 +41,14 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  useEffect(() => {
-    initGooey({
-      colors: [1, 2, 3, 1, 2, 3, 1, 4],
-      particleCount: 15,
-      animationTime: 600,
-      timeVariance: 300
-    });
-  }, [initGooey]);
+  // useEffect(() => {
+  //   initGooey({
+  //     colors: [1, 2, 3, 1, 2, 3, 1, 4],
+  //     particleCount: 15,
+  //     animationTime: 600,
+  //     timeVariance: 300
+  //   });
+  // }, [initGooey]);
 
   const navItems = [
     {
@@ -56,9 +56,9 @@ export default function Home() {
       bgColor: '#1a0f3a',
       textColor: '#8FA5FF',
       links: [
-        { label: 'Création Web', href: '#creation', ariaLabel: 'Voir création web' },
-        { label: 'Sécurité Réseau', href: '#securite', ariaLabel: 'Voir sécurité réseau' },
-        { label: 'Maintenance & Support', href: '#maintenance', ariaLabel: 'Voir maintenance' }
+        { label: 'Création Web', href: '#services', ariaLabel: 'Voir création web' },
+        { label: 'Maintenance & Support', href: '#services', ariaLabel: 'Voir maintenance' },
+        { label: 'Sécurité Réseau', href: '#services', ariaLabel: 'Voir sécurité réseau' }
       ]
     },
     {

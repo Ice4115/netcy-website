@@ -148,6 +148,12 @@ const CardNav = ({
     if (el) cardsRef.current[i] = el;
   };
 
+  const handleLinkClick = () => {
+    if (isExpanded) {
+      toggleMenu();
+    }
+  };
+
   return (
     <div className={`mobile-card-nav-container ${className}`}>
       <nav ref={navRef} className={`mobile-card-nav ${isExpanded ? 'open' : ''}`} style={{ backgroundColor: baseColor }}>
@@ -188,7 +194,7 @@ const CardNav = ({
               <div className="mobile-nav-card-label">{item.label}</div>
               <div className="mobile-nav-card-links">
                 {item.links?.map((lnk, i) => (
-                  <a key={`${lnk.label}-${i}`} className="mobile-nav-card-link" href={lnk.href} aria-label={lnk.ariaLabel}>
+                  <a key={`${lnk.label}-${i}`} className="mobile-nav-card-link" href={lnk.href} aria-label={lnk.ariaLabel} onClick={handleLinkClick}>
                     <GoArrowUpRight className="mobile-nav-card-link-icon" aria-hidden="true" />
                     {lnk.label}
                   </a>

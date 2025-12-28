@@ -128,4 +128,7 @@
   img {
     max-width: none !important;
   }
+  [id] {
+    scroll-margin-top: 120px;
+  }
 }
