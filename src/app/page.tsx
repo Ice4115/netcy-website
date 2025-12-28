@@ -184,7 +184,7 @@ export default function Home() {
                     Je crois que le développement et la sécurité vont de pair pour créer des solutions fiables.
                   </p>
                   
-                  <h4 className="font-semibold mb-4 text-lg md:text-lg">Compétences Principales :</h4>
+                  <h4 className="font-semibold mb-4 text-lg md:text-lg"  id="skill">Compétences Principales :</h4>
                   <div className="bg-[#0f0a20]/50 rounded-lg p-4 mb-4 border border-[#7A8FFF]/20">
                     <TrueFocus 
                       sentence="Web Réseaux Sécurité Données"
@@ -195,7 +195,7 @@ export default function Home() {
                     />
                   </div>
                   
-                  <ul className="space-y-3 text-gray-300 text-base md:text-sm" id="skill">
+                  <ul className="space-y-3 text-gray-300 text-base md:text-sm">
                     <li className="flex items-start">
                       <span className="text-[#8FA5FF] mr-3 font-bold">→</span>
                       <span><strong>Développement</strong> : HTML, CSS, Next.js, React, TypeScript, Tailwind CSS, PHP</span>
