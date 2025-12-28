@@ -1,30 +1,52 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import './LiquidEther.css';
 
+/**
+ * @param {Object} props
+ * @param {number} [props.mouseForce]
+ * @param {number} [props.cursorSize]
+ * @param {boolean} [props.isViscous]
+ * @param {number} [props.viscous]
+ * @param {number} [props.iterationsViscous]
+ * @param {number} [props.iterationsPoisson]
+ * @param {number} [props.dt]
+ * @param {boolean} [props.BFECC]
+ * @param {number} [props.resolution]
+ * @param {boolean} [props.isBounce]
+ * @param {string[]} [props.colors]
+ * @param {Object} [props.style]
+ * @param {string} [props.className]
+ * @param {boolean} [props.autoDemo]
+ * @param {number} [props.autoSpeed]
+ * @param {number} [props.autoIntensity]
+ * @param {number} [props.takeoverDuration]
+ * @param {number} [props.autoResumeDelay]
+ * @param {number} [props.autoRampDuration]
+ */
 export default function LiquidEther({
-  mouseForce = 20,
-  cursorSize = 100,
+  mouseForce,
+  cursorSize,
   isViscous = false,
   viscous = 30,
-  iterationsViscous = 32,
-  iterationsPoisson = 32,
+  iterationsViscous,
+  iterationsPoisson,
   dt = 0.014,
   BFECC = true,
-  resolution = 0.5,
+  resolution,
   isBounce = true,
   colors = ['#3F12F3', '#4670D2', '#5670A4'],
   style = {},
   className = '',
-  autoDemo = true,
+  autoDemo,
   autoSpeed = 0.5,
   autoIntensity = 2.2,
   takeoverDuration = 0.25,
   autoResumeDelay = 1000,
   autoRampDuration = 0.6
-}) {
+} = {}) {
+  const [isMobile, setIsMobile] = useState(false);
   const mountRef = useRef(null);
   const webglRef = useRef(null);
   const resizeObserverRef = useRef(null);
@@ -32,6 +54,32 @@ export default function LiquidEther({
   const intersectionObserverRef = useRef(null);
   const isVisibleRef = useRef(true);
   const resizeRafRef = useRef(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth <= 1024;
+      setIsMobile(isMobileDevice || isSmallScreen);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    if (isMobile) {
+      import('./LiquidEther.mobile.css');
+    } else {
+      import('./LiquidEther.css');
+    }
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [isMobile]);
+
+  const finalMouseForce = mouseForce ?? (isMobile ? 28 : 20);
+  const finalCursorSize = cursorSize ?? (isMobile ? 140 : 100);
+  const finalIterationsViscous = iterationsViscous ?? (isMobile ? 16 : 32);
+  const finalIterationsPoisson = iterationsPoisson ?? (isMobile ? 16 : 32);
+  const finalResolution = resolution ?? (isMobile ? 0.35 : 0.5);
+  const finalAutoDemo = autoDemo ?? (isMobile ? false : true);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -113,7 +161,7 @@ export default function LiquidEther({
       }
       init(container) {
         this.container = container;
-        const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         this.pixelRatio = isMobileDevice ? 1 : Math.min(window.devicePixelRatio || 1, 2);
         this.resize();
         this.renderer = new THREE.WebGLRenderer({ 
@@ -155,6 +203,8 @@ export default function LiquidEther({
         this.diff = new THREE.Vector2();
         this.timer = null;
         this.container = null;
+        this.docTarget = null;
+        this.listenerTarget = null;
         this.isHoverInside = false;
         this.hasUserControl = false;
         this.isAutoActive = false;
@@ -165,25 +215,39 @@ export default function LiquidEther({
         this.takeoverFrom = new THREE.Vector2();
         this.takeoverTo = new THREE.Vector2();
         this.onInteract = null;
-        this._onPointerDown = this.onPointerDown.bind(this);
-        this._onPointerMove = this.onPointerMove.bind(this);
-        this._onPointerUp = this.onPointerUp.bind(this);
-        this._onPointerLeave = this.onPointerLeave.bind(this);
+        this._onMouseMove = this.onDocumentMouseMove.bind(this);
+        this._onTouchStart = this.onDocumentTouchStart.bind(this);
+        this._onTouchMove = this.onDocumentTouchMove.bind(this);
+        this._onTouchEnd = this.onTouchEnd.bind(this);
+        this._onDocumentLeave = this.onDocumentLeave.bind(this);
       }
       init(container) {
         this.container = container;
-        this.container.addEventListener('pointerdown', this._onPointerDown, { passive: false });
-        this.container.addEventListener('pointermove', this._onPointerMove, { passive: false });
-        this.container.addEventListener('pointerup', this._onPointerUp);
-        this.container.addEventListener('pointerleave', this._onPointerLeave);
+        this.docTarget = container.ownerDocument || null;
+        const defaultView =
+          (this.docTarget && this.docTarget.defaultView) || (typeof window !== 'undefined' ? window : null);
+        if (!defaultView) return;
+        this.listenerTarget = defaultView;
+        this.listenerTarget.addEventListener('mousemove', this._onMouseMove);
+        this.listenerTarget.addEventListener('touchstart', this._onTouchStart, { passive: true });
+        this.listenerTarget.addEventListener('touchmove', this._onTouchMove, { passive: true });
+        this.listenerTarget.addEventListener('touchend', this._onTouchEnd);
+        if (this.docTarget) {
+          this.docTarget.addEventListener('mouseleave', this._onDocumentLeave);
+        }
       }
       dispose() {
-        if (this.container) {
-          this.container.removeEventListener('pointerdown', this._onPointerDown);
-          this.container.removeEventListener('pointermove', this._onPointerMove);
-          this.container.removeEventListener('pointerup', this._onPointerUp);
-          this.container.removeEventListener('pointerleave', this._onPointerLeave);
+        if (this.listenerTarget) {
+          this.listenerTarget.removeEventListener('mousemove', this._onMouseMove);
+          this.listenerTarget.removeEventListener('touchstart', this._onTouchStart);
+          this.listenerTarget.removeEventListener('touchmove', this._onTouchMove);
+          this.listenerTarget.removeEventListener('touchend', this._onTouchEnd);
         }
+        if (this.docTarget) {
+          this.docTarget.removeEventListener('mouseleave', this._onDocumentLeave);
+        }
+        this.listenerTarget = null;
+        this.docTarget = null;
         this.container = null;
       }
       isPointInside(clientX, clientY) {
@@ -213,19 +277,8 @@ export default function LiquidEther({
         this.coords.set(nx, ny);
         this.mouseMoved = true;
       }
-      onPointerDown(event) {
-        event.preventDefault();
-        try {
-          this.container.setPointerCapture(event.pointerId);
-        } catch (e) {}
-        if (this.onInteract) this.onInteract();
-        this.setCoords(event.clientX, event.clientY);
-        this.hasUserControl = true;
-        this.isHoverInside = true;
-      }
-      onPointerMove(event) {
-        event.preventDefault();
-        if (!this.isPointInside(event.clientX, event.clientY)) return;
+      onDocumentMouseMove(event) {
+        if (!this.updateHoverState(event.clientX, event.clientY)) return;
         if (this.onInteract) this.onInteract();
         if (this.isAutoActive && !this.hasUserControl && !this.takeoverActive) {
           if (!this.container) return;
@@ -244,16 +297,25 @@ export default function LiquidEther({
         this.setCoords(event.clientX, event.clientY);
         this.hasUserControl = true;
       }
-      onPointerUp(event) {
-        try {
-          this.container.releasePointerCapture(event.pointerId);
-        } catch (e) {}
+      onDocumentTouchStart(event) {
+        if (event.touches.length !== 1) return;
+        const t = event.touches[0];
+        if (!this.updateHoverState(t.clientX, t.clientY)) return;
+        if (this.onInteract) this.onInteract();
+        this.setCoords(t.clientX, t.clientY);
+        this.hasUserControl = true;
+      }
+      onDocumentTouchMove(event) {
+        if (event.touches.length !== 1) return;
+        const t = event.touches[0];
+        if (!this.updateHoverState(t.clientX, t.clientY)) return;
+        if (this.onInteract) this.onInteract();
+        this.setCoords(t.clientX, t.clientY);
+      }
+      onTouchEnd() {
         this.isHoverInside = false;
       }
-      onPointerLeave(event) {
-        try {
-          this.container.releasePointerCapture(event.pointerId);
-        } catch (e) {}
+      onDocumentLeave() {
         this.isHoverInside = false;
       }
       update() {
@@ -921,11 +983,11 @@ export default function LiquidEther({
     }
 
     class Output {
-      constructor() {
-        this.init();
+      constructor(simOptions) {
+        this.init(simOptions);
       }
-      init() {
-        this.simulation = new Simulation();
+      init(simOptions) {
+        this.simulation = new Simulation(simOptions);
         this.scene = new THREE.Scene();
         this.camera = new THREE.Camera();
         this.output = new THREE.Mesh(
@@ -996,7 +1058,18 @@ export default function LiquidEther({
       }
       init() {
         this.props.$wrapper.prepend(Common.renderer.domElement);
-        this.output = new Output();
+        this.output = new Output({
+          iterations_poisson: this.props.iterationsPoisson,
+          iterations_viscous: this.props.iterationsViscous,
+          mouse_force: this.props.mouseForce,
+          resolution: this.props.resolution,
+          cursor_size: this.props.cursorSize,
+          viscous: this.props.viscous,
+          isBounce: this.props.isBounce,
+          dt: this.props.dt,
+          isViscous: this.props.isViscous,
+          BFECC: this.props.BFECC
+        });
       }
       resize() {
         Common.resize();
@@ -1049,12 +1122,22 @@ export default function LiquidEther({
     try {
       webgl = new WebGLManager({
         $wrapper: container,
-        autoDemo,
+        autoDemo: finalAutoDemo,
         autoSpeed,
         autoIntensity,
         takeoverDuration,
         autoResumeDelay,
-        autoRampDuration
+        autoRampDuration,
+        mouseForce: finalMouseForce,
+        cursorSize: finalCursorSize,
+        iterationsViscous: finalIterationsViscous,
+        iterationsPoisson: finalIterationsPoisson,
+        resolution: finalResolution,
+        viscous,
+        isBounce,
+        dt,
+        isViscous,
+        BFECC
       });
       webglRef.current = webgl;
     } catch (e) {
@@ -1076,18 +1159,18 @@ export default function LiquidEther({
         if (!sim) return;
         const prevRes = sim.options.resolution;
         Object.assign(sim.options, {
-          mouse_force: mouseForce,
-          cursor_size: cursorSize,
+          mouse_force: finalMouseForce,
+          cursor_size: finalCursorSize,
           isViscous,
           viscous,
-          iterations_viscous: iterationsViscous,
-          iterations_poisson: iterationsPoisson,
+          iterations_viscous: finalIterationsViscous,
+          iterations_poisson: finalIterationsPoisson,
           dt,
           BFECC,
-          resolution,
+          resolution: finalResolution,
           isBounce
         });
-        if (resolution !== prevRes) {
+        if (finalResolution !== prevRes) {
           sim.resize();
         }
       };
@@ -1150,22 +1233,22 @@ export default function LiquidEther({
     };
   }, [
     BFECC,
-    cursorSize,
     dt,
     isBounce,
     isViscous,
-    iterationsPoisson,
-    iterationsViscous,
-    mouseForce,
-    resolution,
     viscous,
     colors,
-    autoDemo,
     autoSpeed,
     autoIntensity,
     takeoverDuration,
     autoResumeDelay,
-    autoRampDuration
+    autoRampDuration,
+    finalMouseForce,
+    finalCursorSize,
+    finalIterationsViscous,
+    finalIterationsPoisson,
+    finalResolution,
+    finalAutoDemo
   ]);
 
   useEffect(() => {
@@ -1175,19 +1258,19 @@ export default function LiquidEther({
     if (!sim) return;
     const prevRes = sim.options.resolution;
     Object.assign(sim.options, {
-      mouse_force: mouseForce,
-      cursor_size: cursorSize,
+      mouse_force: finalMouseForce,
+      cursor_size: finalCursorSize,
       isViscous,
       viscous,
-      iterations_viscous: iterationsViscous,
-      iterations_poisson: iterationsPoisson,
+      iterations_viscous: finalIterationsViscous,
+      iterations_poisson: finalIterationsPoisson,
       dt,
       BFECC,
-      resolution,
+      resolution: finalResolution,
       isBounce
     });
     if (webgl.autoDriver) {
-      webgl.autoDriver.enabled = autoDemo;
+      webgl.autoDriver.enabled = finalAutoDemo;
       webgl.autoDriver.speed = autoSpeed;
       webgl.autoDriver.resumeDelay = autoResumeDelay;
       webgl.autoDriver.rampDurationMs = autoRampDuration * 1000;
@@ -1196,21 +1279,21 @@ export default function LiquidEther({
         webgl.autoDriver.mouse.takeoverDuration = takeoverDuration;
       }
     }
-    if (resolution !== prevRes) {
+    if (finalResolution !== prevRes) {
       sim.resize();
     }
   }, [
-    mouseForce,
-    cursorSize,
+    finalMouseForce,
+    finalCursorSize,
     isViscous,
     viscous,
-    iterationsViscous,
-    iterationsPoisson,
+    finalIterationsViscous,
+    finalIterationsPoisson,
     dt,
     BFECC,
-    resolution,
+    finalResolution,
     isBounce,
-    autoDemo,
+    finalAutoDemo,
     autoSpeed,
     autoIntensity,
     takeoverDuration,

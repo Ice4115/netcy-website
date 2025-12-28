@@ -19,7 +19,7 @@ export default function Home() {
   const initGooey = useGooeyEffect();
   
   const isMobile = typeof window !== 'undefined' && 
-    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 
   const navItems = [
@@ -60,15 +60,12 @@ export default function Home() {
       <div className="fixed inset-0 w-full h-full z-0">
         <LiquidEther 
           colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-          mouseForce={isMobile ? 28 : 20}
-          cursorSize={isMobile ? 140 : 100}
+          mouseForce={20}
           autoDemo={true}
           autoSpeed={0.5}
           autoIntensity={2.2}
           autoResumeDelay={1000}
           resolution={isMobile ? 0.35 : 0.5}
-          iterationsPoisson={isMobile ? 16 : 32}
-          iterationsViscous={isMobile ? 16 : 32}
         />
       </div>
       
