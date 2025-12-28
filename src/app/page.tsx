@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import LiquidEther from "@/components/LiquidEther";
 import Aurora from "@/components/Aurora";
 import TextType from "@/components/TextType";
@@ -108,7 +109,7 @@ export default function Home() {
         <div className="fixed top-0 w-full z-50 flex items-center">
           <div className="w-full">
             <ResponsiveCardNav
-              logo="/images/logo_netcy.png"
+              logo="/images/logo_netcy_t.svg"
               logoAlt="NETCY"
               items={navItems}
               baseColor="#000"
@@ -218,7 +219,10 @@ export default function Home() {
               <AnimatedContent distance={40} delay={0.2} duration={0.8}>
                 <div className="space-y-8">
                   <div className="bg-gradient-to-r from-[#6F3FFF]/20 to-[#7A8FFF]/20 border border-[#6F3FFF]/50 rounded-lg p-6 hover:border-[#6F3FFF] transition shadow-lg shadow-violet-500/10">
-                    <h4 className="text-2xl font-bold mb-2">🎯 Mission</h4>
+                    <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
+                      <Image src="/images/icons/target.svg" alt="Mission" width={40} height={40} />
+                      Mission
+                    </h4>
                     <p className="text-gray-300 text-lg">
                       Créer des sites web performants et sécurisés tout en partageant mon expertise 
                       en sécurité réseau avec les PME.
@@ -226,7 +230,10 @@ export default function Home() {
                   </div>
                   
                   <div className="bg-gradient-to-r from-[#7A8FFF]/20 to-[#8FA5FF]/20 border border-[#7A8FFF]/50 rounded-lg p-6 hover:border-[#7A8FFF] transition shadow-lg shadow-blue-500/10">
-                    <h4 className="text-2xl font-bold mb-2">🚀 Objectif</h4>
+                    <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
+                      <Image src="/images/icons/rocket.svg" alt="Objectif" width={40} height={40} />
+                      Objectif
+                    </h4>
                     <p className="text-gray-300 text-lg">
                       Grandir progressivement et proposer à terme l&apos;infogérence et la gestion 
                       de sites pour les PME à plus grande échelle.
@@ -234,7 +241,10 @@ export default function Home() {
                   </div>
 
                   <div className="bg-gradient-to-r from-[#8FA5FF]/20 to-[#4A2FFF]/20 border border-[#4A2FFF]/50 rounded-lg p-6 hover:border-[#4A2FFF] transition shadow-lg shadow-indigo-500/10">
-                    <h4 className="text-2xl font-bold mb-2">💎 Philosophie</h4>
+                    <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
+                      <Image src="/images/icons/diamond.svg" alt="Philosophie" width={40} height={40} />
+                      Philosophie
+                    </h4>
                     <p className="text-gray-300 text-lg">
                       Qualité, Transparence, Sécurité et Apprentissage continu pour offrir 
                       des solutions fiables et innovantes.
@@ -248,20 +258,26 @@ export default function Home() {
               <h3 className="text-center text-4xl md:text-4xl font-bold mb-12 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Notre Stack Technologique</h3>
               <LogoLoop
                 logos={[
-                  { src: 'images/html5.png', alt: 'HTML5', title: 'HTML5' },
-                  { src: 'images/css3.png', alt: 'CSS3', title: 'CSS3' },
-                  { src: 'images/js.png', alt: 'JavaScript', title: 'JavaScript' },
-                  { src: 'https://www.php.net/favicon.ico', alt: 'PHP', title: 'PHP' },
-                  { src: 'https://nextjs.org/favicon.ico', alt: 'Next.js', title: 'Next.js' },
-                  { src: 'https://www.typescriptlang.org/favicon.ico', alt: 'TypeScript', title: 'TypeScript' },
-                  { src: 'https://react.dev/favicon.ico', alt: 'React', title: 'React' },
-                  { src: 'https://tailwindcss.com/favicon.ico', alt: 'Tailwind CSS', title: 'Tailwind CSS' }
+                  { src: '/images/stack/html5.svg', alt: 'HTML5', title: 'HTML5' },
+                  { src: '/images/stack/css3.svg', alt: 'CSS3', title: 'CSS3' },
+                  { src: '/images/stack/js.svg', alt: 'JavaScript', title: 'JavaScript' },
+                  { src: '/images/stack/typescript.svg', alt: 'TypeScript', title: 'TypeScript' },
+                  { src: '/images/stack/react.svg', alt: 'React', title: 'React' },
+                  { src: '/images/stack/node.svg', alt: 'Node.js', title: 'Node.js' },
+                  { src: '/images/stack/tailwind.svg', alt: 'Tailwind CSS', title: 'Tailwind CSS' },
+                  { src: '/images/stack/php.svg', alt: 'PHP', title: 'PHP' },
+                  { src: '/images/stack/mysql.svg', alt: 'MySQL', title: 'MySQL', height: 80 },
+                  { src: '/images/stack/postgresql.svg', alt: 'PostgreSQL', title: 'PostgreSQL' },
+                  { src: '/images/stack/mariadb.svg', alt: 'MariaDB', title: 'MariaDB', height: 80 },
+                  { src: '/images/stack/wordpress.svg', alt: 'WordPress', title: 'WordPress' },
+                  { src: '/images/stack/git.svg', alt: 'Git', title: 'Git' },
+                  { src: '/images/stack/github.svg', alt: 'GitHub', title: 'GitHub' }
                 ]}
-                speed={100}
+                speed={50}
                 direction="left"
                 pauseOnHover={true}
-                logoHeight={45}
-                gap={40}
+                logoHeight={50}
+                gap={60}
                 fadeOut={false}
                 className="my-8"
               />
@@ -323,7 +339,8 @@ export default function Home() {
                   title: 'Création de Sites', 
                   desc: 'Site vitrine, portfolio ou e-commerce performant et moderne',
                   items: ['Design responsive', 'Performance web', 'SEO optimisé', 'Sécurisé par défaut'],
-                  icon: '💻',
+                  icon: '/images/icons/laptop.svg',
+                  iconSize: 75,
                   accentColor: '#6F3FFF'
                   
                 },
@@ -332,7 +349,8 @@ export default function Home() {
                   title: 'Maintenance & Support', 
                   desc: 'Suivi, mises à jour et support pour vos projets web',
                   items: ['Mises à jour', 'Monitoring', 'Sauvegardes', 'Support technique'],
-                  icon: '🛠️',
+                  icon: '/images/icons/support.svg',
+                  iconSize: 50,
                   accentColor: '#7A8FFF'
                 },
                 { 
@@ -340,7 +358,8 @@ export default function Home() {
                   title: 'Conseil en Sécurité', 
                   desc: 'Évaluation et recommandations pour sécuriser votre infrastructure',
                   items: ['Audit de sécurité', 'Conformité RGPD', 'Bonnes pratiques', 'Documentation'],
-                  icon: '🔒',
+                  icon: '/images/icons/lock.svg',
+                  iconSize: 42,
                   accentColor: '#4A2FFF'
                 }
               ].map((service, i) => (
@@ -355,7 +374,9 @@ export default function Home() {
                     glareSize={300}
                   >
                     <div id={service.id} className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border rounded-lg p-6 h-full flex flex-col" style={{borderColor: service.accentColor + '50'}}>
-                      <div className="text-4xl mb-3">{service.icon}</div>
+                      <div className="mb-4">
+                        <Image src={service.icon} alt={service.title} width={service.iconSize} height={service.iconSize} />
+                      </div>
                       <h3 className="text-xl md:text-xl font-bold mb-2 transition" style={{color: service.accentColor}}>{service.title}</h3>
                       <p className="text-gray-300 text-base md:text-sm mb-4 flex-grow">{service.desc}</p>
                       <ul className="space-y-2 text-gray-300 text-base md:text-sm">
@@ -399,10 +420,11 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
               <AnimatedContent distance={40} delay={0} duration={0.6}>
                 <div className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border border-[#6F3FFF]/30 rounded-lg p-6 text-center hover:border-[#6F3FFF] transition shadow-lg shadow-violet-500/10">
-                  <div className="text-4xl mb-4">📧</div>
+                  <div className="flex justify-center mb-4">
+                    <Image src="/images/icons/email.svg" alt="Email" width={56} height={56} />
+                  </div>
                   <h3 className="font-bold mb-2">Email</h3>
-                  <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#58;&#99;&#x6f;&#110;&#x74;&#97;&#x63;&#116;&#64;&#110;&#101;&#x74;&#99;&#121;&#46;&#102;&#114;
-" className="text-[#8FA5FF] hover:text-[#6F3FFF] transition">
+                  <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'mailto:' + ['contact', 'netcy.fr'].join('@'); }} className="text-[#8FA5FF] hover:text-[#6F3FFF] transition">
                     contact@netcy.fr
                   </a>
                 </div>
@@ -410,7 +432,9 @@ export default function Home() {
 
               <AnimatedContent distance={40} delay={0.15} duration={0.6}>
                 <div className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border border-[#7A8FFF]/30 rounded-lg p-6 text-center hover:border-[#7A8FFF] transition shadow-lg shadow-blue-500/10">
-                  <div className="text-4xl mb-4">📱</div>
+                  <div className="flex justify-center mb-4">
+                    <Image src="/images/icons/smartphone.svg" alt="Instagram" width={34} height={34} />
+                  </div>
                   <h3 className="font-bold mb-2">Instagram</h3>
                   <a className="text-[#8FA5FF] hover:text-[#7A8FFF] transition">
                     @netcy.dev
@@ -422,8 +446,9 @@ export default function Home() {
             <AnimatedContent distance={50} duration={0.8} className="w-full">
               <form id="contact" className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md relative z-20">
               <div className="mb-8">
-                <h3 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#8FA5FF] to-[#6F3FFF]">
-                  📋 Formulaire de Contact
+                <h3 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#8FA5FF] to-[#6F3FFF] flex items-center gap-3">
+                  <Image src="/images/icons/clipboard.svg" alt="Formulaire" width={40} height={40} />
+                  Formulaire de Contact
                 </h3>
                 <p className="text-gray-300 text-sm">Remplissez ce formulaire et je vous recontacterai dans les 24h</p>
               </div>

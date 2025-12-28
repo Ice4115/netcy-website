@@ -73,7 +73,7 @@
 }
 
 .logoloop__item img {
-  height: var(--logoloop-logoHeight);
+  height: var(--item-height, var(--logoloop-logoHeight));
   width: auto;
   display: block;
   object-fit: contain;

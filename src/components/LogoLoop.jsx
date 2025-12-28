@@ -266,8 +266,9 @@ export const LogoLoop = memo(
         ) : (
           content
         );
+        const itemStyle = item.height ? { '--item-height': `${item.height}px` } : undefined;
         return (
-          <li className="logoloop__item" key={key} role="listitem">
+          <li className="logoloop__item" key={key} role="listitem" style={itemStyle}>
             {itemContent}
           </li>
         );
