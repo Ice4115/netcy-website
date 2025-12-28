@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import LiquidEther from "@/components/LiquidEther";
-import Aurora from "@/components/Aurora";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
 import ResponsiveCardNav from "@/components/ResponsiveCardNav";
@@ -18,37 +16,8 @@ import LogoLoop from "@/components/LogoLoop";
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 export default function Home() {
-  const [isMobile, setIsMobile] = useState(false);
   const initGooey = useGooeyEffect();
 
-  useEffect(() => {
-    const checkMobile = () => {
-      const isTouchDevice = () => {
-        return (
-          (typeof window !== 'undefined' && typeof navigator !== 'undefined') &&
-          (navigator.maxTouchPoints > 0 ||
-            (navigator as any).msMaxTouchPoints > 0 ||
-            (typeof window !== 'undefined' && 'ontouchstart' in window))
-        );
-      };
-      
-      const isSmallScreen = window.innerWidth < 1024;
-      setIsMobile(isTouchDevice() && isSmallScreen);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // useEffect(() => {
-  //   initGooey({
-  //     colors: [1, 2, 3, 1, 2, 3, 1, 4],
-  //     particleCount: 15,
-  //     animationTime: 600,
-  //     timeVariance: 300
-  //   });
-  // }, [initGooey]);
 
   const navItems = [
     {
@@ -86,22 +55,14 @@ export default function Home() {
   return (
     <div className="w-full text-white overflow-x-hidden relative">
       <div className="fixed inset-0 w-full h-full z-0">
-        {isMobile ? (
-          <Aurora
-            colorStops={['#6F3FFF', '#8FA5FF', '#4A2FFF']}
-            amplitude={0.8}
-            blend={0.5}
-          />
-        ) : (
-          <LiquidEther 
-            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-            mouseForce={20}
-            autoDemo={true}
-            autoSpeed={0.5}
-            autoIntensity={2.2}
-            autoResumeDelay={1000}
-          />
-        )}
+        <LiquidEther 
+          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+          mouseForce={20}
+          autoDemo={true}
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          autoResumeDelay={1000}
+        />
       </div>
       
       <div className="relative z-10">
