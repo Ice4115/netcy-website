@@ -17,6 +17,9 @@ import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 export default function Home() {
   const initGooey = useGooeyEffect();
+  
+  const isMobile = typeof window !== 'undefined' && 
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 
   const navItems = [
@@ -62,6 +65,7 @@ export default function Home() {
           autoSpeed={0.5}
           autoIntensity={2.2}
           autoResumeDelay={1000}
+          resolution={isMobile ? 0.35 : 0.5}
         />
       </div>
       

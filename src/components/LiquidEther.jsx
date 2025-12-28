@@ -36,6 +36,32 @@ export default function LiquidEther({
   useEffect(() => {
     if (!mountRef.current) return;
 
+    const checkWebGLSupport = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) {
+          console.error('LiquidEther: WebGL not supported');
+          return false;
+        }
+        return true;
+      } catch (e) {
+        console.error('LiquidEther: Error checking WebGL support', e);
+        return false;
+      }
+    };
+
+    if (!checkWebGLSupport()) {
+      const fallback = document.createElement('div');
+      fallback.style.cssText = 'width:100%;height:100%;background:linear-gradient(135deg, #6F3FFF 0%, #7A8FFF 50%, #8FA5FF 100%);';
+      mountRef.current.appendChild(fallback);
+      return () => {
+        if (mountRef.current && fallback.parentNode === mountRef.current) {
+          mountRef.current.removeChild(fallback);
+        }
+      };
+    }
+
     function makePaletteTexture(stops) {
       let arr;
       if (Array.isArray(stops) && stops.length > 0) {
@@ -87,9 +113,15 @@ export default function LiquidEther({
       }
       init(container) {
         this.container = container;
-        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        this.pixelRatio = isMobileDevice ? 1 : Math.min(window.devicePixelRatio || 1, 2);
         this.resize();
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer = new THREE.WebGLRenderer({ 
+          antialias: false, 
+          alpha: true,
+          powerPreference: 'high-performance',
+          failIfMajorPerformanceCaveat: false
+        });
         this.renderer.autoClear = false;
         this.renderer.setClearColor(new THREE.Color(0x000000), 0);
         this.renderer.setPixelRatio(this.pixelRatio);
@@ -326,12 +358,25 @@ export default function LiquidEther({
       }
     }
 
+    const getPrecision = () => {
+      const gl = document.createElement('canvas').getContext('webgl') || 
+                 document.createElement('canvas').getContext('experimental-webgl');
+      if (!gl) return 'mediump';
+      const fragmentPrecision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+      if (fragmentPrecision && fragmentPrecision.precision > 0) {
+        return 'highp';
+      }
+      return 'mediump';
+    };
+
+    const precision = getPrecision();
+
     const face_vert = `
   attribute vec3 position;
   uniform vec2 px;
   uniform vec2 boundarySpace;
   varying vec2 uv;
-  precision highp float;
+  precision ${precision} float;
   void main(){
   vec3 pos = position;
   vec2 scale = 1.0 - boundarySpace * 2.0;
@@ -343,7 +388,7 @@ export default function LiquidEther({
     const line_vert = `
   attribute vec3 position;
   uniform vec2 px;
-  precision highp float;
+  precision ${precision} float;
   varying vec2 uv;
   void main(){
   vec3 pos = position;
@@ -355,7 +400,7 @@ export default function LiquidEther({
 }
 `;
     const mouse_vert = `
-    precision highp float;
+    precision ${precision} float;
     attribute vec3 position;
     attribute vec2 uv;
     uniform vec2 center;
@@ -369,7 +414,7 @@ export default function LiquidEther({
 }
 `;
     const advection_frag = `
-    precision highp float;
+    precision ${precision} float;
     uniform sampler2D velocity;
     uniform float dt;
     uniform bool isBFECC;
@@ -399,7 +444,7 @@ export default function LiquidEther({
 }
 `;
     const color_frag = `
-    precision highp float;
+    precision ${precision} float;
     uniform sampler2D velocity;
     uniform sampler2D palette;
     uniform vec4 bgColor;
@@ -414,7 +459,7 @@ export default function LiquidEther({
 }
 `;
     const divergence_frag = `
-    precision highp float;
+    precision ${precision} float;
     uniform sampler2D velocity;
     uniform float dt;
     uniform vec2 px;
@@ -429,7 +474,7 @@ export default function LiquidEther({
 }
 `;
     const externalForce_frag = `
-    precision highp float;
+    precision ${precision} float;
     uniform vec2 force;
     uniform vec2 center;
     uniform vec2 scale;
@@ -443,7 +488,7 @@ export default function LiquidEther({
 }
 `;
     const poisson_frag = `
-    precision highp float;
+    precision ${precision} float;
     uniform sampler2D pressure;
     uniform sampler2D divergence;
     uniform vec2 px;
@@ -459,7 +504,7 @@ export default function LiquidEther({
 }
 `;
     const pressure_frag = `
-    precision highp float;
+    precision ${precision} float;
     uniform sampler2D pressure;
     uniform sampler2D velocity;
     uniform vec2 px;
@@ -478,7 +523,7 @@ export default function LiquidEther({
 }
 `;
     const viscous_frag = `
-    precision highp float;
+    precision ${precision} float;
     uniform sampler2D velocity;
     uniform sampler2D velocity_new;
     uniform float v;
@@ -511,10 +556,15 @@ export default function LiquidEther({
         this.scene = new THREE.Scene();
         this.camera = new THREE.Camera();
         if (this.uniforms) {
-          this.material = new THREE.RawShaderMaterial(this.props.material);
-          this.geometry = new THREE.PlaneGeometry(2.0, 2.0);
-          this.plane = new THREE.Mesh(this.geometry, this.material);
-          this.scene.add(this.plane);
+          try {
+            this.material = new THREE.RawShaderMaterial(this.props.material);
+            this.geometry = new THREE.PlaneGeometry(2.0, 2.0);
+            this.plane = new THREE.Mesh(this.geometry, this.material);
+            this.scene.add(this.plane);
+          } catch (e) {
+            console.error('LiquidEther: Shader compilation error', e);
+            throw e;
+          }
         }
       }
       update() {
@@ -1009,70 +1059,87 @@ export default function LiquidEther({
     container.style.position = container.style.position || 'relative';
     container.style.overflow = container.style.overflow || 'hidden';
 
-    const webgl = new WebGLManager({
-      $wrapper: container,
-      autoDemo,
-      autoSpeed,
-      autoIntensity,
-      takeoverDuration,
-      autoResumeDelay,
-      autoRampDuration
-    });
-    webglRef.current = webgl;
-
-    const applyOptionsFromProps = () => {
-      if (!webglRef.current) return;
-      const sim = webglRef.current.output?.simulation;
-      if (!sim) return;
-      const prevRes = sim.options.resolution;
-      Object.assign(sim.options, {
-        mouse_force: mouseForce,
-        cursor_size: cursorSize,
-        isViscous,
-        viscous,
-        iterations_viscous: iterationsViscous,
-        iterations_poisson: iterationsPoisson,
-        dt,
-        BFECC,
-        resolution,
-        isBounce
+    let webgl;
+    try {
+      webgl = new WebGLManager({
+        $wrapper: container,
+        autoDemo,
+        autoSpeed,
+        autoIntensity,
+        takeoverDuration,
+        autoResumeDelay,
+        autoRampDuration
       });
-      if (resolution !== prevRes) {
-        sim.resize();
-      }
-    };
-    applyOptionsFromProps();
-
-    webgl.start();
-
-    // IntersectionObserver to pause rendering when not visible
-    const io = new IntersectionObserver(
-      entries => {
-        const entry = entries[0];
-        const isVisible = entry.isIntersecting && entry.intersectionRatio > 0;
-        isVisibleRef.current = isVisible;
-        if (!webglRef.current) return;
-        if (isVisible && !document.hidden) {
-          webglRef.current.start();
-        } else {
-          webglRef.current.pause();
+      webglRef.current = webgl;
+    } catch (e) {
+      console.error('LiquidEther: Failed to initialize WebGL', e);
+      const fallback = document.createElement('div');
+      fallback.style.cssText = 'width:100%;height:100%;background:linear-gradient(135deg, #6F3FFF 0%, #7A8FFF 50%, #8FA5FF 100%);';
+      container.appendChild(fallback);
+      return () => {
+        if (container && fallback.parentNode === container) {
+          container.removeChild(fallback);
         }
-      },
-      { threshold: [0, 0.01, 0.1] }
-    );
-    io.observe(container);
-    intersectionObserverRef.current = io;
+      };
+    }
 
-    const ro = new ResizeObserver(() => {
-      if (!webglRef.current) return;
-      if (resizeRafRef.current) cancelAnimationFrame(resizeRafRef.current);
-      resizeRafRef.current = requestAnimationFrame(() => {
+    if (webgl) {
+      const applyOptionsFromProps = () => {
         if (!webglRef.current) return;
-        webglRef.current.resize();
+        const sim = webglRef.current.output?.simulation;
+        if (!sim) return;
+        const prevRes = sim.options.resolution;
+        Object.assign(sim.options, {
+          mouse_force: mouseForce,
+          cursor_size: cursorSize,
+          isViscous,
+          viscous,
+          iterations_viscous: iterationsViscous,
+          iterations_poisson: iterationsPoisson,
+          dt,
+          BFECC,
+          resolution,
+          isBounce
+        });
+        if (resolution !== prevRes) {
+          sim.resize();
+        }
+      };
+      applyOptionsFromProps();
+
+      webgl.start();
+    }
+
+    if (webgl) {
+      // IntersectionObserver to pause rendering when not visible
+      const io = new IntersectionObserver(
+        entries => {
+          const entry = entries[0];
+          const isVisible = entry.isIntersecting && entry.intersectionRatio > 0;
+          isVisibleRef.current = isVisible;
+          if (!webglRef.current) return;
+          if (isVisible && !document.hidden) {
+            webglRef.current.start();
+          } else {
+            webglRef.current.pause();
+          }
+        },
+        { threshold: [0, 0.01, 0.1] }
+      );
+      io.observe(container);
+      intersectionObserverRef.current = io;
+
+      const ro = new ResizeObserver(() => {
+        if (!webglRef.current) return;
+        if (resizeRafRef.current) cancelAnimationFrame(resizeRafRef.current);
+        resizeRafRef.current = requestAnimationFrame(() => {
+          if (!webglRef.current) return;
+          webglRef.current.resize();
+        });
       });
-    });
-    ro.observe(container);
-    resizeObserverRef.current = ro;
+      ro.observe(container);
+      resizeObserverRef.current = ro;
+    }
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
