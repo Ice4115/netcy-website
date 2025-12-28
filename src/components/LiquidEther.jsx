@@ -227,7 +227,7 @@ export default function LiquidEther({
         this.touches = [...e.touches];
         if (this.touches.length > 0) {
           this.setFromEvent(this.touches[0].clientX, this.touches[0].clientY);
-          this.coords_old.copy(this.coords);
+          this.hasUserControl = true;
         }
       }
 
@@ -263,8 +263,11 @@ export default function LiquidEther({
         this.diff.subVectors(this.coords, this.coords_old);
         this.coords_old.copy(this.coords);
         
-        if (isMobile) {
-          this.velocity.add(this.diff.clone().multiplyScalar(1.5));
+        if (isMobile && this.touches.length > 0) {
+          this.velocity.add(this.diff.clone().multiplyScalar(4.0));
+          this.velocity.multiplyScalar(this.inertia);
+          this.diff.copy(this.velocity);
+        } else if (isMobile) {
           this.velocity.multiplyScalar(this.inertia);
           this.diff.copy(this.velocity);
         }
