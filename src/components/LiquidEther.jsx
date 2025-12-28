@@ -59,8 +59,8 @@ export default function LiquidEther({
 
   const isMobile = useMemo(() => isMobileDevice(), []);
 
-  const finalMouseForce = mouseForce ?? (isMobile ? 35 : 20);
-  const finalCursorSize = cursorSize ?? (isMobile ? 180 : 100);
+  const finalMouseForce = mouseForce ?? (isMobile ? 50 : 20);
+  const finalCursorSize = cursorSize ?? (isMobile ? 200 : 100);
   const finalIterationsViscous = iterationsViscous ?? (isMobile ? 16 : 32);
   const finalIterationsPoisson = iterationsPoisson ?? (isMobile ? 16 : 32);
   const finalResolution = resolution ?? (isMobile ? 0.35 : 0.5);
@@ -68,6 +68,9 @@ export default function LiquidEther({
 
   useEffect(() => {
     if (!mountRef.current) return;
+
+    console.log('LiquidEther: isMobile =', isMobile, '| UserAgent:', navigator.userAgent);
+    console.log('LiquidEther: Window size:', window.innerWidth, 'x', window.innerHeight);
 
     const checkWebGLSupport = () => {
       try {
@@ -152,6 +155,7 @@ export default function LiquidEther({
         this.renderer.domElement.style.width = '100%';
         this.renderer.domElement.style.height = '100%';
         this.renderer.domElement.style.display = 'block';
+        this.renderer.domElement.style.pointerEvents = 'none';
         container.appendChild(this.renderer.domElement);
         this.clock = new THREE.Clock();
         this.clock.start();
@@ -175,11 +179,13 @@ export default function LiquidEther({
         this.coords_old = new THREE.Vector2();
         this.diff = new THREE.Vector2();
         this.velocity = new THREE.Vector2();
-        this.inertia = isMobile ? 0.92 : 0.95;
+        this.inertia = isMobile ? 0.90 : 0.95;
         this.container = null;
         this.touches = [];
+        this.isTouching = false;
         this.isAutoActive = false;
         this.hasUserControl = false;
+        this.lastTouchTime = 0;
         this._onMouseMove = this.onMouseMove.bind(this);
         this._onTouchStart = this.onTouchStart.bind(this);
         this._onTouchMove = this.onTouchMove.bind(this);
@@ -189,11 +195,13 @@ export default function LiquidEther({
       init(container) {
         this.container = container;
         if (isMobile) {
+          console.log('Attaching TOUCH event listeners to container');
           container.addEventListener('touchstart', this._onTouchStart, { passive: false });
           container.addEventListener('touchmove', this._onTouchMove, { passive: false });
-          container.addEventListener('touchend', this._onTouchEnd);
-          container.addEventListener('touchcancel', this._onTouchEnd);
+          container.addEventListener('touchend', this._onTouchEnd, { passive: false });
+          container.addEventListener('touchcancel', this._onTouchEnd, { passive: false });
         } else {
+          console.log('Attaching MOUSE event listeners to window');
           window.addEventListener('mousemove', this._onMouseMove);
         }
       }
@@ -223,53 +231,84 @@ export default function LiquidEther({
       }
 
       onTouchStart(e) {
-        e.preventDefault();
-        this.touches = [...e.touches];
-        if (this.touches.length > 0) {
-          this.setFromEvent(this.touches[0].clientX, this.touches[0].clientY);
-          this.hasUserControl = true;
+        try {
+          e.preventDefault();
+          e.stopPropagation();
+          this.touches = [...e.touches];
+          this.isTouching = true;
+          this.lastTouchTime = Date.now();
+          
+          if (this.touches.length > 0) {
+            const touch = this.touches[0];
+            this.setFromEvent(touch.clientX, touch.clientY);
+            this.coords_old.copy(this.coords);
+            this.hasUserControl = true;
+            console.log('Touch started at:', touch.clientX, touch.clientY, '| Normalized:', this.coords.x.toFixed(2), this.coords.y.toFixed(2));
+          }
+        } catch (err) {
+          console.error('Touch start error:', err);
         }
       }
 
       onTouchMove(e) {
-        e.preventDefault();
-        this.touches = [...e.touches];
+        try {
+          e.preventDefault();
+          e.stopPropagation();
+          this.touches = [...e.touches];
+          this.lastTouchTime = Date.now();
 
-        if (this.touches.length === 1) {
-          this.setFromEvent(this.touches[0].clientX, this.touches[0].clientY);
-          this.hasUserControl = true;
-        }
+          if (this.touches.length === 1) {
+            const touch = this.touches[0];
+            this.setFromEvent(touch.clientX, touch.clientY);
+            this.hasUserControl = true;
+          } else if (this.touches.length === 2) {
+            const a = this.touches[0];
+            const b = this.touches[1];
+            const cx = (a.clientX + b.clientX) * 0.5;
+            const cy = (a.clientY + b.clientY) * 0.5;
+            this.setFromEvent(cx, cy);
 
-        if (this.touches.length === 2) {
-          const a = this.touches[0];
-          const b = this.touches[1];
-          const cx = (a.clientX + b.clientX) * 0.5;
-          const cy = (a.clientY + b.clientY) * 0.5;
-          this.setFromEvent(cx, cy);
-
-          const dx = a.clientX - b.clientX;
-          const dy = a.clientY - b.clientY;
-          this.velocity.x += -dy * 0.0012;
-          this.velocity.y += dx * 0.0012;
-          this.hasUserControl = true;
+            const dx = a.clientX - b.clientX;
+            const dy = a.clientY - b.clientY;
+            this.velocity.x += -dy * 0.003;
+            this.velocity.y += dx * 0.003;
+            this.hasUserControl = true;
+          }
+        } catch (err) {
+          console.error('Touch move error:', err);
         }
       }
 
-      onTouchEnd() {
-        this.touches = [];
+      onTouchEnd(e) {
+        try {
+          e.preventDefault();
+          this.touches = [...e.touches];
+          if (this.touches.length === 0) {
+            this.isTouching = false;
+          }
+        } catch (err) {
+          console.error('Touch end error:', err);
+        }
       }
 
       update() {
-        this.diff.subVectors(this.coords, this.coords_old);
+        const rawDiff = new THREE.Vector2();
+        rawDiff.subVectors(this.coords, this.coords_old);
         this.coords_old.copy(this.coords);
         
-        if (isMobile && this.touches.length > 0) {
-          this.velocity.add(this.diff.clone().multiplyScalar(4.0));
-          this.velocity.multiplyScalar(this.inertia);
+        if (isMobile) {
+          if (this.isTouching) {
+            this.velocity.add(rawDiff.multiplyScalar(6.0));
+            this.velocity.multiplyScalar(0.85);
+            if (Math.abs(this.velocity.x) > 0.001 || Math.abs(this.velocity.y) > 0.001) {
+              console.log('Touch velocity:', this.velocity.x.toFixed(3), this.velocity.y.toFixed(3));
+            }
+          } else {
+            this.velocity.multiplyScalar(this.inertia);
+          }
           this.diff.copy(this.velocity);
-        } else if (isMobile) {
-          this.velocity.multiplyScalar(this.inertia);
-          this.diff.copy(this.velocity);
+        } else {
+          this.diff.copy(rawDiff);
         }
       }
     }
