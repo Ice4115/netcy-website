@@ -32,7 +32,11 @@ const isMobileDevice = () => {
 export default function Home() {
   const initGooey = useGooeyEffect();
   
-  const isMobile = useMemo(() => isMobileDevice(), []);
+  const isMobile = useMemo(() => {
+    const result = isMobileDevice();
+    console.log('📱 Device detection - isMobile:', result);
+    return result;
+  }, []);
 
 
   const navItems = [

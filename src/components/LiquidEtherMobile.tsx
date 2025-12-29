@@ -71,12 +71,19 @@ export default function LiquidEtherMobile({
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    console.log('🔵 LiquidEtherMobile mounted');
+    
+    if (!containerRef.current) {
+      console.error('❌ Container ref is null');
+      return;
+    }
+    
     if (!checkWebGLSupport()) {
-      console.warn('WebGL not supported, showing fallback');
+      console.warn('⚠️ WebGL not supported, showing fallback');
       return;
     }
 
+    console.log('✅ WebGL supported, initializing...');
     const container = containerRef.current;
     const rect = container.getBoundingClientRect();
     const width = Math.max(1, Math.floor(rect.width));
@@ -358,6 +365,10 @@ export default function LiquidEtherMobile({
 
       const forceX = state.diff.x * mouseForce;
       const forceY = state.diff.y * mouseForce;
+      
+      if (Math.abs(forceX) > 0.5 || Math.abs(forceY) > 0.5) {
+        console.log('💨 Applying force:', forceX.toFixed(1), forceY.toFixed(1), '| mouseForce:', mouseForce);
+      }
 
       scene.clear();
       scene.add(advectionMesh);
