@@ -73,17 +73,32 @@ export default function LiquidEtherMobile({
   useEffect(() => {
     console.log('🔵 LiquidEtherMobile mounted');
     
+    // Dispatch debug event
+    window.dispatchEvent(new CustomEvent('debug-update', { 
+      detail: { component: 'mobile', lastTouch: 'mounting...' } 
+    }));
+    
     if (!containerRef.current) {
       console.error('❌ Container ref is null');
+      window.dispatchEvent(new CustomEvent('debug-update', { 
+        detail: { component: 'mobile', lastTouch: 'ERROR: no container' } 
+      }));
       return;
     }
     
     if (!checkWebGLSupport()) {
       console.warn('⚠️ WebGL not supported, showing fallback');
+      window.dispatchEvent(new CustomEvent('debug-update', { 
+        detail: { component: 'mobile', lastTouch: 'ERROR: no WebGL' } 
+      }));
       return;
     }
 
     console.log('✅ WebGL supported, initializing...');
+    window.dispatchEvent(new CustomEvent('debug-update', { 
+      detail: { component: 'mobile', lastTouch: 'WebGL OK' } 
+    }));
+    
     const container = containerRef.current;
     const rect = container.getBoundingClientRect();
     const width = Math.max(1, Math.floor(rect.width));

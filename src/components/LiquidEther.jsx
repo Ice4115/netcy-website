@@ -69,6 +69,10 @@ export default function LiquidEther({
   useEffect(() => {
     if (!mountRef.current) return;
 
+    window.dispatchEvent(new CustomEvent('debug-update', { 
+      detail: { component: 'desktop', lastTouch: 'mounting...' } 
+    }));
+
     const checkWebGLSupport = () => {
       try {
         const canvas = document.createElement('canvas');

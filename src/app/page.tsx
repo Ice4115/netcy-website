@@ -17,6 +17,7 @@ import GlareHover from "@/components/GlareHover";
 import LogoLoop from "@/components/LogoLoop";
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import DebugOverlay from "@/components/DebugOverlay";
 
 const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
   ssr: false,
@@ -73,8 +74,10 @@ export default function Home() {
   ];
 
   return (
-    <div className="w-full text-white overflow-x-hidden relative">
-      <div className="fixed inset-0 w-full h-full z-0">
+    <>
+      <DebugOverlay enabled={true} />
+      <div className="w-full text-white overflow-x-hidden relative">
+        <div className="fixed inset-0 w-full h-full z-0">
         {isMobile ? (
           <LiquidEtherMobile 
             colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
@@ -557,6 +560,7 @@ export default function Home() {
           </p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }

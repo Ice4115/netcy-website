@@ -61,6 +61,14 @@ export const usePointerInput = (
       state.coords = normalized;
       state.coordsOld = { ...normalized };
       console.log('📍 Normalized coords:', normalized.x.toFixed(2), normalized.y.toFixed(2));
+      
+      // Debug event
+      window.dispatchEvent(new CustomEvent('debug-update', { 
+        detail: { 
+          touches: activePointers.current.size,
+          lastTouch: `${e.clientX},${e.clientY}`,
+        } 
+      }));
     }
 
     onPointerChange?.(state);
@@ -128,6 +136,13 @@ export const usePointerInput = (
       
       if (Math.abs(amplifiedDiffX) > 0.001 || Math.abs(amplifiedDiffY) > 0.001) {
         console.log('🔥 Diff amplified:', amplifiedDiffX.toFixed(3), amplifiedDiffY.toFixed(3));
+        
+        // Debug event
+        window.dispatchEvent(new CustomEvent('debug-update', { 
+          detail: { 
+            force: `${amplifiedDiffX.toFixed(2)}, ${amplifiedDiffY.toFixed(2)}`,
+          } 
+        }));
       }
     } else {
       state.velocity.x *= inertia;
