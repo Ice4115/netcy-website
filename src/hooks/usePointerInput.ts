@@ -16,7 +16,7 @@ interface UsePointerInputOptions {
 }
 
 export const usePointerInput = (
-  containerRef: React.RefObject<HTMLElement>,
+  containerRef: React.RefObject<HTMLElement | null>,
   options: UsePointerInputOptions = {}
 ) => {
   const { inertia = 0.90, amplification = 12.0, onPointerChange } = options;
