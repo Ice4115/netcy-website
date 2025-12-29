@@ -69,9 +69,6 @@ export default function LiquidEther({
   useEffect(() => {
     if (!mountRef.current) return;
 
-    console.log('LiquidEther: isMobile =', isMobile, '| UserAgent:', navigator.userAgent);
-    console.log('LiquidEther: Window size:', window.innerWidth, 'x', window.innerHeight);
-
     const checkWebGLSupport = () => {
       try {
         const canvas = document.createElement('canvas');
@@ -194,13 +191,11 @@ export default function LiquidEther({
       init(container) {
         this.container = container;
         if (isMobile) {
-          console.log('Attaching TOUCH event listeners to container');
           container.addEventListener('touchstart', this._onTouchStart, { passive: false });
           container.addEventListener('touchmove', this._onTouchMove, { passive: false });
           container.addEventListener('touchend', this._onTouchEnd, { passive: false });
           container.addEventListener('touchcancel', this._onTouchEnd, { passive: false });
         } else {
-          console.log('Attaching MOUSE event listeners to window');
           window.addEventListener('mousemove', this._onMouseMove);
         }
       }
@@ -242,7 +237,6 @@ export default function LiquidEther({
             this.setFromEvent(touch.clientX, touch.clientY);
             this.coords_old.copy(this.coords);
             this.hasUserControl = true;
-            console.log('Touch started at:', touch.clientX, touch.clientY, '| Normalized:', this.coords.x.toFixed(2), this.coords.y.toFixed(2));
           }
         } catch (err) {
           console.error('Touch start error:', err);
@@ -301,10 +295,6 @@ export default function LiquidEther({
             this.velocity.add(amplifiedDiff);
             this.velocity.multiplyScalar(0.80);
             this.diff.copy(amplifiedDiff);
-            if (Math.abs(amplifiedDiff.x) > 0.001 || Math.abs(amplifiedDiff.y) > 0.001) {
-              console.log('Touch rawDiff:', rawDiff.x.toFixed(4), rawDiff.y.toFixed(4), 
-                          '| amplified:', amplifiedDiff.x.toFixed(3), amplifiedDiff.y.toFixed(3));
-            }
           } else {
             this.velocity.multiplyScalar(this.inertia);
             this.diff.copy(this.velocity);
@@ -606,12 +596,6 @@ export default function LiquidEther({
         const diffMultiplier = isMobile ? 1.0 : 0.5;
         const forceX = (Mouse.diff.x * diffMultiplier) * props.mouse_force;
         const forceY = (Mouse.diff.y * diffMultiplier) * props.mouse_force;
-        
-        if (isMobile && (Math.abs(forceX) > 0.01 || Math.abs(forceY) > 0.01)) {
-          console.log('ExternalForce - diff:', Mouse.diff.x.toFixed(3), Mouse.diff.y.toFixed(3), 
-                      '| force:', forceX.toFixed(2), forceY.toFixed(2), 
-                      '| mouseForce:', props.mouse_force);
-        }
         
         const cursorSizeX = props.cursor_size * props.cellScale.x;
         const cursorSizeY = props.cursor_size * props.cellScale.y;

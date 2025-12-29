@@ -1,6 +1,8 @@
 'use client';
 
+import { useMemo } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import LiquidEther from "@/components/LiquidEther";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
@@ -15,11 +17,22 @@ import GlareHover from "@/components/GlareHover";
 import LogoLoop from "@/components/LogoLoop";
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+
+const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
+  ssr: false,
+});
+
+const isMobileDevice = () => {
+  if (typeof window === 'undefined') return false;
+  const ua = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isSmallScreen = window.innerWidth <= 1024;
+  return ua || isSmallScreen;
+};
+
 export default function Home() {
   const initGooey = useGooeyEffect();
   
-  const isMobile = typeof window !== 'undefined' && 
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isMobile = useMemo(() => isMobileDevice(), []);
 
 
   const navItems = [
@@ -58,14 +71,23 @@ export default function Home() {
   return (
     <div className="w-full text-white overflow-x-hidden relative">
       <div className="fixed inset-0 w-full h-full z-0">
-        <LiquidEther 
-          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-          autoDemo={true}
-          autoSpeed={0.5}
-          autoIntensity={2.2}
-          autoResumeDelay={1000}
-          resolution={isMobile ? 0.35 : 0.5}
-        />
+        {isMobile ? (
+          <LiquidEtherMobile 
+            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+            mouseForce={80}
+            cursorSize={250}
+            resolution={0.35}
+          />
+        ) : (
+          <LiquidEther 
+            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+            autoDemo={true}
+            autoSpeed={0.5}
+            autoIntensity={2.2}
+            autoResumeDelay={1000}
+            resolution={0.5}
+          />
+        )}
       </div>
       
       <div className="relative z-10">
