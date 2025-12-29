@@ -75,7 +75,7 @@ export default function Home() {
 
   return (
     <>
-      <DebugOverlay enabled={true} />
+      {/* <DebugOverlay enabled={true} /> */}
       <div className="w-full text-white overflow-x-hidden relative">
         <div className="fixed inset-0 w-full h-full z-0">
         {isMobile ? (
