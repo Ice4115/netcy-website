@@ -30,7 +30,7 @@ export default function LiquidEtherMobile({
   const [isVisible, setIsVisible] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
 
-  const pointerInput = usePointerInput(canvasRef, {
+  const pointerInput = usePointerInput(containerRef, {
     inertia: 0.90,
     amplification: 12.0,
   });
@@ -514,6 +514,7 @@ export default function LiquidEtherMobile({
         userSelect: 'none',
         WebkitUserSelect: 'none',
         WebkitTouchCallout: 'none',
+        pointerEvents: 'auto',
         ...style,
       }}
     />

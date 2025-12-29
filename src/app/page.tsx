@@ -97,9 +97,9 @@ export default function Home() {
         )}
       </div>
       
-      <div className="relative z-10">
+      <div className="relative z-10" style={{ pointerEvents: 'none' }}>
       
-        <div className="fixed top-0 w-full z-50 flex items-center">
+        <div className="fixed top-0 w-full z-50 flex items-center" style={{ pointerEvents: 'auto' }}>
           <div className="w-full">
             <ResponsiveCardNav
               logo="/images/logo_netcy_t.svg"
@@ -114,7 +114,7 @@ export default function Home() {
           </div>
         </div>
 
-        <section id="hero" className="relative min-h-screen w-full overflow-hidden pt-40">
+        <section id="hero" className="relative min-h-screen w-full overflow-hidden pt-40" style={{ pointerEvents: 'auto' }}>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-4">
             <TextType 
               text="NETCY"
@@ -148,7 +148,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="about" className="py-20 px-4 md:px-8">
+        <section id="about" className="py-20 px-4 md:px-8" style={{ pointerEvents: 'auto' }}>
           <div className="max-w-6xl mx-auto">
             <div className="mb-12" id="netcy">
               <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
@@ -312,7 +312,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="services" className="py-20 px-4 md:px-8">
+        <section id="services" className="py-20 px-4 md:px-8" style={{ pointerEvents: 'auto' }}>
           <div className="max-w-6xl mx-auto">
               <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
                 Services & Prestations
@@ -388,7 +388,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-20 px-4 md:px-8 relative z-10" style={{ scrollMarginTop: '100px' }}>
+        <section className="py-20 px-4 md:px-8 relative z-10" style={{ scrollMarginTop: '100px', pointerEvents: 'auto' }}>
           <div className="max-w-4xl mx-auto">
               <ScrollFloat scrollContainerRef={null} containerClassName="text-center mb-4 reduced">
                 Parlons de Votre Projet
@@ -550,7 +550,7 @@ export default function Home() {
         </section>
       </div>
 
-      <footer className="border-t border-[#6F3FFF]/20 py-8 px-4 md:px-8 backdrop-blur-sm relative z-40 bg-black/40">
+      <footer className="border-t border-[#6F3FFF]/20 py-8 px-4 md:px-8 backdrop-blur-sm relative z-40 bg-black/40" style={{ pointerEvents: 'auto' }}>
         <div className="max-w-6xl mx-auto text-center text-gray-500">
           <p className="mb-2">
             © 2025 NETCY - Network Cybersecurity. Tous droits réservés.
