@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-// use your own icon import if react-icons is not available
+import Image from 'next/image';
 import { GoArrowUpRight } from 'react-icons/go';
 import './CardNavMobile.css';
 
@@ -164,14 +164,14 @@ const CardNav = ({
             role="button"
             aria-label={isExpanded ? 'Close menu' : 'Open menu'}
             tabIndex={0}
-            style={{ color: menuColor || '#000' }}
+            style={{ color: menuColor || '#110F1B' }}
           >
             <div className="mobile-hamburger-line" />
             <div className="mobile-hamburger-line" />
           </div>
 
           <div className="mobile-logo-container">
-            <img src={logo} alt={logoAlt} className="mobile-logo" />
+            <Image src={logo} alt={logoAlt} className="mobile-logo" width={120} height={40} priority />
           </div>
 
           <button

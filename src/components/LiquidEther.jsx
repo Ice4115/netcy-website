@@ -150,7 +150,7 @@ export default function LiquidEther({
           powerPreference: 'high-performance'
         });
         this.renderer.autoClear = false;
-        this.renderer.setClearColor(0x000000, 0);
+        this.renderer.setClearColor(0x110F1B, 0);
         this.renderer.setPixelRatio(this.pixelRatio);
         this.renderer.setSize(this.width, this.height);
         this.renderer.domElement.style.width = '100%';

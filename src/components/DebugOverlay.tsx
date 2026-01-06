@@ -47,7 +47,7 @@ export default function DebugOverlay({ enabled = true }: { enabled?: boolean }) 
         position: 'fixed',
         top: '10px',
         right: '10px',
-        background: 'rgba(0, 0, 0, 0.8)',
+        background: 'rgba(17, 15, 27, 0.8)',
         color: '#00ff00',
         padding: '10px',
         fontFamily: 'monospace',

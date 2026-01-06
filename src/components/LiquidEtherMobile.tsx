@@ -111,7 +111,7 @@ export default function LiquidEtherMobile({
     });
     
     renderer.autoClear = false;
-    renderer.setClearColor(0x000000, 0);
+    renderer.setClearColor(0x110F1B, 0);
     renderer.setPixelRatio(1);
     renderer.setSize(width, height);
     renderer.domElement.style.width = '100%';
@@ -514,7 +514,7 @@ export default function LiquidEtherMobile({
         userSelect: 'none',
         WebkitUserSelect: 'none',
         WebkitTouchCallout: 'none',
-        pointerEvents: 'none',
+        pointerEvents: 'auto',
         ...style,
       }}
     />

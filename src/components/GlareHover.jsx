@@ -5,7 +5,7 @@ import './GlareHover.css';
 const GlareHover = ({
   width = '500px',
   height = '500px',
-  background = '#000',
+  background = '#110F1B',
   borderRadius = '10px',
   borderColor = '#333',
   children,

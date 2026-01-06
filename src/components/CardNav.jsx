@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
-// use your own icon import if react-icons is not available
+import Image from 'next/image';
 import { GoArrowUpRight } from 'react-icons/go';
 import './CardNav.css';
 
@@ -241,14 +241,14 @@ const CardNav = ({
             role="button"
             aria-label={isExpanded ? 'Close menu' : 'Open menu'}
             tabIndex={0}
-            style={{ color: menuColor || '#000' }}
+            style={{ color: menuColor || '#110F1B' }}
           >
             <div className="hamburger-line" />
             <div className="hamburger-line" />
           </div>
 
           <div className="logo-container">
-            <img src={logo} alt={logoAlt} className="logo" />
+            <Image src={logo} alt={logoAlt} className="logo" width={120} height={40} priority />
           </div>
 
           <a

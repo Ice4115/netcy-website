@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -16,6 +16,7 @@ import ProfileCard from "@/components/ProfileCard";
 import AnimatedContent from "@/components/AnimatedContent";
 import GlareHover from "@/components/GlareHover";
 import LogoLoop from "@/components/LogoLoop";
+import LoadingScreen from "@/components/LoadingScreen";
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import DebugOverlay from "@/components/DebugOverlay";
@@ -34,11 +35,65 @@ const isMobileDevice = () => {
 export default function Home() {
   const initGooey = useGooeyEffect();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   
   const isMobile = useMemo(() => {
     const result = isMobileDevice();
     console.log('📱 Device detection - isMobile:', result);
     return result;
+  }, []);
+
+  useEffect(() => {
+    const criticalImages = [
+      '/images/logo_netcy_t.svg',
+      '/images/icons/target.svg',
+      '/images/icons/rocket.svg',
+      '/images/icons/diamond.svg',
+      '/images/profile.png',
+      '/images/iconpattern.png',
+      '/images/grain.webp',
+      '/images/stack/html5.svg',
+      '/images/stack/css3.svg',
+      '/images/stack/js.svg',
+      '/images/stack/typescript.svg',
+      '/images/stack/react.svg',
+      '/images/stack/node.svg',
+      '/images/stack/tailwind.svg',
+      '/images/stack/php.svg',
+      '/images/stack/mysql.svg',
+      '/images/stack/postgresql.svg',
+      '/images/stack/mariadb.svg',
+      '/images/stack/wordpress.svg',
+      '/images/stack/git.svg',
+      '/images/stack/github.svg'
+    ];
+
+    const preloadImages = () => {
+      const promises = criticalImages.map(src => {
+        return new Promise((resolve) => {
+          const img = new window.Image();
+          img.src = src;
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      });
+
+      return Promise.all(promises);
+    };
+
+    const handleLoad = async () => {
+      await preloadImages();
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
+    };
+
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+      return () => window.removeEventListener('load', handleLoad);
+    }
   }, []);
 
 
@@ -77,6 +132,7 @@ export default function Home() {
 
   return (
     <>
+      <LoadingScreen isLoading={isLoading} />
       {/* <DebugOverlay enabled={true} /> */}
       <div className="w-full text-white overflow-x-hidden relative">
         <div className="fixed inset-0 w-full h-full z-0">
@@ -107,7 +163,7 @@ export default function Home() {
               logo="/images/logo_netcy_t.svg"
               logoAlt="NETCY"
               items={navItems}
-              baseColor="#000"
+              baseColor="#110F1B"
               menuColor="#E8EFFF"
               buttonBgColor="#6F3FFF"
               buttonTextColor="#E8EFFF"
@@ -623,7 +679,7 @@ export default function Home() {
         </section>
       </div>
 
-      <footer className="border-t border-[#6F3FFF]/20 py-8 px-4 md:px-8 backdrop-blur-sm relative z-40 bg-black/40" style={{ pointerEvents: 'auto' }}>
+      <footer className="border-t border-[#6F3FFF]/20 py-8 px-4 md:px-8 backdrop-blur-sm relative z-40" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(17, 15, 27, 0.4)' }}>
         <div className="max-w-6xl mx-auto text-center text-gray-500">
           <p className="mb-2">
             © 2025 NETCY - Network Cybersecurity. Tous droits réservés.
