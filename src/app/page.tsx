@@ -437,7 +437,74 @@ export default function Home() {
             </div>
 
             <AnimatedContent distance={50} duration={0.8} className="w-full">
-              <form id="contact" className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md relative z-20">
+              <form id="contact" onSubmit={(e) => {
+                e.preventDefault();
+                const form = e.target as HTMLFormElement;
+                const formData = new FormData(form);
+                
+                const nom = formData.get('nom') as string;
+                const email = formData.get('email') as string;
+                const entreprise = formData.get('entreprise') as string;
+                const typeProjet = formData.get('typeProjet') as string;
+                const budget = formData.get('budget') as string;
+                const delai = formData.get('delai') as string;
+                const details = formData.get('details') as string;
+                const privacy = formData.get('privacy') as string;
+
+                if (!privacy) {
+                  alert('Veuillez accepter les conditions d\'utilisation et la politique de confidentialité');
+                  return;
+                }
+
+                const typeProjetLabels: { [key: string]: string } = {
+                  'web': 'Site Web',
+                  'ecommerce': 'E-Commerce',
+                  'consultation': 'Consultation',
+                  'other': 'Autre'
+                };
+
+                const budgetLabels: { [key: string]: string } = {
+                  '1000': 'Moins de 1 000€',
+                  '5000': '1 000€ - 5 000€',
+                  '10000': '5 000€ - 10 000€',
+                  '25000': '10 000€ - 25 000€',
+                  '50000': 'Plus de 25 000€'
+                };
+
+                const delaiLabels: { [key: string]: string } = {
+                  'urgent': 'Urgent (moins d\'un mois)',
+                  'soon': 'Rapide (1-3 mois)',
+                  'flexible': 'Flexible (3+ mois)'
+                };
+
+                const typeLabel = typeProjetLabels[typeProjet] || typeProjet;
+                const subject = `${typeLabel} - ${nom}`;
+                
+                const body = `NOUVEAU CONTACT - FORMULAIRE NETCY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 INFORMATIONS CLIENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nom complet     : ${nom}
+Email           : ${email}
+Entreprise      : ${entreprise || 'Non renseignée'}
+
+💼 DÉTAILS DU PROJET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Type de projet  : ${typeLabel}
+Budget estimé   : ${budget ? budgetLabels[budget] : 'Non renseigné'}
+Délai souhaité  : ${delai ? delaiLabels[delai] : 'Non renseigné'}
+
+📝 DESCRIPTION DU PROJET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${details}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Message envoyé depuis netcy.fr
+`;
+
+                window.location.href = `mailto:contact@netcy.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+              }} className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md relative z-20">
               <div className="mb-8">
                 <h3 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#8FA5FF] to-[#6F3FFF] flex items-center gap-3">
                   <Image src="/images/icons/clipboard.svg" alt="Formulaire" width={40} height={40} />
@@ -450,7 +517,8 @@ export default function Home() {
                 <div>
                   <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Nom Complet *</label>
                   <input 
-                    type="text" 
+                    type="text"
+                    name="nom"
                     required
                     className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
                     placeholder="Votre nom"
@@ -459,7 +527,8 @@ export default function Home() {
                 <div>
                   <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Email *</label>
                   <input 
-                    type="email" 
+                    type="email"
+                    name="email"
                     required
                     className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
                     placeholder="votre@email.com"
@@ -471,14 +540,16 @@ export default function Home() {
                 <div>
                   <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Entreprise</label>
                   <input 
-                    type="text" 
+                    type="text"
+                    name="entreprise"
                     className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
                     placeholder="Votre entreprise"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Type de Projet *</label>
-                  <select 
+                  <select
+                    name="typeProjet"
                     required
                     className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
                   >
@@ -493,7 +564,8 @@ export default function Home() {
 
               <div className="mb-6">
                 <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Budget Estimé</label>
-                <select 
+                <select
+                  name="budget"
                   className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
                 >
                   <option value="">Sélectionnez un budget...</option>
@@ -507,7 +579,8 @@ export default function Home() {
 
               <div className="mb-6">
                 <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Délai Souhaité</label>
-                <select 
+                <select
+                  name="delai"
                   className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
                 >
                   <option value="">Sélectionnez un délai...</option>
@@ -519,7 +592,8 @@ export default function Home() {
 
               <div className="mb-6">
                 <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Détails du Projet *</label>
-                <textarea 
+                <textarea
+                  name="details"
                   rows={5}
                   required
                   className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition resize-none"
@@ -530,11 +604,14 @@ export default function Home() {
               <div className="flex items-center mb-6">
                 <input 
                   type="checkbox"
+                  name="privacy"
                   id="privacy"
+                  value="accepted"
+                  required
                   className="w-4 h-4 rounded bg-[#0f0a20] border border-[#6F3FFF]/30 accent-[#6F3FFF]"
                 />
                 <label htmlFor="privacy" className="ml-2 text-sm text-gray-400">
-                  J&apos;accepte les conditions d&apos;utilisation et la politique de confidentialité
+                  J&apos;accepte les conditions d&apos;utilisation et la politique de confidentialité *
                 </label>
               </div>
 
