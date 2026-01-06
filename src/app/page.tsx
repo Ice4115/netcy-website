@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -36,11 +36,12 @@ export default function Home() {
   const initGooey = useGooeyEffect();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  
-  const isMobile = useMemo(() => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
     const result = isMobileDevice();
     console.log('📱 Device detection - isMobile:', result);
-    return result;
+    setIsMobile(result);
   }, []);
 
   useEffect(() => {
@@ -542,7 +543,9 @@ export default function Home() {
                   if (result.success) {
                     router.push('/contact-success');
                   } else {
-                    alert('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+                    console.error('Erreur API:', result);
+                    const errorMsg = result.error ? `Erreur: ${result.error}` : 'Erreur lors de l\'envoi du message. Veuillez réessayer.';
+                    alert(errorMsg);
                     if (submitButton) {
                       submitButton.disabled = false;
                       submitButton.textContent = 'Envoyer le Message';
