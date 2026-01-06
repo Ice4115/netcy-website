@@ -504,7 +504,7 @@ Message envoyé depuis netcy.fr
 `;
 
                 window.location.href = `mailto:contact@netcy.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-              }} className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md relative z-20">
+              }} className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md relative z-20" style={{ pointerEvents: 'auto' }}>
               <div className="mb-8">
                 <h3 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#8FA5FF] to-[#6F3FFF] flex items-center gap-3">
                   <Image src="/images/icons/clipboard.svg" alt="Formulaire" width={40} height={40} />
@@ -617,7 +617,8 @@ Message envoyé depuis netcy.fr
 
               <button 
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] font-semibold py-3 rounded-lg transition shadow-lg shadow-violet-500/30"
+                className="w-full bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] font-semibold py-3 rounded-lg transition shadow-lg shadow-violet-500/30 cursor-pointer relative z-10"
+                style={{ pointerEvents: 'auto' }}
               >
                 Envoyer le Message
               </button>
