@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import LiquidEther from "@/components/LiquidEther";
@@ -32,6 +33,7 @@ const isMobileDevice = () => {
 
 export default function Home() {
   const initGooey = useGooeyEffect();
+  const router = useRouter();
   
   const isMobile = useMemo(() => {
     const result = isMobileDevice();
@@ -97,7 +99,7 @@ export default function Home() {
         )}
       </div>
       
-      <div className="relative z-10" style={{ pointerEvents: 'none' }}>
+      <div className="relative z-10">
       
         <div className="fixed top-0 w-full z-50 flex items-center" style={{ pointerEvents: 'auto' }}>
           <div className="w-full">
@@ -388,8 +390,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-20 px-4 md:px-8 relative z-10" style={{ scrollMarginTop: '100px', pointerEvents: 'auto' }}>
-          <div className="max-w-4xl mx-auto">
+        <section className="py-20 px-4 md:px-8 relative z-30" style={{ scrollMarginTop: '100px' }}>
+          <div className="max-w-4xl mx-auto" style={{ position: 'relative', zIndex: 30 }}>
               <ScrollFloat scrollContainerRef={null} containerClassName="text-center mb-4 reduced">
                 Parlons de Votre Projet
               </ScrollFloat>
@@ -436,8 +438,8 @@ export default function Home() {
               </AnimatedContent>
             </div>
 
-            <AnimatedContent distance={50} duration={0.8} className="w-full">
-              <form id="contact" onSubmit={(e) => {
+            <div className="w-full" style={{ position: 'relative', zIndex: 100, pointerEvents: 'auto' }}>
+            <form id="contact" onSubmit={async (e) => {
                 e.preventDefault();
                 const form = e.target as HTMLFormElement;
                 const formData = new FormData(form);
@@ -456,55 +458,49 @@ export default function Home() {
                   return;
                 }
 
-                const typeProjetLabels: { [key: string]: string } = {
-                  'web': 'Site Web',
-                  'ecommerce': 'E-Commerce',
-                  'consultation': 'Consultation',
-                  'other': 'Autre'
-                };
+                const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+                if (submitButton) {
+                  submitButton.disabled = true;
+                  submitButton.textContent = 'Envoi en cours...';
+                }
 
-                const budgetLabels: { [key: string]: string } = {
-                  '1000': 'Moins de 1 000€',
-                  '5000': '1 000€ - 5 000€',
-                  '10000': '5 000€ - 10 000€',
-                  '25000': '10 000€ - 25 000€',
-                  '50000': 'Plus de 25 000€'
-                };
+                try {
+                  const response = await fetch('/api/send-email', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      nom,
+                      email,
+                      entreprise,
+                      typeProjet,
+                      budget,
+                      delai,
+                      details,
+                    }),
+                  });
 
-                const delaiLabels: { [key: string]: string } = {
-                  'urgent': 'Urgent (moins d\'un mois)',
-                  'soon': 'Rapide (1-3 mois)',
-                  'flexible': 'Flexible (3+ mois)'
-                };
+                  const result = await response.json();
 
-                const typeLabel = typeProjetLabels[typeProjet] || typeProjet;
-                const subject = `${typeLabel} - ${nom}`;
-                
-                const body = `NOUVEAU CONTACT - FORMULAIRE NETCY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📋 INFORMATIONS CLIENT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Nom complet     : ${nom}
-Email           : ${email}
-Entreprise      : ${entreprise || 'Non renseignée'}
-
-💼 DÉTAILS DU PROJET
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Type de projet  : ${typeLabel}
-Budget estimé   : ${budget ? budgetLabels[budget] : 'Non renseigné'}
-Délai souhaité  : ${delai ? delaiLabels[delai] : 'Non renseigné'}
-
-📝 DESCRIPTION DU PROJET
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${details}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Message envoyé depuis netcy.fr
-`;
-
-                window.location.href = `mailto:contact@netcy.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-              }} className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md relative z-20" style={{ pointerEvents: 'auto' }}>
+                  if (result.success) {
+                    router.push('/contact-success');
+                  } else {
+                    alert('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+                    if (submitButton) {
+                      submitButton.disabled = false;
+                      submitButton.textContent = 'Envoyer le Message';
+                    }
+                  }
+                } catch (error) {
+                  console.error('Erreur:', error);
+                  alert('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+                  if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Envoyer le Message';
+                  }
+                }
+              }} className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md w-full">
               <div className="mb-8">
                 <h3 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#8FA5FF] to-[#6F3FFF] flex items-center gap-3">
                   <Image src="/images/icons/clipboard.svg" alt="Formulaire" width={40} height={40} />
@@ -617,13 +613,12 @@ Message envoyé depuis netcy.fr
 
               <button 
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] font-semibold py-3 rounded-lg transition shadow-lg shadow-violet-500/30 cursor-pointer relative z-10"
-                style={{ pointerEvents: 'auto' }}
+                className="w-full bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] font-semibold py-3 rounded-lg transition shadow-lg shadow-violet-500/30 cursor-pointer"
               >
                 Envoyer le Message
               </button>
             </form>
-            </AnimatedContent>
+            </div>
           </div>
         </section>
       </div>

@@ -514,7 +514,7 @@ export default function LiquidEtherMobile({
         userSelect: 'none',
         WebkitUserSelect: 'none',
         WebkitTouchCallout: 'none',
-        pointerEvents: 'auto',
+        pointerEvents: 'none',
         ...style,
       }}
     />

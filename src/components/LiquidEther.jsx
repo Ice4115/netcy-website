@@ -970,6 +970,7 @@ export default function LiquidEther({
         touchAction: 'none',
         userSelect: 'none',
         WebkitUserSelect: 'none',
+        pointerEvents: 'none',
         ...style 
       }}
     />

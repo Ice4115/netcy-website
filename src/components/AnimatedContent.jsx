@@ -107,7 +107,7 @@ const AnimatedContent = ({
   ]);
 
   return (
-    <div ref={ref} className={className} style={{ visibility: 'hidden' }} {...props}>
+    <div ref={ref} className={className} style={{ visibility: 'hidden', pointerEvents: 'auto', ...props.style }} {...props}>
       {children}
     </div>
   );
