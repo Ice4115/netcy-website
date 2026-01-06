@@ -6,14 +6,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { nom, email, entreprise, typeProjet, budget, delai, details } = body;
 
-    console.log('📧 Tentative d\'envoi d\'email...');
-    console.log('EMAIL_USER:', process.env.EMAIL_USER ? '✅ Configuré' : '❌ Manquant');
-    console.log('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? '✅ Configuré' : '❌ Manquant');
-
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      throw new Error('Variables d\'environnement EMAIL_USER ou EMAIL_PASSWORD manquantes');
-    }
-
     const transporter = nodemailer.createTransport({
       host: 'ssl0.ovh.net',
       port: 587,
@@ -22,8 +14,6 @@ export async function POST(request: NextRequest) {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       },
-      debug: true,
-      logger: true,
     });
 
     const typeProjetLabels: { [key: string]: string } = {
@@ -124,8 +114,7 @@ ${details}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Message envoyé depuis netcy.fr`;
 
-    console.log('📨 Envoi du mail...');
-    const info = await transporter.sendMail({
+    await transporter.sendMail({
       from: `"Formulaire NETCY" <${process.env.EMAIL_USER}>`,
       to: 'contact@netcy.fr',
       subject: subject,
@@ -134,21 +123,11 @@ Message envoyé depuis netcy.fr`;
       replyTo: email,
     });
 
-    console.log('✅ Email envoyé avec succès:', info.messageId);
     return NextResponse.json({ success: true, message: 'Email envoyé avec succès' });
-  } catch (error: any) {
-    console.error('❌ Erreur envoi email:', error);
-    console.error('Code erreur:', error.code);
-    console.error('Message erreur:', error.message);
-    console.error('Stack:', error.stack);
-    
+  } catch (error) {
+    console.error('Erreur envoi email:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        message: 'Erreur lors de l\'envoi de l\'email',
-        error: error.message,
-        code: error.code 
-      },
+      { success: false, message: 'Erreur lors de l\'envoi de l\'email' },
       { status: 500 }
     );
   }
