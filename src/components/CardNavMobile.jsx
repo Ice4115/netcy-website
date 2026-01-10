@@ -174,13 +174,14 @@ const CardNav = ({
             <Image src={logo} alt={logoAlt} className="mobile-logo" width={140} height={47} priority />
           </div>
 
-          <button
-            type="button"
+          <a
+            href="#contact"
             className="mobile-card-nav-cta-button"
             style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
+            onClick={handleLinkClick}
           >
-            Get Started
-          </button>
+            Contact
+          </a>
         </div>
 
         <div className="mobile-card-nav-content" aria-hidden={!isExpanded}>

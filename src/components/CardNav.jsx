@@ -255,6 +255,36 @@ const CardNav = ({
             href="#contact"
             className="card-nav-cta-button"
             style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
+            onClick={() => {
+              if (isExpanded) {
+                const closeWithElasticEffect = () => {
+                  const navEl = navRef.current;
+                  if (!navEl) return;
+
+                  gsap.to(navEl, {
+                    scaleY: 1.15,
+                    duration: 0.15,
+                    ease: 'power2.out',
+                    onComplete: () => {
+                      gsap.to(navEl, {
+                        scaleY: 0.95,
+                        duration: 0.2,
+                        ease: 'back.out',
+                        onComplete: () => {
+                          setIsHamburgerOpen(false);
+                          const tl = tlRef.current;
+                          if (tl) {
+                            tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
+                            tl.reverse();
+                          }
+                        }
+                      });
+                    }
+                  });
+                };
+                closeWithElasticEffect();
+              }
+            }}
           >
             Contact
           </a>
