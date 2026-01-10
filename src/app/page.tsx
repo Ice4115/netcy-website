@@ -38,9 +38,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   
   const isMobile = useMemo(() => {
-    const result = isMobileDevice();
-    console.log('📱 Device detection - isMobile:', result);
-    return result;
+    return isMobileDevice();
   }, []);
 
   useEffect(() => {
@@ -603,7 +601,7 @@ export default function Home() {
                   <select
                     name="typeProjet"
                     required
-                    className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
+                    className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[length:20px] bg-[right_0.75rem_center] hover:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] focus:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')]"
                   >
                     <option value="">Sélectionnez un type...</option>
                     <option value="web">Site Web</option>
@@ -618,7 +616,7 @@ export default function Home() {
                 <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Budget Estimé</label>
                 <select
                   name="budget"
-                  className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
+                  className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[length:20px] bg-[right_0.75rem_center] hover:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] focus:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')]"
                 >
                   <option value="">Sélectionnez un budget...</option>
                   <option value="1000">Moins de 1 000€</option>
@@ -633,7 +631,7 @@ export default function Home() {
                 <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Délai Souhaité</label>
                 <select
                   name="delai"
-                  className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition"
+                  className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[length:20px] bg-[right_0.75rem_center] hover:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] focus:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')]"
                 >
                   <option value="">Sélectionnez un délai...</option>
                   <option value="urgent">Urgent (moins d&apos;un mois)</option>
@@ -653,17 +651,40 @@ export default function Home() {
                 ></textarea>
               </div>
 
-              <div className="flex items-center mb-6">
-                <input 
-                  type="checkbox"
-                  name="privacy"
-                  id="privacy"
-                  value="accepted"
-                  required
-                  className="w-4 h-4 rounded bg-[#0f0a20] border border-[#6F3FFF]/30 accent-[#6F3FFF]"
-                />
-                <label htmlFor="privacy" className="ml-2 text-sm text-gray-400">
-                  J&apos;accepte les conditions d&apos;utilisation et la politique de confidentialité *
+              <div className="flex items-center mb-6 group">
+                <div className="relative flex items-center">
+                  <input 
+                    type="checkbox"
+                    name="privacy"
+                    id="privacy"
+                    value="accepted"
+                    required
+                    className="peer sr-only"
+                  />
+                  <label 
+                    htmlFor="privacy"
+                    className="w-5 h-5 rounded border-2 border-[#6F3FFF]/40 bg-[#0f0a20] cursor-pointer flex items-center justify-center transition-all duration-200 peer-checked:bg-gradient-to-r peer-checked:from-[#6F3FFF] peer-checked:to-[#7A8FFF] peer-checked:border-[#6F3FFF] hover:border-[#6F3FFF] peer-focus:ring-2 peer-focus:ring-[#6F3FFF]/50"
+                  >
+                    <svg 
+                      className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </label>
+                </div>
+                <label htmlFor="privacy" className="ml-3 text-sm text-gray-400 cursor-pointer group-hover:text-gray-300 transition-colors leading-5">
+                  J&apos;accepte les{' '}
+                  <a href="/cgu" target="_blank" rel="noopener noreferrer" className="text-[#7A8FFF] hover:text-[#8FA5FF] underline">
+                    conditions d&apos;utilisation
+                  </a>
+                  {' '}et la{' '}
+                  <a href="/politique-confidentialite" target="_blank" rel="noopener noreferrer" className="text-[#7A8FFF] hover:text-[#8FA5FF] underline">
+                    politique de confidentialité
+                  </a>
+                  {' '}*
                 </label>
               </div>
 
@@ -684,9 +705,33 @@ export default function Home() {
           <p className="mb-2">
             © 2025 NETCY - Network Cybersecurity. Tous droits réservés.
           </p>
-          <p className="text-sm">
+          <p className="text-sm mb-3">
             Création de sites internet & Cybersécurité Réseau | Jung Jean-Marie
           </p>
+          <div className="flex justify-center gap-4 text-sm flex-wrap">
+            <a href="/cgu" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+              CGU
+            </a>
+            <span className="text-gray-600">|</span>
+            <a href="/cgv" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+              CGV
+            </a>
+            <span className="text-gray-600">|</span>
+            <a href="/politique-confidentialite" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+              Politique de Confidentialité
+            </a>
+            <span className="text-gray-600">|</span>
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new Event('openCookieSettings'));
+                }
+              }}
+              className="text-gray-400 hover:text-[#7A8FFF] transition-colors"
+            >
+              Gérer les cookies
+            </button>
+          </div>
         </div>
       </footer>
       </div>
