@@ -83,7 +83,7 @@ export default function Home() {
       await preloadImages();
       setTimeout(() => {
         setIsLoading(false);
-      }, 300);
+      }, 1000);
     };
 
     if (document.readyState === 'complete') {

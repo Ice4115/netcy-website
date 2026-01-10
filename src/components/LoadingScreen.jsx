@@ -22,13 +22,14 @@ const LoadingScreen = ({ isLoading }) => {
           <div className="loading-content">
             <ShinyText
               text="LOADING"
-              speed={2}
+              speed={0.5}
               color="#b5b5b5"
               shineColor="#ffffff"
-              spread={120}
+              spread={125}
               direction="left"
               delay={0}
               className={`loading-text ${montserrat.className}`}
+              yoyo={true}
             />
           </div>
         </motion.div>
