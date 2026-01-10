@@ -79,8 +79,22 @@
   object-fit: contain;
   image-rendering: -webkit-optimize-contrast;
   -webkit-user-drag: none;
-  pointer-events: none;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tooltip-container {
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .logoloop--scale-hover .logoloop__item {

@@ -108,8 +108,8 @@ export default function Home() {
     },
     {
       label: 'À Propos',
-      bgColor: '#0f0a20',
-      textColor: '#7A8FFF',
+      bgColor: '#1a1540',
+      textColor: '#B5C4FF',
       links: [
         { label: 'Qui suis-je', href: '#me', ariaLabel: 'En savoir plus sur moi' },
         { label: 'Mes Compétences', href: '#skill', ariaLabel: 'Voir compétences' },
@@ -118,8 +118,8 @@ export default function Home() {
     },
     {
       label: 'Expertise',
-      bgColor: '#140820',
-      textColor: '#6F3FFF',
+      bgColor: '#251550',
+      textColor: '#CFDBFF',
       links: [
         { label: 'Stack Technologique', href: '#tech', ariaLabel: 'Voir stack technologique' },
         { label: 'Services Détaillés', href: '#services', ariaLabel: 'Voir services détaillés' },
@@ -315,9 +315,9 @@ export default function Home() {
                   { src: '/images/stack/node.svg', alt: 'Node.js', title: 'Node.js' },
                   { src: '/images/stack/tailwind.svg', alt: 'Tailwind CSS', title: 'Tailwind CSS' },
                   { src: '/images/stack/php.svg', alt: 'PHP', title: 'PHP' },
-                  { src: '/images/stack/mysql.svg', alt: 'MySQL', title: 'MySQL', height: 80 },
+                  { src: '/images/stack/mysql.svg', alt: 'MySQL', title: 'MySQL', height: 95 },
                   { src: '/images/stack/postgresql.svg', alt: 'PostgreSQL', title: 'PostgreSQL' },
-                  { src: '/images/stack/mariadb.svg', alt: 'MariaDB', title: 'MariaDB', height: 80 },
+                  { src: '/images/stack/mariadb.svg', alt: 'MariaDB', title: 'MariaDB', height: 95 },
                   { src: '/images/stack/wordpress.svg', alt: 'WordPress', title: 'WordPress' },
                   { src: '/images/stack/git.svg', alt: 'Git', title: 'Git' },
                   { src: '/images/stack/github.svg', alt: 'GitHub', title: 'GitHub' }
@@ -325,8 +325,8 @@ export default function Home() {
                 speed={50}
                 direction="left"
                 pauseOnHover={true}
-                logoHeight={50}
-                gap={60}
+                logoHeight={60}
+                gap={70}
                 fadeOut={false}
                 className="my-8"
               />
@@ -412,18 +412,18 @@ export default function Home() {
                   accentColor: '#4A2FFF'
                 }
               ].map((service, i) => (
-                <AnimatedContent key={i} distance={40} delay={i * 0.15} duration={0.6}>
+                <AnimatedContent key={i} distance={40} delay={i * 0.15} duration={0.6} className="h-full">
                   <GlareHover 
                     width="100%" 
-                    height="auto" 
+                    height="100%" 
                     background="linear-gradient(135deg, #0f0a20 0%, #1a0f3a 100%)"
                     borderColor={service.accentColor}
                     glareColor={service.accentColor}
                     glareOpacity={0.3}
                     glareSize={300}
                   >
-                    <div id={service.id} className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border rounded-lg p-6 h-full flex flex-col" style={{borderColor: service.accentColor + '50'}}>
-                      <div className="mb-4">
+                    <div id={service.id} className="p-6 h-full flex flex-col">
+                      <div className="mb-4 flex items-center" style={{ minHeight: '75px' }}>
                         <Image src={service.icon} alt={service.title} width={service.iconSize} height={service.iconSize} />
                       </div>
                       <h3 className="text-xl md:text-xl font-bold mb-2 transition" style={{color: service.accentColor}}>{service.title}</h3>
@@ -598,46 +598,61 @@ export default function Home() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Type de Projet *</label>
-                  <select
-                    name="typeProjet"
-                    required
-                    className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[length:20px] bg-[right_0.75rem_center] hover:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] focus:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')]"
-                  >
-                    <option value="">Sélectionnez un type...</option>
-                    <option value="web">Site Web</option>
-                    <option value="ecommerce">E-Commerce</option>
-                    <option value="consultation">Consultation</option>
-                    <option value="other">Autre</option>
-                  </select>
+                  <div className="select-wrapper">
+                    <select
+                      name="typeProjet"
+                      required
+                      className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer"
+                    >
+                      <option value="">Sélectionnez un type...</option>
+                      <option value="web">Site Web</option>
+                      <option value="ecommerce">E-Commerce</option>
+                      <option value="consultation">Consultation</option>
+                      <option value="other">Autre</option>
+                    </select>
+                    <svg className="select-arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <polyline points="6 9 12 15 18 9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></polyline>
+                    </svg>
+                  </div>
                 </div>
               </div>
 
               <div className="mb-6">
                 <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Budget Estimé</label>
-                <select
-                  name="budget"
-                  className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[length:20px] bg-[right_0.75rem_center] hover:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] focus:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')]"
-                >
-                  <option value="">Sélectionnez un budget...</option>
-                  <option value="1000">Moins de 1 000€</option>
-                  <option value="5000">1 000€ - 5 000€</option>
-                  <option value="10000">5 000€ - 10 000€</option>
-                  <option value="25000">10 000€ - 25 000€</option>
-                  <option value="50000">Plus de 25 000€</option>
-                </select>
+                <div className="select-wrapper">
+                  <select
+                    name="budget"
+                    className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer"
+                  >
+                    <option value="">Sélectionnez un budget...</option>
+                    <option value="1000">Moins de 1 000€</option>
+                    <option value="5000">1 000€ - 5 000€</option>
+                    <option value="10000">5 000€ - 10 000€</option>
+                    <option value="25000">10 000€ - 25 000€</option>
+                    <option value="50000">Plus de 25 000€</option>
+                  </select>
+                  <svg className="select-arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polyline points="6 9 12 15 18 9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></polyline>
+                  </svg>
+                </div>
               </div>
 
               <div className="mb-6">
                 <label className="block text-sm font-semibold mb-2 text-[#E8EFFF]">Délai Souhaité</label>
-                <select
-                  name="delai"
-                  className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[length:20px] bg-[right_0.75rem_center] hover:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] focus:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')]"
-                >
-                  <option value="">Sélectionnez un délai...</option>
-                  <option value="urgent">Urgent (moins d&apos;un mois)</option>
-                  <option value="soon">Rapide (1-3 mois)</option>
-                  <option value="flexible">Flexible (3+ mois)</option>
-                </select>
+                <div className="select-wrapper">
+                  <select
+                    name="delai"
+                    className="w-full bg-[#0f0a20] border border-[#6F3FFF]/30 rounded-lg px-4 py-2 text-white focus:border-[#6F3FFF] outline-none transition appearance-none cursor-pointer"
+                  >
+                    <option value="">Sélectionnez un délai...</option>
+                    <option value="urgent">Urgent (moins d&apos;un mois)</option>
+                    <option value="soon">Rapide (1-3 mois)</option>
+                    <option value="flexible">Flexible (3+ mois)</option>
+                  </select>
+                  <svg className="select-arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polyline points="6 9 12 15 18 9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></polyline>
+                  </svg>
+                </div>
               </div>
 
               <div className="mb-6">
@@ -703,34 +718,41 @@ export default function Home() {
       <footer className="border-t border-[#6F3FFF]/20 py-8 px-4 md:px-8 backdrop-blur-sm relative z-40" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(17, 15, 27, 0.4)' }}>
         <div className="max-w-6xl mx-auto text-center text-gray-500">
           <p className="mb-2">
-            © 2025 NETCY - Network Cybersecurity. Tous droits réservés.
+            <span className="inline sm:inline">© 2026 NETCY - Network Cybersecurity.</span>
+            <span className="block sm:inline"> Tous droits réservés.</span>
           </p>
           <p className="text-sm mb-3">
-            Création de sites internet & Cybersécurité Réseau | Jung Jean-Marie
+            <span className="inline sm:inline">Création de sites internet & Cybersécurité Réseau</span>
+            <span className="hidden sm:inline"> | </span>
+            <span className="block sm:inline">Jung Jean-Marie</span>
           </p>
-          <div className="flex justify-center gap-4 text-sm flex-wrap">
-            <a href="/cgu" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
-              CGU
-            </a>
-            <span className="text-gray-600">|</span>
-            <a href="/cgv" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
-              CGV
-            </a>
-            <span className="text-gray-600">|</span>
-            <a href="/politique-confidentialite" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
-              Politique de Confidentialité
-            </a>
-            <span className="text-gray-600">|</span>
-            <button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  window.dispatchEvent(new Event('openCookieSettings'));
-                }
-              }}
-              className="text-gray-400 hover:text-[#7A8FFF] transition-colors"
-            >
-              Gérer les cookies
-            </button>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 text-sm">
+            <div className="flex gap-4">
+              <a href="/cgu" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+                CGU
+              </a>
+              <span className="text-gray-600">|</span>
+              <a href="/cgv" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+                CGV
+              </a>
+            </div>
+            <span className="hidden sm:inline text-gray-600">|</span>
+            <div className="flex gap-4">
+              <a href="/politique-confidentialite" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+                Politique de Confidentialité
+              </a>
+              <span className="text-gray-600">|</span>
+              <button
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new Event('openCookieSettings'));
+                  }
+                }}
+                className="text-gray-400 hover:text-[#7A8FFF] transition-colors"
+              >
+                Gérer les cookies
+              </button>
+            </div>
           </div>
         </div>
       </footer>

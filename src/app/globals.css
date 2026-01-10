@@ -147,4 +147,25 @@
   input {
     caret-color: #ffffff;
   }
+  
+  .select-wrapper {
+    position: relative;
+  }
+  
+  .select-arrow {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: transform 0.3s ease;
+  }
+  
+  .select-wrapper select:focus ~ .select-arrow {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  
+  .select-wrapper select {
+    padding-right: 2.5rem;
+  }
 }

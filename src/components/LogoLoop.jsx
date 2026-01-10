@@ -1,6 +1,89 @@
 import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 import './LogoLoop.css';
 
+const TooltipWrapper = ({ children, title }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleClick = (e) => {
+    if (isMobile) {
+      e.preventDefault();
+      setShowTooltip(!showTooltip);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (!isMobile) {
+      setShowTooltip(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isMobile) {
+      setShowTooltip(false);
+    }
+  };
+
+  return (
+    <div 
+      className="tooltip-container"
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ position: 'relative', display: 'inline-block' }}
+    >
+      {children}
+      {showTooltip && title && (
+        <div 
+          className="tooltip-box"
+          style={{
+            position: 'absolute',
+            bottom: '120%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: '#1a0f3a',
+            color: '#A5B4FF',
+            padding: '8px 12px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontWeight: '600',
+            whiteSpace: 'nowrap',
+            zIndex: 1000,
+            border: '1px solid #6F3FFF',
+            boxShadow: '0 4px 12px rgba(111, 63, 255, 0.3)',
+            pointerEvents: 'none',
+            animation: 'fadeIn 0.2s ease-in-out'
+          }}
+        >
+          {title}
+          <div 
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: '6px solid transparent',
+              borderRight: '6px solid transparent',
+              borderTop: '6px solid #6F3FFF'
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ANIMATION_CONFIG = { SMOOTH_TAU: 0.25, MIN_COPIES: 2, COPY_HEADROOM: 2 };
 
 const toCssLength = value => (typeof value === 'number' ? `${value}px` : (value ?? undefined));
@@ -246,13 +329,17 @@ export const LogoLoop = memo(
             width={item.width}
             height={item.height}
             alt={item.alt ?? ''}
-            title={item.title}
             loading="lazy"
             decoding="async"
             draggable={false}
           />
         );
         const itemAriaLabel = isNodeItem ? (item.ariaLabel ?? item.title) : (item.alt ?? item.title);
+        const wrappedContent = (
+          <TooltipWrapper title={item.title}>
+            {content}
+          </TooltipWrapper>
+        );
         const itemContent = item.href ? (
           <a
             className="logoloop__link"
@@ -261,10 +348,10 @@ export const LogoLoop = memo(
             target="_blank"
             rel="noreferrer noopener"
           >
-            {content}
+            {wrappedContent}
           </a>
         ) : (
-          content
+          wrappedContent
         );
         const itemStyle = item.height ? { '--item-height': `${item.height}px` } : undefined;
         return (

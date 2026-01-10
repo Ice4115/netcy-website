@@ -3,11 +3,39 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+
+const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
+  ssr: false,
+});
+
+const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
+  ssr: false,
+});
+
+const isMobileDevice = () => {
+  if (typeof window === 'undefined') return false;
+  const ua = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isSmallScreen = window.innerWidth <= 1024;
+  return ua || isSmallScreen;
+};
 
 export default function ContactSuccess() {
   const router = useRouter();
   const [countdown, setCountdown] = useState(20);
   const [fadeOut, setFadeOut] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+    
+    const handleResize = () => {
+      setIsMobile(isMobileDevice());
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -27,8 +55,27 @@ export default function ContactSuccess() {
   }, [countdown, router]);
 
   return (
-    <div className={`min-h-screen w-full bg-gradient-to-br from-[#0f0a20] via-[#1a0f3a] to-[#0f0a20] flex items-center justify-center px-4 transition-opacity duration-1000 ${fadeOut ? 'opacity-0' : 'opacity-100 animate-fadeIn'}`}>
-      <div className="max-w-2xl w-full bg-gradient-to-br from-[#1a0f3a]/80 to-[#0f0a20]/80 border border-[#6F3FFF]/40 rounded-2xl p-12 shadow-2xl shadow-violet-500/20 backdrop-blur-md text-center">
+    <div className={`relative min-h-screen w-full overflow-hidden flex items-center justify-center px-4 transition-opacity duration-1000 ${fadeOut ? 'opacity-0' : 'opacity-100 animate-fadeIn'}`} style={{ backgroundColor: '#110F1B' }}>
+      <div className="fixed inset-0 w-full h-full z-0">
+        {isMobile ? (
+          <LiquidEtherMobile 
+            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+            mouseForce={80}
+            cursorSize={250}
+            resolution={0.35}
+          />
+        ) : (
+          <LiquidEther 
+            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+            autoDemo={true}
+            autoSpeed={0.5}
+            autoIntensity={2.2}
+            autoResumeDelay={1000}
+            resolution={0.5}
+          />
+        )}
+      </div>
+      <div className="relative z-10 max-w-2xl w-full bg-gradient-to-br from-[#1a0f3a]/80 to-[#0f0a20]/80 border border-[#6F3FFF]/40 rounded-2xl p-12 shadow-2xl shadow-violet-500/20 backdrop-blur-md text-center">
         <div className="flex justify-center mb-6 animate-scaleIn">
           <div className="bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] rounded-full p-6 animate-pulse">
             <Image src="/images/icons/email.svg" alt="Email envoyé" width={80} height={80} className="brightness-200 contrast-100" style={{ filter: 'invert(1) brightness(2)' }} />
@@ -44,12 +91,24 @@ export default function ContactSuccess() {
         </p>
 
         <p className="text-lg text-gray-400 mb-8 animate-slideUp animation-delay-100">
-          Votre email a bien été envoyé. Je vous répondrai dans les plus brefs délais, généralement sous 24h.
+          Votre demande a bien été enregistrée. Je vous répondrai dans les plus brefs délais, généralement sous 24h.
         </p>
+
+        <div className="bg-[#0f0a20]/50 rounded-lg p-6 mb-6 border border-[#6F3FFF]/20 animate-slideUp animation-delay-200">
+          <p className="text-[#8FA5FF] font-semibold mb-2">
+            ✉️ Email de confirmation envoyé
+          </p>
+          <p className="text-gray-300 text-base">
+            Un email de confirmation vous a été envoyé avec le récapitulatif de votre demande.
+          </p>
+          <p className="text-gray-400 text-sm mt-2">
+            Pensez à vérifier vos spams si vous ne le recevez pas.
+          </p>
+        </div>
 
         <div className="bg-[#0f0a20]/50 rounded-lg p-6 mb-8 border border-[#6F3FFF]/20 animate-slideUp animation-delay-200">
           <p className="text-[#8FA5FF] font-semibold mb-2">
-            📧 Email de destination
+            📧 Nous contacter
           </p>
           <p className="text-white text-lg">
             contact@netcy.fr

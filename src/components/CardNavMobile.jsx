@@ -171,7 +171,7 @@ const CardNav = ({
           </div>
 
           <div className="mobile-logo-container">
-            <Image src={logo} alt={logoAlt} className="mobile-logo" width={120} height={40} priority />
+            <Image src={logo} alt={logoAlt} className="mobile-logo" width={140} height={47} priority />
           </div>
 
           <button
