@@ -8,6 +8,8 @@ import './LoadingScreen.css';
 const montserrat = Montserrat({
   weight: '600',
   subsets: ['latin'],
+  display: 'swap',
+  preload: true,
 });
 
 const LoadingScreen = ({ isLoading }) => {

@@ -85,7 +85,7 @@ export default function Home() {
       await preloadImages();
       setTimeout(() => {
         setIsLoading(false);
-      }, 1000);
+      }, 300);
     };
 
     if (document.readyState === 'complete') {
@@ -275,7 +275,7 @@ export default function Home() {
                 <div className="space-y-8">
                   <div className="bg-gradient-to-r from-[#6F3FFF]/20 to-[#7A8FFF]/20 border border-[#6F3FFF]/50 rounded-lg p-6 hover:border-[#6F3FFF] transition shadow-lg shadow-violet-500/10">
                     <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
-                      <Image src="/images/icons/target.svg" alt="Mission" width={40} height={40} />
+                      <Image src="/images/icons/target.svg" alt="Mission" width={40} height={40} priority />
                       Mission
                     </h4>
                     <p className="text-gray-300 text-lg">
@@ -286,7 +286,7 @@ export default function Home() {
                   
                   <div className="bg-gradient-to-r from-[#7A8FFF]/20 to-[#8FA5FF]/20 border border-[#7A8FFF]/50 rounded-lg p-6 hover:border-[#7A8FFF] transition shadow-lg shadow-blue-500/10">
                     <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
-                      <Image src="/images/icons/rocket.svg" alt="Objectif" width={40} height={40} />
+                      <Image src="/images/icons/rocket.svg" alt="Objectif" width={40} height={40} priority />
                       Objectif
                     </h4>
                     <p className="text-gray-300 text-lg">
@@ -297,7 +297,7 @@ export default function Home() {
 
                   <div className="bg-gradient-to-r from-[#8FA5FF]/20 to-[#4A2FFF]/20 border border-[#4A2FFF]/50 rounded-lg p-6 hover:border-[#4A2FFF] transition shadow-lg shadow-indigo-500/10">
                     <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
-                      <Image src="/images/icons/diamond.svg" alt="Philosophie" width={40} height={40} />
+                      <Image src="/images/icons/diamond.svg" alt="Philosophie" width={40} height={40} priority />
                       Philosophie
                     </h4>
                     <p className="text-gray-300 text-lg">

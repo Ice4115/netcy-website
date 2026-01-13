@@ -313,18 +313,21 @@ export const LogoLoop = memo(
 
     const handleDragMove = useCallback((clientX, clientY) => {
       if (!isDragging) return;
-      const delta = isVertical ? (clientY - dragStartRef.current.y) : (clientX - dragStartRef.current.x);
-      const seqSize = isVertical ? seqHeight : seqWidth;
-      if (seqSize > 0) {
-        let newOffset = dragStartRef.current.offset - delta;
-        newOffset = ((newOffset % seqSize) + seqSize) % seqSize;
-        dragOffsetRef.current = newOffset;
-      }
-      const now = Date.now();
-      dragHistoryRef.current.push({ x: clientX, y: clientY, time: now });
-      if (dragHistoryRef.current.length > 5) {
-        dragHistoryRef.current.shift();
-      }
+      
+      window.requestAnimationFrame(() => {
+        const delta = isVertical ? (clientY - dragStartRef.current.y) : (clientX - dragStartRef.current.x);
+        const seqSize = isVertical ? seqHeight : seqWidth;
+        if (seqSize > 0) {
+          let newOffset = dragStartRef.current.offset - delta;
+          newOffset = ((newOffset % seqSize) + seqSize) % seqSize;
+          dragOffsetRef.current = newOffset;
+        }
+        const now = Date.now();
+        dragHistoryRef.current.push({ x: clientX, y: clientY, time: now });
+        if (dragHistoryRef.current.length > 5) {
+          dragHistoryRef.current.shift();
+        }
+      });
     }, [isDragging, isVertical, seqWidth, seqHeight]);
 
     const handleDragEnd = useCallback(() => {

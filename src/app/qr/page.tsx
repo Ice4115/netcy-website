@@ -51,7 +51,7 @@ export default function QRLandingPage() {
       await preloadImages();
       setTimeout(() => {
         setIsLoading(false);
-      }, 1000);
+      }, 300);
     };
 
     if (document.readyState === 'complete') {
