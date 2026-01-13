@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -17,6 +17,7 @@ import AnimatedContent from "@/components/AnimatedContent";
 import GlareHover from "@/components/GlareHover";
 import LogoLoop from "@/components/LogoLoop";
 import LoadingScreen from "@/components/LoadingScreen";
+import StarBorder from "@/components/StarBorder";
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import DebugOverlay from "@/components/DebugOverlay";
@@ -36,9 +37,10 @@ export default function Home() {
   const initGooey = useGooeyEffect();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  
-  const isMobile = useMemo(() => {
-    return isMobileDevice();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
   }, []);
 
   useEffect(() => {
@@ -187,19 +189,23 @@ export default function Home() {
               solides et performantes. Étudiant en BTS SIO, je mets mon expertise au service de votre entreprise.
             </p>
             
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col md:flex-row gap-4 items-center">
               <a 
                 href="#about" 
-                className="px-8 py-3 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] rounded-lg font-semibold transition shadow-lg shadow-violet-500/30"
+                className="inline-flex items-center justify-center bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] rounded-lg font-semibold transition shadow-lg shadow-violet-500/30"
+                style={{ width: '128.8px', height: '35px', padding: '10px 16px', boxSizing: 'content-box' }}
               >
-                Netcy c'est quoi ?
+                Netcy c&apos;est quoi ?
               </a>
-              <a 
-                href="#services" 
-                className="px-8 py-3 border border-[#8FA5FF] hover:bg-[#8FA5FF]/10 rounded-lg font-semibold transition"
+              <StarBorder
+                as="a"
+                href="#services"
+                color="white"
+                speed="3s"
+                thickness={3}
               >
                 Services & Prestations
-              </a>
+              </StarBorder>
             </div>
           </div>
         </section>
