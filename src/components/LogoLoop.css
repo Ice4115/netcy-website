@@ -29,6 +29,11 @@
   user-select: none;
   position: relative;
   z-index: 0;
+  cursor: grab;
+}
+
+.logoloop__track:active {
+  cursor: grabbing;
 }
 
 .logoloop--vertical .logoloop__track {

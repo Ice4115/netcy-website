@@ -721,8 +721,8 @@ export default function Home() {
         </section>
       </div>
 
-      <footer className="border-t border-[#6F3FFF]/20 py-8 px-4 md:px-8 backdrop-blur-sm relative z-40" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(17, 15, 27, 0.4)' }}>
-        <div className="max-w-6xl mx-auto text-center text-gray-500">
+      <footer className="border-t border-[#6F3FFF]/30 py-8 px-4 md:px-8 backdrop-blur-sm relative z-40" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(17, 15, 27, 0.5)' }}>
+        <div className="max-w-6xl mx-auto text-center text-gray-400">
           <p className="mb-2">
             <span className="inline sm:inline">© 2026 NETCY - Network Cybersecurity.</span>
             <span className="block sm:inline"> Tous droits réservés.</span>
@@ -734,27 +734,27 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 text-sm">
             <div className="flex gap-4">
-              <a href="/cgu" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+              <a href="/cgu" className="text-gray-300 hover:text-[#7A8FFF] transition-colors">
                 CGU
               </a>
-              <span className="text-gray-600">|</span>
-              <a href="/cgv" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+              <span className="text-gray-500">|</span>
+              <a href="/cgv" className="text-gray-300 hover:text-[#7A8FFF] transition-colors">
                 CGV
               </a>
             </div>
-            <span className="hidden sm:inline text-gray-600">|</span>
+            <span className="hidden sm:inline text-gray-500">|</span>
             <div className="flex gap-4">
-              <a href="/politique-confidentialite" className="text-gray-400 hover:text-[#7A8FFF] transition-colors">
+              <a href="/politique-confidentialite" className="text-gray-300 hover:text-[#7A8FFF] transition-colors">
                 Politique de Confidentialité
               </a>
-              <span className="text-gray-600">|</span>
+              <span className="text-gray-500">|</span>
               <button
                 onClick={() => {
                   if (typeof window !== 'undefined') {
                     window.dispatchEvent(new Event('openCookieSettings'));
                   }
                 }}
-                className="text-gray-400 hover:text-[#7A8FFF] transition-colors"
+                className="text-gray-300 hover:text-[#7A8FFF] transition-colors"
               >
                 Gérer les cookies
               </button>
