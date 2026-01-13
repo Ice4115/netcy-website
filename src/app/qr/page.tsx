@@ -117,15 +117,16 @@ export default function QRLandingPage() {
               >
                 Contact
               </Link>
-              <StarBorder
-                as={Link}
-                href="/"
-                color="white"
-                speed="3s"
-                thickness={3}
-              >
-                Voir le site
-              </StarBorder>
+              <Link href="/">
+                <StarBorder
+                  as="span"
+                  color="white"
+                  speed="3s"
+                  thickness={3}
+                >
+                  Voir le site
+                </StarBorder>
+              </Link>
             </div>
           </div>
         </section>
