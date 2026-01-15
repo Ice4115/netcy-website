@@ -1,0 +1,31 @@
+# robots.txt for NETCY - https://netcy.fr
+# Création de Sites Internet Sécurisé & Cybersécurité Réseau
+
+User-agent: *
+Allow: /
+Allow: /images/
+Allow: /*.svg
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.webp
+
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Google bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /images/
+
+# Bing bot
+User-agent: Bingbot
+Allow: /
+
+# Sitemap
+Sitemap: https://netcy.fr/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 0

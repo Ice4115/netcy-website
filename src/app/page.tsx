@@ -18,6 +18,7 @@ import GlareHover from "@/components/GlareHover";
 import LogoLoop from "@/components/LogoLoop";
 import LoadingScreen from "@/components/LoadingScreen";
 import StarBorder from "@/components/StarBorder";
+import StructuredData from "@/components/StructuredData";
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import DebugOverlay from "@/components/DebugOverlay";
@@ -132,9 +133,19 @@ export default function Home() {
 
   return (
     <>
+      <StructuredData />
       <LoadingScreen isLoading={isLoading} />
       {/* <DebugOverlay enabled={true} /> */}
       <div className="w-full text-white overflow-x-hidden relative">
+        {/* SEO Content - Hidden for search engines only */}
+        <div className="sr-only" aria-hidden="true">
+          <h1>NETCY - Création de Sites Internet Sécurisé et Cybersécurité Réseau à Montpellier</h1>
+          <p>NETCY, expert en développement web et cybersécurité réseau basé à Montpellier. Netcy propose des services de création de sites internet sécurisés, maintenance web, et conseil en sécurité réseau pour les PME. Jung Jean-Marie, étudiant BTS SIO SISR, développeur full stack spécialisé en Next.js, React, TypeScript et sécurité informatique.</p>
+          <p>Services NETCY Montpellier : création site vitrine, site e-commerce sécurisé, développement web sur mesure, maintenance et support technique, audit de sécurité réseau, conformité RGPD, hébergement web sécurisé, protection cybersécurité PME.</p>
+          <p>Technologies : Next.js, React, TypeScript, Tailwind CSS, Node.js, PHP, MySQL, PostgreSQL, MariaDB, WordPress, Git, GitHub. Stack technique moderne pour sites web performants et sécurisés.</p>
+          <p>Netcy Montpellier - Network Cybersecurity - Jung Jean-Marie - BTS SIO SISR - Développeur web Montpellier - Cybersécurité réseau - Création sites internet - Sites web sécurisés - Maintenance web - Support technique - Audit sécurité - RGPD - Infrastructure réseau - Hébergement sécurisé.</p>
+          <p>Zone d'intervention : Montpellier, Hérault, Occitanie, France. Services pour PME, TPE, entrepreneurs, professionnels. Développement web professionnel, sites responsives, SEO optimisé, performances web, accessibilité, animations modernes.</p>
+        </div>
         <div className="fixed inset-0 w-full h-full z-0">
         {isMobile ? (
           <LiquidEtherMobile 
@@ -161,7 +172,7 @@ export default function Home() {
           <div className="w-full">
             <ResponsiveCardNav
               logo="/images/logo_netcy_t.svg"
-              logoAlt="NETCY"
+              logoAlt="NETCY - Création Sites Internet Sécurisés Montpellier"
               items={navItems}
               baseColor="#110F1B"
               menuColor="#E8EFFF"
@@ -213,6 +224,7 @@ export default function Home() {
         <section id="about" className="py-20 px-4 md:px-8" style={{ pointerEvents: 'auto' }}>
           <div className="max-w-6xl mx-auto">
             <div className="mb-12" id="netcy">
+              <h2 className="sr-only">À Propos de NETCY - Création Sites Web et Cybersécurité Montpellier</h2>
               <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
                 À Propos de NETCY
               </ScrollFloat>
@@ -275,7 +287,7 @@ export default function Home() {
                 <div className="space-y-8">
                   <div className="bg-gradient-to-r from-[#6F3FFF]/20 to-[#7A8FFF]/20 border border-[#6F3FFF]/50 rounded-lg p-6 hover:border-[#6F3FFF] transition shadow-lg shadow-violet-500/10">
                     <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
-                      <Image src="/images/icons/target.svg" alt="Mission" width={40} height={40} priority />
+                      <Image src="/images/icons/target.svg" alt="Mission NETCY - Création sites web sécurisés Montpellier" width={40} height={40} priority />
                       Mission
                     </h4>
                     <p className="text-gray-300 text-lg">
@@ -286,7 +298,7 @@ export default function Home() {
                   
                   <div className="bg-gradient-to-r from-[#7A8FFF]/20 to-[#8FA5FF]/20 border border-[#7A8FFF]/50 rounded-lg p-6 hover:border-[#7A8FFF] transition shadow-lg shadow-blue-500/10">
                     <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
-                      <Image src="/images/icons/rocket.svg" alt="Objectif" width={40} height={40} priority />
+                      <Image src="/images/icons/rocket.svg" alt="Objectif NETCY - Infogérance PME" width={40} height={40} priority />
                       Objectif
                     </h4>
                     <p className="text-gray-300 text-lg">
@@ -297,7 +309,7 @@ export default function Home() {
 
                   <div className="bg-gradient-to-r from-[#8FA5FF]/20 to-[#4A2FFF]/20 border border-[#4A2FFF]/50 rounded-lg p-6 hover:border-[#4A2FFF] transition shadow-lg shadow-indigo-500/10">
                     <h4 className="text-2xl font-bold mb-2 flex items-center gap-3">
-                      <Image src="/images/icons/diamond.svg" alt="Philosophie" width={40} height={40} priority />
+                      <Image src="/images/icons/diamond.svg" alt="Philosophie NETCY - Qualité et Sécurité" width={40} height={40} priority />
                       Philosophie
                     </h4>
                     <p className="text-gray-300 text-lg">
@@ -310,7 +322,7 @@ export default function Home() {
             </div>
             
             <div className="mt-20" id="tech">
-              <h3 className="text-center text-4xl md:text-4xl font-bold mb-12 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Notre Stack Technologique</h3>
+              <h2 className="text-center text-4xl md:text-4xl font-bold mb-12 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Notre Stack Technologique</h2>
               <LogoLoop
                 logos={[
                   { src: '/images/stack/html5.svg', alt: 'HTML5', title: 'HTML5' },
@@ -342,6 +354,7 @@ export default function Home() {
 
         <section className="py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto" id="me">
+            <h2 className="sr-only">Jung Jean-Marie - Développeur Web et Expert Cybersécurité Montpellier</h2>
             <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
               Qui Suis-Je ?
             </ScrollFloat>
@@ -363,7 +376,7 @@ export default function Home() {
               behindGlowSize="80%"
               miniAvatarUrl="/images/profile.png"
               name="Jean-Marie Jung"
-              title="Étudiant BTS SIO"
+              title="Étudiant BTS SIO SISR"
               
               onContactClick={() => {
                 const contactSection = document.getElementById('contact');
@@ -376,6 +389,7 @@ export default function Home() {
 
         <section id="services" className="py-20 px-4 md:px-8" style={{ pointerEvents: 'auto' }}>
           <div className="max-w-6xl mx-auto">
+              <h2 className="sr-only">Services NETCY - Création Sites Web, Maintenance et Cybersécurité Montpellier</h2>
               <ScrollFloat scrollContainerRef={null} containerClassName="text-center reduced mb-6">
                 Services & Prestations
               </ScrollFloat>
@@ -395,6 +409,7 @@ export default function Home() {
                   desc: 'Site vitrine, portfolio ou e-commerce performant et moderne',
                   items: ['Design responsive', 'Performance web', 'SEO optimisé', 'Sécurisé par défaut'],
                   icon: '/images/icons/laptop.svg',
+                  iconAlt: 'Création de sites web Montpellier - NETCY développement Next.js React',
                   iconSize: 75,
                   accentColor: '#6F3FFF'
                   
@@ -405,6 +420,7 @@ export default function Home() {
                   desc: 'Suivi, mises à jour et support pour vos projets web',
                   items: ['Mises à jour', 'Monitoring', 'Sauvegardes', 'Support technique'],
                   icon: '/images/icons/support.svg',
+                  iconAlt: 'Maintenance site web Montpellier - Support technique NETCY',
                   iconSize: 50,
                   accentColor: '#7A8FFF'
                 },
@@ -414,6 +430,7 @@ export default function Home() {
                   desc: 'Évaluation et recommandations pour sécuriser votre infrastructure',
                   items: ['Audit de sécurité', 'Conformité RGPD', 'Bonnes pratiques', 'Documentation'],
                   icon: '/images/icons/lock.svg',
+                  iconAlt: 'Cybersécurité réseau Montpellier - Audit sécurité RGPD NETCY',
                   iconSize: 42,
                   accentColor: '#4A2FFF'
                 }
@@ -430,7 +447,7 @@ export default function Home() {
                   >
                     <div id={service.id} className="p-6 h-full flex flex-col">
                       <div className="mb-4 flex items-center" style={{ minHeight: '75px' }}>
-                        <Image src={service.icon} alt={service.title} width={service.iconSize} height={service.iconSize} />
+                        <Image src={service.icon} alt={service.iconAlt || service.title} width={service.iconSize} height={service.iconSize} />
                       </div>
                       <h3 className="text-xl md:text-xl font-bold mb-2 transition" style={{color: service.accentColor}}>{service.title}</h3>
                       <p className="text-gray-300 text-base md:text-sm mb-4 flex-grow">{service.desc}</p>
@@ -452,6 +469,7 @@ export default function Home() {
 
         <section className="py-20 px-4 md:px-8 relative z-30" style={{ scrollMarginTop: '100px' }}>
           <div className="max-w-4xl mx-auto" style={{ position: 'relative', zIndex: 30 }}>
+              <h2 className="sr-only">Contact NETCY - Devis Gratuit Création Site Web Montpellier</h2>
               <ScrollFloat scrollContainerRef={null} containerClassName="text-center mb-4 reduced">
                 Parlons de Votre Projet
               </ScrollFloat>
@@ -476,7 +494,7 @@ export default function Home() {
               <AnimatedContent distance={40} delay={0} duration={0.6}>
                 <div className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border border-[#6F3FFF]/30 rounded-lg p-6 text-center hover:border-[#6F3FFF] transition shadow-lg shadow-violet-500/10">
                   <div className="flex justify-center mb-4">
-                    <Image src="/images/icons/email.svg" alt="Email" width={56} height={56} />
+                    <Image src="/images/icons/email.svg" alt="Contact email NETCY Montpellier" width={56} height={56} />
                   </div>
                   <h3 className="font-bold mb-2">Email</h3>
                   <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'mailto:' + ['contact', 'netcy.fr'].join('@'); }} className="text-[#8FA5FF] hover:text-[#6F3FFF] transition">
@@ -488,7 +506,7 @@ export default function Home() {
               <AnimatedContent distance={40} delay={0.15} duration={0.6}>
                 <div className="bg-gradient-to-br from-[#0f0a20]/50 to-[#1a0f3a]/50 border border-[#7A8FFF]/30 rounded-lg p-6 text-center hover:border-[#7A8FFF] transition shadow-lg shadow-blue-500/10">
                   <div className="flex justify-center mb-4">
-                    <Image src="/images/icons/smartphone.svg" alt="Instagram" width={34} height={34} />
+                    <Image src="/images/icons/smartphone.svg" alt="Instagram NETCY développeur web Montpellier" width={34} height={34} />
                   </div>
                   <h3 className="font-bold mb-2">Instagram</h3>
                   <a className="text-[#8FA5FF] hover:text-[#7A8FFF] transition">
@@ -562,10 +580,10 @@ export default function Home() {
                 }
               }} className="bg-gradient-to-br from-[#0f0a20]/70 to-[#1a0f3a]/70 border border-[#6F3FFF]/40 rounded-xl p-8 shadow-2xl shadow-violet-500/20 backdrop-blur-md w-full">
               <div className="mb-8">
-                <h3 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#8FA5FF] to-[#6F3FFF] flex items-center gap-3">
-                  <Image src="/images/icons/clipboard.svg" alt="Formulaire" width={40} height={40} />
+                <h2 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#8FA5FF] to-[#6F3FFF] flex items-center gap-3">
+                  <Image src="/images/icons/clipboard.svg" alt="Formulaire contact NETCY Montpellier" width={40} height={40} />
                   Formulaire de Contact
-                </h3>
+                </h2>
                 <p className="text-gray-300 text-sm">Remplissez ce formulaire et je vous recontacterai dans les 24h</p>
               </div>
               
