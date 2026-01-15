@@ -429,13 +429,13 @@
 
 @media (max-width: 768px) {
   .pc-card {
-    height: 70svh;
-    max-height: 450px;
+    height: 80svh;
+    max-height: 560px;
   }
 
 
   .pc-details h3 {
-    font-size: min(4svh, 2.5em);
+    font-size: min(5svh, 3em);
   }
 
   .pc-details p {
@@ -473,14 +473,14 @@
 
 @media (max-width: 480px) {
   .pc-card {
-    height: 60svh;
-    max-height: 380px;
+    height: 72svh;
+    max-height: 490px;
   }
 
  
 
   .pc-details h3 {
-    font-size: min(3.5svh, 2em);
+    font-size: min(4.5svh, 2.5em);
   }
 
   .pc-details p {
@@ -519,12 +519,12 @@
 
 @media (max-width: 320px) {
   .pc-card {
-    height: 55svh;
-    max-height: 320px;
+    height: 68svh;
+    max-height: 420px;
   }
 
   .pc-details h3 {
-    font-size: min(3svh, 1.5em);
+    font-size: min(4svh, 2em);
   }
 
   .pc-details p {

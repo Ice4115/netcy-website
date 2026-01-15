@@ -361,6 +361,8 @@ export default function MetallicPaint({ imageData, params = defaultParams }) {
   const [uniforms, setUniforms] = useState({});
   const totalAnimationTime = useRef(0);
   const lastRenderTime = useRef(0);
+  const animationFrameRef = useRef(null);
+  const isAnimatingRef = useRef(false);
 
   function updateUniforms() {
     if (!gl || !uniforms) return;
@@ -375,11 +377,27 @@ export default function MetallicPaint({ imageData, params = defaultParams }) {
   useEffect(() => {
     function initShader() {
       const canvas = canvasRef.current;
-      const gl = canvas?.getContext('webgl2', {
+      if (!canvas) return;
+
+      const handleContextLost = (event) => {
+        event.preventDefault();
+        console.log('WebGL context lost');
+      };
+
+      const handleContextRestored = () => {
+        console.log('WebGL context restored, reinitializing...');
+        initShader();
+      };
+
+      canvas.addEventListener('webglcontextlost', handleContextLost, false);
+      canvas.addEventListener('webglcontextrestored', handleContextRestored, false);
+
+      const gl = canvas.getContext('webgl2', {
         antialias: true,
-        alpha: true
+        alpha: true,
+        preserveDrawingBuffer: true
       });
-      if (!canvas || !gl) {
+      if (!gl) {
         return;
       }
 
@@ -448,6 +466,14 @@ export default function MetallicPaint({ imageData, params = defaultParams }) {
 
     initShader();
     updateUniforms();
+
+    return () => {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.removeEventListener('webglcontextlost', () => {});
+        canvas.removeEventListener('webglcontextrestored', () => {});
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -458,25 +484,65 @@ export default function MetallicPaint({ imageData, params = defaultParams }) {
   useEffect(() => {
     if (!gl || !uniforms) return;
 
-    let renderId;
+    let isRunning = true;
 
     function render(currentTime) {
+      if (!isRunning) return;
+      
       const deltaTime = currentTime - lastRenderTime.current;
       lastRenderTime.current = currentTime;
 
       totalAnimationTime.current += deltaTime * params.speed;
-      gl.uniform1f(uniforms.u_time, totalAnimationTime.current);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      renderId = requestAnimationFrame(render);
+      
+      try {
+        gl.uniform1f(uniforms.u_time, totalAnimationTime.current);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        isAnimatingRef.current = true;
+      } catch (e) {
+        console.error('Render error:', e);
+        isAnimatingRef.current = false;
+      }
+      
+      animationFrameRef.current = requestAnimationFrame(render);
     }
 
-    lastRenderTime.current = performance.now();
-    renderId = requestAnimationFrame(render);
+    function startAnimation() {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      lastRenderTime.current = performance.now();
+      isAnimatingRef.current = true;
+      animationFrameRef.current = requestAnimationFrame(render);
+    }
+
+    startAnimation();
+
+    const checkInterval = setInterval(() => {
+      if (!isAnimatingRef.current && isRunning) {
+        console.log('Animation stopped, restarting...');
+        startAnimation();
+      }
+      isAnimatingRef.current = false;
+    }, 2000);
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isRunning) {
+        startAnimation();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-      cancelAnimationFrame(renderId);
+      isRunning = false;
+      clearInterval(checkInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
     };
-  }, [gl, params.speed]);
+  }, [gl, params.speed, uniforms]);
 
   useEffect(() => {
     const canvasEl = canvasRef.current;
