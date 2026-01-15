@@ -21,10 +21,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://netcy.fr'),
   title: {
-    default: "NETCY - Création de Sites Internet Sécurisé & Cybersécurité Réseau | Montpellier",
+    default: "NETCY",
     template: "%s | NETCY"
   },
-  description: "NETCY : Expert en création de sites web sécurisés et cybersécurité réseau à Montpellier. Développement web moderne (Next.js, React, TypeScript), maintenance, support technique et conseil en sécurité réseau pour PME. Jung Jean-Marie, étudiant BTS SIO SISR.",
+  description: "Création sites web sécurisés à Montpellier. NETCY : développement Next.js/React, cybersécurité réseau & maintenance PME. Devis gratuit !",
   keywords: [
     "NETCY",
     "Netcy",
@@ -55,9 +55,11 @@ export const metadata: Metadata = {
   classification: "Web Development & Cybersecurity",
   icons: {
     icon: [
+      { url: "/images/logo_tab.png", sizes: "32x32", type: "image/png" },
       { url: "/images/logo_tab.svg", sizes: "any", type: "image/svg+xml" },
     ],
-    apple: "/images/logo_tab.svg",
+    apple: "/images/logo_tab.png",
+    shortcut: "/images/logo_tab.png",
   },
   openGraph: {
     type: "website",
@@ -65,7 +67,7 @@ export const metadata: Metadata = {
     url: "https://netcy.fr",
     siteName: "NETCY",
     title: "NETCY - Création de Sites Internet Sécurisé & Cybersécurité Réseau",
-    description: "Expert en création de sites web sécurisés et cybersécurité réseau à Montpellier. Développement Next.js, React, sécurité réseau pour PME.",
+    description: "Création sites web sécurisés à Montpellier. NETCY : développement Next.js/React, cybersécurité réseau & maintenance PME. Devis gratuit !",
     images: [
       {
         url: "/images/logo_netcy.svg",
@@ -78,7 +80,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "NETCY - Création de Sites Internet Sécurisé & Cybersécurité Réseau",
-    description: "Expert en création de sites web sécurisés et cybersécurité réseau à Montpellier.",
+    description: "Création sites web sécurisés à Montpellier. NETCY : développement Next.js/React, cybersécurité réseau & maintenance PME. Devis gratuit !",
     images: ["/images/logo_netcy.svg"],
     creator: "@netcy",
   },
