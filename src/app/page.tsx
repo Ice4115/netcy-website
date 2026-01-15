@@ -8,22 +8,44 @@ import LiquidEther from "@/components/LiquidEther";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
 import ResponsiveCardNav from "@/components/ResponsiveCardNav";
-import SpotlightCard from "@/components/SpotlightCard";
-import DecryptedText from "@/components/DecryptedText";
-import TrueFocus from "@/components/TrueFocus";
-import ScrollFloat from "@/components/ScrollFloat.jsx";
-import ProfileCard from "@/components/ProfileCard";
-import AnimatedContent from "@/components/AnimatedContent";
-import GlareHover from "@/components/GlareHover";
-import LogoLoop from "@/components/LogoLoop";
-import LoadingScreen from "@/components/LoadingScreen";
 import StarBorder from "@/components/StarBorder";
 import StructuredData from "@/components/StructuredData";
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import DebugOverlay from "@/components/DebugOverlay";
 
 const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
+  ssr: false,
+});
+
+const LoadingScreen = dynamic(() => import("@/components/LoadingScreen"), {
+  ssr: false,
+});
+
+const DecryptedText = dynamic(() => import("@/components/DecryptedText"), {
+  ssr: false,
+});
+
+const TrueFocus = dynamic(() => import("@/components/TrueFocus"), {
+  ssr: false,
+});
+
+const ScrollFloat = dynamic(() => import("@/components/ScrollFloat.jsx"), {
+  ssr: false,
+});
+
+const ProfileCard = dynamic(() => import("@/components/ProfileCard"), {
+  ssr: false,
+});
+
+const AnimatedContent = dynamic(() => import("@/components/AnimatedContent"), {
+  ssr: false,
+});
+
+const GlareHover = dynamic(() => import("@/components/GlareHover"), {
+  ssr: false,
+});
+
+const LogoLoop = dynamic(() => import("@/components/LogoLoop"), {
   ssr: false,
 });
 
@@ -47,26 +69,6 @@ export default function Home() {
   useEffect(() => {
     const criticalImages = [
       '/images/logo_netcy_t.svg',
-      '/images/icons/target.svg',
-      '/images/icons/rocket.svg',
-      '/images/icons/diamond.svg',
-      '/images/profile.png',
-      '/images/iconpattern.png',
-      '/images/grain.webp',
-      '/images/stack/html5.svg',
-      '/images/stack/css3.svg',
-      '/images/stack/js.svg',
-      '/images/stack/typescript.svg',
-      '/images/stack/react.svg',
-      '/images/stack/node.svg',
-      '/images/stack/tailwind.svg',
-      '/images/stack/php.svg',
-      '/images/stack/mysql.svg',
-      '/images/stack/postgresql.svg',
-      '/images/stack/mariadb.svg',
-      '/images/stack/wordpress.svg',
-      '/images/stack/git.svg',
-      '/images/stack/github.svg'
     ];
 
     const preloadImages = () => {
