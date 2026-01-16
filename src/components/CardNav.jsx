@@ -23,9 +23,8 @@ const CardNav = ({
   const navRef = useRef(null);
   const cardsRef = useRef([]);
   const tlRef = useRef(null);
-  const hoverTimeoutRef = useRef(null);
 
-  const COLLAPSED_WIDTH = 325;
+  const COLLAPSED_WIDTH = 400;
   const EXPANDED_WIDTH = 800;
 
   const calculateHeight = () => {
@@ -185,9 +184,11 @@ const CardNav = ({
     if (!isExpanded) {
       setIsHamburgerOpen(true);
       setIsExpanded(true);
+      setIsHovered(false);
       tl.play(0);
     } else {
       setIsHamburgerOpen(false);
+      setIsHovered(false);
       tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
       tl.reverse();
     }

@@ -4,14 +4,18 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import LiquidEther from "@/components/LiquidEther";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
 import ResponsiveCardNav from "@/components/ResponsiveCardNav";
 import StarBorder from "@/components/StarBorder";
 import StructuredData from "@/components/StructuredData";
+import GlareHover from "@/components/GlareHover";
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+
+const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
+  ssr: false,
+});
 
 const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
   ssr: false,
@@ -38,10 +42,6 @@ const ProfileCard = dynamic(() => import("@/components/ProfileCard"), {
 });
 
 const AnimatedContent = dynamic(() => import("@/components/AnimatedContent"), {
-  ssr: false,
-});
-
-const GlareHover = dynamic(() => import("@/components/GlareHover"), {
   ssr: false,
 });
 
@@ -102,13 +102,13 @@ export default function Home() {
 
   const navItems = [
     {
-      label: 'Services',
+      label: 'Expertise',
       bgColor: '#1a0f3a',
       textColor: '#8FA5FF',
       links: [
-        { label: 'Création Web', href: '#services', ariaLabel: 'Voir création web' },
-        { label: 'Maintenance & Support', href: '#services', ariaLabel: 'Voir maintenance' },
-        { label: 'Sécurité Réseau', href: '#services', ariaLabel: 'Voir sécurité réseau' }
+        { label: 'Stack Technologique', href: '#tech', ariaLabel: 'Voir stack technologique' },
+        { label: 'Services Détaillés', href: '#services', ariaLabel: 'Voir services détaillés' },
+        { label: 'Nous Contacter', href: '#contact', ariaLabel: 'Nous contacter' }
       ]
     },
     {
@@ -122,12 +122,12 @@ export default function Home() {
       ]
     },
     {
-      label: 'Expertise',
+      label: 'Compte',
       bgColor: '#251550',
       textColor: '#CFDBFF',
       links: [
-        { label: 'Stack Technologique', href: '#tech', ariaLabel: 'Voir stack technologique' },
-        { label: 'Services Détaillés', href: '#services', ariaLabel: 'Voir services détaillés' },
+        { label: 'Connexion', href: '/connexion', ariaLabel: 'Se connecter' },
+        { label: 'Inscription', href: '#inscription', ariaLabel: 'S&apos;inscrire' },
         { label: 'Nous Contacter', href: '#contact', ariaLabel: 'Nous contacter' }
       ]
     }
