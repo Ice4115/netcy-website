@@ -53,17 +53,31 @@ export default function AdminDashboard() {
   const checkAuth = async () => {
     const user = await getCurrentUser();
     if (!user) {
+      console.error('Aucun utilisateur connecté');
       router.push('/admin/login');
       return;
     }
 
-    const { data: clientData } = await supabase
+    console.log('Utilisateur connecté:', user.id);
+
+    const { data: clientData, error: clientError } = await supabase
       .from('clients')
       .select('role')
       .eq('id', user.id)
       .single();
 
+    console.log('Données client:', clientData);
+    console.log('Erreur client:', clientError);
+
+    if (!clientData) {
+      console.error('Profil client non trouvé dans la table clients. UUID:', user.id);
+      alert(`ERREUR: Profil admin non configuré.\n\nVotre UUID est: ${user.id}\n\nAllez dans Supabase SQL Editor et exécutez:\n\nINSERT INTO clients (id, nom, email, type, role)\nVALUES ('${user.id}', 'Jean-Marie Jung', '${user.email}', 'entreprise', 'admin');`);
+      router.push('/admin/login');
+      return;
+    }
+
     if (clientData?.role !== 'admin') {
+      console.error('Utilisateur non admin. Rôle:', clientData.role);
       router.push('/admin/login');
       return;
     }

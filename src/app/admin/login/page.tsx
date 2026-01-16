@@ -20,16 +20,19 @@ export default function AdminLogin() {
       const { data, error } = await signIn(email, password);
       
       if (error) {
-        setError(error.message);
+        setError(`Erreur de connexion: ${error.message}`);
+        console.error('Erreur Supabase:', error);
         setLoading(false);
         return;
       }
 
       if (data.user) {
+        console.log('Utilisateur connecté:', data.user.id);
         router.push('/admin/dashboard');
       }
-    } catch (err) {
-      setError('Une erreur est survenue lors de la connexion');
+    } catch (err: any) {
+      setError(`Une erreur est survenue: ${err.message || 'Connexion impossible'}`);
+      console.error('Erreur catch:', err);
       setLoading(false);
     }
   };
