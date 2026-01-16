@@ -158,10 +158,11 @@ export default function InscriptionPage() {
       const { data, error: signUpError } = await signUp(email, password);
       
       if (signUpError) {
+        console.error('Erreur signUp:', signUpError);
         if (signUpError.message.includes('already registered')) {
           setError('Cet email est déjà utilisé');
         } else {
-          setError('Erreur lors de l\'inscription. Veuillez réessayer.');
+          setError(`Erreur lors de l'inscription: ${signUpError.message}`);
         }
         setLoading(false);
         return;
@@ -197,6 +198,9 @@ export default function InscriptionPage() {
 
         if (profileError) {
           console.error('Erreur création profil:', profileError);
+          setError(`Erreur création profil: ${profileError.message}`);
+          setLoading(false);
+          return;
         }
 
         setSuccess(true);
@@ -205,7 +209,8 @@ export default function InscriptionPage() {
         }, 3000);
       }
     } catch (err: any) {
-      setError('Une erreur est survenue lors de l\'inscription');
+      console.error('Erreur catch:', err);
+      setError(`Une erreur est survenue: ${err.message || err}`);
       setLoading(false);
     }
   };
