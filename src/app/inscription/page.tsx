@@ -169,6 +169,8 @@ export default function InscriptionPage() {
       }
 
       if (data.user) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         const clientData: any = {
           id: data.user.id,
           nom: nom.trim(),
