@@ -91,7 +91,7 @@ export default function ConnexionPage() {
     }
   };
 
-  const isLocked = lockoutUntil && Date.now() < lockoutUntil;
+  const isLocked = !!(lockoutUntil && Date.now() < lockoutUntil);
 
   return (
     <div className="relative min-h-screen">
