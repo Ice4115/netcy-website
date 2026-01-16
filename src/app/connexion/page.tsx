@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { Fingerprint } from '@/components/animate-ui/icons/fingerprint';
+import { Checkbox } from '@/components/animate-ui/components/base/checkbox';
 import { signIn, getCurrentUser } from '@/lib/supabase';
 
 const LiquidEther = dynamic(() => import('@/components/LiquidEther'), {
@@ -108,7 +110,15 @@ export default function ConnexionPage() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
             <div className="text-center mb-8">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/20 rounded-full mb-4">
-                <span className="text-4xl">👤</span>
+                <Fingerprint 
+                  size={32} 
+                  className="text-purple-400" 
+                  strokeWidth={1.5}
+                  animate={true}
+                  animation="default"
+                  loop={true}
+                  loopDelay={2000}
+                />
               </div>
               <h1 className="text-3xl font-bold text-white mb-2">Connexion</h1>
               <p className="text-gray-300">Accédez à votre espace personnel</p>
@@ -156,10 +166,9 @@ export default function ConnexionPage() {
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center opacity-50 cursor-not-allowed">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     disabled
-                    className="w-4 h-4 bg-white/10 border-white/20 rounded focus:ring-purple-500 focus:ring-2"
+                    className="bg-white/10 border-white/20 focus-visible:ring-purple-500 [&[data-checked]]:bg-purple-500 [&[data-checked]]:text-white"
                   />
                   <span className="ml-2 text-sm text-gray-300">Se souvenir de moi</span>
                 </label>

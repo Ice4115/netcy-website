@@ -4,19 +4,35 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { ClipboardList } from '@/components/animate-ui/icons/clipboard-list';
+import { Send } from '@/components/animate-ui/icons/send';
 import { signUp, getCurrentUser, supabase } from '@/lib/supabase';
+import Stepper, { Step } from '@/components/Stepper';
 
 const LiquidEther = dynamic(() => import('@/components/LiquidEther'), {
+  ssr: false,
+});
+
+const AnimatedContent = dynamic(() => import('@/components/AnimatedContent'), {
   ssr: false,
 });
 
 export default function InscriptionPage() {
   const router = useRouter();
   const [nom, setNom] = useState('');
+  const [prenom, setPrenom] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [type, setType] = useState<'particulier' | 'entreprise' | 'association'>('particulier');
+  const [adresse, setAdresse] = useState('');
+  const [adresseLigne2, setAdresseLigne2] = useState('');
+  const [codePostal, setCodePostal] = useState('');
+  const [pays, setPays] = useState('France');
+  const [telephone, setTelephone] = useState('');
+  const [type, setType] = useState<'particulier' | 'entreprise' | 'entreprise_creation' | 'association'>('particulier');
+  const [nomSociete, setNomSociete] = useState('');
+  const [siret, setSiret] = useState('');
+  const [nomAssociation, setNomAssociation] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,13 +69,51 @@ export default function InscriptionPage() {
       return false;
     }
 
+    if (prenom.trim().length < 2) {
+      setError('Le prénom doit contenir au moins 2 caractères');
+      return false;
+    }
+
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       setError('Format d\'email invalide');
       return false;
     }
 
-    if (password.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractères');
+    if (!adresse.trim()) {
+      setError('L\'adresse est requise');
+      return false;
+    }
+
+    if (!codePostal.trim() || !codePostal.match(/^\d{5}$/)) {
+      setError('Le code postal doit contenir 5 chiffres');
+      return false;
+    }
+
+    if (!telephone.trim() || !telephone.match(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/)) {
+      setError('Format de téléphone invalide (ex: 06 12 34 56 78)');
+      return false;
+    }
+
+    if (type === 'entreprise' || type === 'entreprise_creation') {
+      if (!nomSociete.trim()) {
+        setError('Le nom de la société est requis');
+        return false;
+      }
+      if (type === 'entreprise') {
+        if (!siret.trim() || !siret.match(/^\d{14}$/)) {
+          setError('Le SIRET doit contenir 14 chiffres');
+          return false;
+        }
+      }
+    }
+
+    if (type === 'association' && !nomAssociation.trim()) {
+      setError('Le nom de l\'association est requis');
+      return false;
+    }
+
+    if (password.length < 12) {
+      setError('Le mot de passe doit contenir au moins 12 caractères');
       return false;
     }
 
@@ -91,8 +145,7 @@ export default function InscriptionPage() {
     return true;
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleFinalSubmit = async () => {
     setError('');
 
     if (!validateForm()) {
@@ -115,15 +168,32 @@ export default function InscriptionPage() {
       }
 
       if (data.user) {
+        const clientData: any = {
+          id: data.user.id,
+          nom: nom.trim(),
+          prenom: prenom.trim(),
+          email: email,
+          adresse: adresse.trim(),
+          adresse_ligne2: adresseLigne2.trim() || null,
+          code_postal: codePostal.trim(),
+          pays: pays,
+          telephone: telephone.trim(),
+          type: type,
+          role: 'client'
+        };
+
+        if (type === 'entreprise' || type === 'entreprise_creation') {
+          clientData.nom_societe = nomSociete.trim();
+          if (type === 'entreprise') {
+            clientData.siret = siret.trim();
+          }
+        } else if (type === 'association') {
+          clientData.nom_association = nomAssociation.trim();
+        }
+
         const { error: profileError } = await supabase
           .from('clients')
-          .insert({
-            id: data.user.id,
-            nom: nom.trim(),
-            email: email,
-            type: type,
-            role: 'client'
-          });
+          .insert(clientData);
 
         if (profileError) {
           console.error('Erreur création profil:', profileError);
@@ -165,19 +235,40 @@ export default function InscriptionPage() {
         </div>
         <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
           <div className="w-full max-w-md">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
-                <span className="text-4xl">✓</span>
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
+                  <Send 
+                    size={32} 
+                    className="text-green-400" 
+                    strokeWidth={1.5}
+                    animate={true}
+                    animation="default"
+                    loop={true}
+                    loopDelay={2000}
+                  />
+                </div>
+                <h1 className="text-3xl font-bold text-white mb-2">Inscription réussie !</h1>
+                <p className="text-gray-300">Email de confirmation envoyé</p>
               </div>
-              <h1 className="text-3xl font-bold text-white mb-4">Inscription réussie !</h1>
-              <p className="text-gray-300 mb-6">
-                Un email de confirmation a été envoyé à <strong>{email}</strong>.
-                <br /><br />
-                Veuillez vérifier votre boîte de réception et cliquer sur le lien de confirmation.
-              </p>
-              <p className="text-gray-400 text-sm">
-                Redirection automatique dans 3 secondes...
-              </p>
+              
+              <div className="space-y-4">
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+                  <p className="text-gray-300 text-sm text-center">
+                    Un email de confirmation a été envoyé à <strong className="text-white">{email}</strong>
+                  </p>
+                </div>
+                
+                <p className="text-gray-300 text-sm text-center">
+                  Veuillez vérifier votre boîte de réception et cliquer sur le lien de confirmation pour activer votre compte.
+                </p>
+                
+                <div className="pt-4 border-t border-white/10">
+                  <p className="text-gray-400 text-xs text-center">
+                    Redirection automatique vers la page de connexion dans 3 secondes...
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -196,128 +287,320 @@ export default function InscriptionPage() {
         />
       </div>
       <div className="min-h-screen flex items-center justify-center p-4 relative z-10 py-12">
-        <div className="w-full max-w-md">
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/20 rounded-full mb-4">
-                <span className="text-4xl">📝</span>
-              </div>
-              <h1 className="text-3xl font-bold text-white mb-2">Inscription</h1>
-              <p className="text-gray-300">Créez votre compte NETCY</p>
-            </div>
-
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 mb-6">
-                <p className="text-red-400 text-sm text-center">{error}</p>
-              </div>
-            )}
-
-            <form onSubmit={handleSignUp} className="space-y-5">
-              <div>
-                <label htmlFor="nom" className="block text-sm font-medium text-gray-200 mb-2">
-                  Nom complet *
-                </label>
-                <input
-                  type="text"
-                  id="nom"
-                  value={nom}
-                  onChange={(e) => setNom(e.target.value)}
-                  required
-                  minLength={2}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  placeholder="Jean Dupont"
-                />
+        <div className="w-full max-w-3xl">
+          <AnimatedContent distance={30} duration={0.6}>
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 md:p-10">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/20 rounded-full mb-4">
+                  <ClipboardList 
+                    size={32} 
+                    className="text-purple-400" 
+                    strokeWidth={1.5}
+                    animate={true}
+                    animation="default"
+                    loop={true}
+                    loopDelay={2000}
+                  />
+                </div>
+                <h1 className="text-3xl font-bold text-white mb-2">Inscription</h1>
+                <p className="text-gray-300">Créez votre compte NETCY</p>
               </div>
 
-              <div>
-                <label htmlFor="type" className="block text-sm font-medium text-gray-200 mb-2">
-                  Type de compte *
-                </label>
-                <select
-                  id="type"
-                  value={type}
-                  onChange={(e) => setType(e.target.value as any)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                >
-                  <option value="particulier" className="bg-gray-800">Particulier</option>
-                  <option value="entreprise" className="bg-gray-800">Entreprise</option>
-                  <option value="association" className="bg-gray-800">Association</option>
-                </select>
-              </div>
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 mb-6">
+                  <p className="text-red-400 text-sm text-center">{error}</p>
+                </div>
+              )}
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  placeholder="votre@email.com"
-                />
-              </div>
+            <Stepper
+              onFinalStepCompleted={handleFinalSubmit}
+              nextButtonText="Suivant"
+              backButtonText="Retour"
+            >
+              {/* Étape 1: Type de compte */}
+              <Step>
+                <div className="space-y-4 p-6">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Type de compte</h3>
+                  <label htmlFor="type" className="block text-sm font-medium text-gray-200 mb-2">
+                    Sélectionnez votre type de compte *
+                  </label>
+                  <select
+                    id="type"
+                    value={type}
+                    onChange={(e) => setType(e.target.value as any)}
+                    className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  >
+                    <option value="particulier" className="bg-gray-800">Particulier</option>
+                    <option value="entreprise" className="bg-gray-800">Entreprise</option>
+                    <option value="entreprise_creation" className="bg-gray-800">Entreprise en création</option>
+                    <option value="association" className="bg-gray-800">Association</option>
+                  </select>
+                </div>
+              </Step>
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-2">
-                  Mot de passe *
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={8}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  placeholder="••••••••"
-                />
-                {password && (
-                  <div className="mt-2">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs text-gray-400">Force du mot de passe</span>
-                      <span className={`text-xs font-semibold ${passwordStrength >= 80 ? 'text-green-400' : passwordStrength >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
-                        {getStrengthText()}
-                      </span>
+              {/* Étape 2: Informations personnelles + Entreprise/Association */}
+              <Step>
+                <div className="space-y-6 p-6">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Informations personnelles</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col">
+                      <label htmlFor="nom" className="block text-sm font-medium text-gray-200 mb-2">
+                        Nom *
+                      </label>
+                      <input
+                        type="text"
+                        id="nom"
+                        value={nom}
+                        onChange={(e) => setNom(e.target.value)}
+                        required
+                        minLength={2}
+                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        placeholder="Dupont"
+                      />
                     </div>
-                    <div className="w-full bg-white/10 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full transition-all ${getStrengthColor()}`}
-                        style={{ width: `${passwordStrength}%` }}
-                      ></div>
+                    <div className="flex flex-col">
+                      <label htmlFor="prenom" className="block text-sm font-medium text-gray-200 mb-2">
+                        Prénom *
+                      </label>
+                      <input
+                        type="text"
+                        id="prenom"
+                        value={prenom}
+                        onChange={(e) => setPrenom(e.target.value)}
+                        required
+                        minLength={2}
+                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        placeholder="Jean"
+                      />
                     </div>
                   </div>
-                )}
-                <p className="mt-2 text-xs text-gray-400">
-                  Min 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
-                </p>
-              </div>
 
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-200 mb-2">
-                  Confirmer le mot de passe *
-                </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  placeholder="••••••••"
-                />
-              </div>
+                  {(type === 'entreprise' || type === 'entreprise_creation') && (
+                    <div className="space-y-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg p-4 border border-purple-500/20 mt-6">
+                      <h4 className="text-lg font-semibold text-white border-b border-purple-500/30 pb-2">Informations entreprise</h4>
+                      <div>
+                        <label htmlFor="nomSociete" className="block text-sm font-medium text-gray-200 mb-2">
+                          Nom de la société *
+                        </label>
+                        <input
+                          type="text"
+                          id="nomSociete"
+                          value={nomSociete}
+                          onChange={(e) => setNomSociete(e.target.value)}
+                          required
+                          className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                          placeholder="Ma Société SARL"
+                        />
+                      </div>
+                      {type === 'entreprise' && (
+                        <div>
+                          <label htmlFor="siret" className="block text-sm font-medium text-gray-200 mb-2">
+                            SIRET *
+                          </label>
+                          <input
+                            type="text"
+                            id="siret"
+                            value={siret}
+                            onChange={(e) => setSiret(e.target.value)}
+                            required
+                            maxLength={14}
+                            className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                            placeholder="12345678901234"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Inscription en cours...' : 'S\'inscrire'}
-              </button>
-            </form>
+                  {type === 'association' && (
+                    <div className="space-y-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg p-4 border border-purple-500/20 mt-6">
+                      <h4 className="text-lg font-semibold text-white border-b border-purple-500/30 pb-2">Informations association</h4>
+                      <div>
+                        <label htmlFor="nomAssociation" className="block text-sm font-medium text-gray-200 mb-2">
+                          Nom de l&apos;association *
+                        </label>
+                        <input
+                          type="text"
+                          id="nomAssociation"
+                          value={nomAssociation}
+                          onChange={(e) => setNomAssociation(e.target.value)}
+                          required
+                          className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                          placeholder="Mon Association"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Step>
+
+              {/* Étape 3: Contact */}
+              <Step>
+                <div className="space-y-6 p-6">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Contact</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col">
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
+                        Email *
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        placeholder="votre@email.com"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label htmlFor="telephone" className="block text-sm font-medium text-gray-200 mb-2">
+                        Téléphone *
+                      </label>
+                      <input
+                        type="tel"
+                        id="telephone"
+                        value={telephone}
+                        onChange={(e) => setTelephone(e.target.value)}
+                        required
+                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        placeholder="06 12 34 56 78"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Step>
+
+              {/* Étape 4: Adresse */}
+              <Step>
+                <div className="space-y-6 p-6">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Adresse</h3>
+                  
+                  <div>
+                    <label htmlFor="adresse" className="block text-sm font-medium text-gray-200 mb-2">
+                      Adresse *
+                    </label>
+                    <input
+                      type="text"
+                      id="adresse"
+                      value={adresse}
+                      onChange={(e) => setAdresse(e.target.value)}
+                      required
+                      className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                      placeholder="123 Rue de la Paix"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="adresseLigne2" className="block text-sm font-medium text-gray-200 mb-2">
+                      Complément d&apos;adresse (facultatif)
+                    </label>
+                    <input
+                      type="text"
+                      id="adresseLigne2"
+                      value={adresseLigne2}
+                      onChange={(e) => setAdresseLigne2(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                      placeholder="Appartement, étage, bâtiment..."
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col">
+                      <label htmlFor="codePostal" className="block text-sm font-medium text-gray-200 mb-2">
+                        Code postal *
+                      </label>
+                      <input
+                        type="text"
+                        id="codePostal"
+                        value={codePostal}
+                        onChange={(e) => setCodePostal(e.target.value)}
+                        required
+                        maxLength={5}
+                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        placeholder="75001"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label htmlFor="pays" className="block text-sm font-medium text-gray-200 mb-2">
+                        Pays *
+                      </label>
+                      <input
+                        type="text"
+                        id="pays"
+                        value={pays}
+                        onChange={(e) => setPays(e.target.value)}
+                        required
+                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        placeholder="France"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Step>
+
+              {/* Étape 5: Sécurité */}
+              <Step>
+                <div className="space-y-6 p-6">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Sécurité</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-2">
+                          Mot de passe *
+                        </label>
+                        <input
+                          type="password"
+                          id="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                          minLength={12}
+                          className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                          placeholder="••••••••••••"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-200 mb-2">
+                          Confirmer le mot de passe *
+                        </label>
+                        <input
+                          type="password"
+                          id="confirmPassword"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          required
+                          className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                          placeholder="••••••••••••"
+                        />
+                      </div>
+                    </div>
+                    
+                    {password && (
+                      <div className="mt-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs text-gray-400">Force du mot de passe</span>
+                          <span className={`text-xs font-semibold ${passwordStrength >= 80 ? 'text-green-400' : passwordStrength >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
+                            {getStrengthText()}
+                          </span>
+                        </div>
+                        <div className="w-full bg-white/10 rounded-full h-2">
+                          <div
+                            className={`h-2 rounded-full transition-all ${getStrengthColor()}`}
+                            style={{ width: `${passwordStrength}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <p className="text-xs text-gray-400">
+                      Min 12 caractères, majuscules, minuscules, chiffres et caractères spéciaux
+                    </p>
+                  </div>
+                </div>
+              </Step>
+            </Stepper>
 
             <div className="mt-6 text-center">
               <p className="text-gray-300 text-sm">
@@ -327,13 +610,16 @@ export default function InscriptionPage() {
                 </Link>
               </p>
             </div>
-          </div>
+            </div>
+          </AnimatedContent>
 
-          <div className="mt-8 text-center">
-            <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
-              ← Retour à l&apos;accueil
-            </Link>
-          </div>
+          <AnimatedContent distance={20} duration={0.5} delay={0.8}>
+            <div className="mt-8 text-center">
+              <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
+                ← Retour à l&apos;accueil
+              </Link>
+            </div>
+          </AnimatedContent>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ import ResponsiveCardNav from "@/components/ResponsiveCardNav";
 import StarBorder from "@/components/StarBorder";
 import StructuredData from "@/components/StructuredData";
 import GlareHover from "@/components/GlareHover";
+import { Checkbox } from '@/components/animate-ui/components/base/checkbox';
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -61,6 +62,7 @@ export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
@@ -693,29 +695,14 @@ export default function Home() {
               </div>
 
               <div className="flex items-center mb-6 group">
-                <div className="relative flex items-center">
-                  <input 
-                    type="checkbox"
-                    name="privacy"
-                    id="privacy"
-                    value="accepted"
-                    required
-                    className="peer sr-only"
-                  />
-                  <label 
-                    htmlFor="privacy"
-                    className="w-5 h-5 rounded border-2 border-[#6F3FFF]/40 bg-[#0f0a20] cursor-pointer flex items-center justify-center transition-all duration-200 peer-checked:bg-gradient-to-r peer-checked:from-[#6F3FFF] peer-checked:to-[#7A8FFF] peer-checked:border-[#6F3FFF] hover:border-[#6F3FFF] peer-focus:ring-2 peer-focus:ring-[#6F3FFF]/50"
-                  >
-                    <svg 
-                      className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </label>
-                </div>
+                <Checkbox
+                  name="privacy"
+                  id="privacy"
+                  required
+                  checked={privacyAccepted}
+                  onCheckedChange={setPrivacyAccepted}
+                  className="border-[#6F3FFF]/40 bg-[#0f0a20] focus-visible:ring-[#6F3FFF]/50 [&[data-checked]]:bg-gradient-to-r [&[data-checked]]:from-[#6F3FFF] [&[data-checked]]:to-[#7A8FFF] [&[data-checked]]:border-[#6F3FFF] hover:border-[#6F3FFF]"
+                />
                 <label htmlFor="privacy" className="ml-3 text-sm text-gray-400 cursor-pointer group-hover:text-gray-300 transition-colors leading-5">
                   J&apos;accepte les{' '}
                   <a href="/cgu" target="_blank" rel="noopener noreferrer" className="text-[#7A8FFF] hover:text-[#8FA5FF] underline">
