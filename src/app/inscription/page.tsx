@@ -171,7 +171,20 @@ export default function InscriptionPage() {
       if (data.user) {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const clientData: any = {
+        const clientData: {
+          nom: string;
+          prenom: string;
+          adresse: string;
+          adresse_ligne2: string | null;
+          code_postal: string;
+          pays: string;
+          telephone: string;
+          type: string;
+          nom_societe?: string;
+          siret?: string;
+          nom_association?: string;
+          entreprise?: string;
+        } = {
           nom: nom.trim(),
           prenom: prenom.trim(),
           adresse: adresse.trim(),
@@ -184,11 +197,15 @@ export default function InscriptionPage() {
 
         if (type === 'entreprise' || type === 'entreprise_creation') {
           clientData.nom_societe = nomSociete.trim();
+          clientData.entreprise = nomSociete.trim();
           if (type === 'entreprise') {
             clientData.siret = siret.trim();
           }
         } else if (type === 'association') {
           clientData.nom_association = nomAssociation.trim();
+          clientData.entreprise = nomAssociation.trim();
+        } else {
+          clientData.entreprise = 'Particulier';
         }
 
         const { error: profileError } = await supabase
