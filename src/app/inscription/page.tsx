@@ -45,7 +45,7 @@ export default function InscriptionPage() {
   const checkIfLoggedIn = async () => {
     const user = await getCurrentUser();
     if (user) {
-      router.push('/espace-client');
+      router.push('/client');
     }
   };
 

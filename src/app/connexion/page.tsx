@@ -37,7 +37,7 @@ export default function ConnexionPage() {
   const checkIfLoggedIn = async () => {
     const user = await getCurrentUser();
     if (user) {
-      router.push('/espace-client');
+      router.push('/client');
     }
   };
 
@@ -85,7 +85,7 @@ export default function ConnexionPage() {
 
       if (data.user) {
         localStorage.removeItem('loginAttempts');
-        router.push('/espace-client');
+        router.push('/client');
       }
     } catch (err: any) {
       setError('Une erreur est survenue');
