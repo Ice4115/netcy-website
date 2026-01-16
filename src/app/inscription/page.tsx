@@ -169,20 +169,17 @@ export default function InscriptionPage() {
       }
 
       if (data.user) {
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         const clientData: any = {
-          id: data.user.id,
           nom: nom.trim(),
           prenom: prenom.trim(),
-          email: email,
           adresse: adresse.trim(),
           adresse_ligne2: adresseLigne2.trim() || null,
           code_postal: codePostal.trim(),
           pays: pays,
           telephone: telephone.trim(),
-          type: type,
-          role: 'client'
+          type: type
         };
 
         if (type === 'entreprise' || type === 'entreprise_creation') {
@@ -196,11 +193,12 @@ export default function InscriptionPage() {
 
         const { error: profileError } = await supabase
           .from('clients')
-          .insert(clientData);
+          .update(clientData)
+          .eq('id', data.user.id);
 
         if (profileError) {
-          console.error('Erreur création profil:', profileError);
-          setError(`Erreur création profil: ${profileError.message}`);
+          console.error('Erreur mise à jour profil:', profileError);
+          setError(`Erreur mise à jour profil: ${profileError.message}`);
           setLoading(false);
           return;
         }
