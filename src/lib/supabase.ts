@@ -5,7 +5,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export const signUp = async (email: string, password: string) => {
+export const signUp = async (email: string, password: string, additionalData?: any) => {
   const result = await supabase.auth.signUp({
     email,
     password,
@@ -18,13 +18,21 @@ export const signUp = async (email: string, password: string) => {
   });
 
   if (result.data.user) {
-    await supabase
+    const clientRecord = {
+      id: result.data.user.id,
+      email: email,
+      role: 'client',
+      ...additionalData
+    };
+
+    const { error: insertError } = await supabase
       .from('clients')
-      .insert({
-        id: result.data.user.id,
-        email: email,
-        role: 'client'
-      });
+      .insert(clientRecord);
+
+    if (insertError) {
+      console.error('Erreur insertion client:', insertError);
+      return { ...result, error: insertError };
+    }
   }
 
   return result;

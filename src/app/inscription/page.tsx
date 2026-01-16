@@ -155,7 +155,44 @@ export default function InscriptionPage() {
     setLoading(true);
 
     try {
-      const { data, error: signUpError } = await signUp(email, password);
+      const clientData: {
+        nom: string;
+        prenom: string;
+        adresse: string;
+        adresse_ligne2: string | null;
+        code_postal: string;
+        pays: string;
+        telephone: string;
+        type: string;
+        nom_societe?: string;
+        siret?: string;
+        nom_association?: string;
+        entreprise?: string;
+      } = {
+        nom: nom.trim(),
+        prenom: prenom.trim(),
+        adresse: adresse.trim(),
+        adresse_ligne2: adresseLigne2.trim() || null,
+        code_postal: codePostal.trim(),
+        pays: pays,
+        telephone: telephone.trim(),
+        type: type
+      };
+
+      if (type === 'entreprise' || type === 'entreprise_creation') {
+        clientData.nom_societe = nomSociete.trim();
+        clientData.entreprise = nomSociete.trim();
+        if (type === 'entreprise') {
+          clientData.siret = siret.trim();
+        }
+      } else if (type === 'association') {
+        clientData.nom_association = nomAssociation.trim();
+        clientData.entreprise = nomAssociation.trim();
+      } else {
+        clientData.entreprise = 'Particulier';
+      }
+
+      const { data, error: signUpError } = await signUp(email, password, clientData);
       
       if (signUpError) {
         console.error('Erreur signUp:', signUpError);
@@ -169,57 +206,6 @@ export default function InscriptionPage() {
       }
 
       if (data.user) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        const clientData: {
-          nom: string;
-          prenom: string;
-          adresse: string;
-          adresse_ligne2: string | null;
-          code_postal: string;
-          pays: string;
-          telephone: string;
-          type: string;
-          nom_societe?: string;
-          siret?: string;
-          nom_association?: string;
-          entreprise?: string;
-        } = {
-          nom: nom.trim(),
-          prenom: prenom.trim(),
-          adresse: adresse.trim(),
-          adresse_ligne2: adresseLigne2.trim() || null,
-          code_postal: codePostal.trim(),
-          pays: pays,
-          telephone: telephone.trim(),
-          type: type
-        };
-
-        if (type === 'entreprise' || type === 'entreprise_creation') {
-          clientData.nom_societe = nomSociete.trim();
-          clientData.entreprise = nomSociete.trim();
-          if (type === 'entreprise') {
-            clientData.siret = siret.trim();
-          }
-        } else if (type === 'association') {
-          clientData.nom_association = nomAssociation.trim();
-          clientData.entreprise = nomAssociation.trim();
-        } else {
-          clientData.entreprise = 'Particulier';
-        }
-
-        const { error: profileError } = await supabase
-          .from('clients')
-          .update(clientData)
-          .eq('id', data.user.id);
-
-        if (profileError) {
-          console.error('Erreur mise à jour profil:', profileError);
-          setError(`Erreur mise à jour profil: ${profileError.message}`);
-          setLoading(false);
-          return;
-        }
-
         setSuccess(true);
         setTimeout(() => {
           router.push('/connexion');
