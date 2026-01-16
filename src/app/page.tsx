@@ -127,7 +127,7 @@ export default function Home() {
       textColor: '#CFDBFF',
       links: [
         { label: 'Connexion', href: '/connexion', ariaLabel: 'Se connecter' },
-        { label: 'Inscription', href: '#inscription', ariaLabel: 'S&apos;inscrire' },
+        { label: 'Inscription', href: '/inscription', ariaLabel: 'S&apos;inscrire' },
         { label: 'Nous Contacter', href: '#contact', ariaLabel: 'Nous contacter' }
       ]
     }
