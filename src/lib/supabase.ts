@@ -18,16 +18,37 @@ export const signUp = async (email: string, password: string, additionalData?: a
   });
 
   if (result.data.user && additionalData) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    let retries = 0;
+    const maxRetries = 5;
+    
+    while (retries < maxRetries) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const { data: existingClient } = await supabase
+        .from('clients')
+        .select('id')
+        .eq('id', result.data.user.id)
+        .single();
+      
+      if (existingClient) {
+        const { error: updateError } = await supabase
+          .from('clients')
+          .update(additionalData)
+          .eq('id', result.data.user.id);
 
-    const { error: updateError } = await supabase
-      .from('clients')
-      .update(additionalData)
-      .eq('id', result.data.user.id);
-
-    if (updateError) {
-      console.error('Erreur mise à jour client:', updateError);
-      return { ...result, error: updateError };
+        if (updateError) {
+          console.error('Erreur mise à jour client:', updateError);
+          return { ...result, error: updateError };
+        }
+        break;
+      }
+      
+      retries++;
+    }
+    
+    if (retries === maxRetries) {
+      console.error('Le profil client n\'a pas été créé par le trigger');
+      return { ...result, error: { message: 'Erreur création profil' } };
     }
   }
 
