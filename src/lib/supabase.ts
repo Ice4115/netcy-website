@@ -17,21 +17,17 @@ export const signUp = async (email: string, password: string, additionalData?: a
     }
   });
 
-  if (result.data.user) {
-    const clientRecord = {
-      id: result.data.user.id,
-      email: email,
-      role: 'client',
-      ...additionalData
-    };
+  if (result.data.user && additionalData) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const { error: insertError } = await supabase
+    const { error: updateError } = await supabase
       .from('clients')
-      .insert(clientRecord);
+      .update(additionalData)
+      .eq('id', result.data.user.id);
 
-    if (insertError) {
-      console.error('Erreur insertion client:', insertError);
-      return { ...result, error: insertError };
+    if (updateError) {
+      console.error('Erreur mise à jour client:', updateError);
+      return { ...result, error: updateError };
     }
   }
 

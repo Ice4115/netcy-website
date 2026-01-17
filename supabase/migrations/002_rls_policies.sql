@@ -2,6 +2,12 @@
 -- Policies pour les CLIENTS
 -- ========================================
 
+-- Client peut créer son propre profil lors de l'inscription
+create policy "Client crée son profil"
+on clients
+for insert
+with check (auth.uid() = id);
+
 -- Client voit son propre profil
 create policy "Client voit son profil"
 on clients
