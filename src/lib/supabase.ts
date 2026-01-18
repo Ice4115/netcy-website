@@ -6,11 +6,13 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export const signUp = async (email: string, password: string, additionalData?: any) => {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.netcy.fr';
+  
   const result = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/connexion`,
+      emailRedirectTo: `${origin}/connexion`,
       data: {
         email: email
       }
