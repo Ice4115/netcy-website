@@ -15,6 +15,7 @@ export default function ClientLayout({
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   const checkAuth = async () => {
     const user = await getCurrentUser();
@@ -28,6 +29,15 @@ export default function ClientLayout({
 
   useEffect(() => {
     checkAuth();
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const dockItems = [
@@ -87,10 +97,10 @@ export default function ClientLayout({
       <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-4">
         <Dock 
           items={dockItems}
-          magnification={70}
-          distance={200}
-          panelHeight={68}
-          baseItemSize={50}
+          magnification={isMobile ? 55 : 70}
+          distance={isMobile ? 120 : 200}
+          panelHeight={isMobile ? 60 : 68}
+          baseItemSize={isMobile ? 44 : 50}
         />
       </div>
     </div>
