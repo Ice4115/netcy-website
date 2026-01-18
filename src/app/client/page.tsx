@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase, getCurrentUser } from '@/lib/supabase';
 import { TrendingUp, CheckCircle, Clock, Percent } from 'lucide-react';
 import { gsap } from 'gsap';
@@ -92,6 +93,7 @@ const StatCard = ({
 };
 
 export default function ClientDashboard() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<Stats>({
     totalProjects: 0,
@@ -203,15 +205,22 @@ export default function ClientDashboard() {
             <p className="text-gray-400 text-center py-12">Aucun projet pour le moment</p>
           ) : (
             <div className="space-y-4">
-              {projects.slice(0, 5).map((project) => (
+              {projects.slice(0, 5).map((project, index) => (
                 <div
                   key={project.id}
-                  className="bg-[#060010] border border-[#392e4e] rounded-xl p-6 hover:border-[#6F3FFF]/50 transition-all group"
+                  onClick={() => router.push('/client/suivie')}
+                  className="bg-[#060010] border border-[#392e4e] rounded-xl p-6 hover:border-[#6F3FFF]/50 transition-all duration-300 group cursor-pointer hover:scale-[1.02] hover:shadow-lg hover:shadow-[#6F3FFF]/20 animate-slide-in-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-white group-hover:text-[#8FA5FF] transition-colors">
-                      {project.titre}
-                    </h3>
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-xl font-bold text-white group-hover:text-[#8FA5FF] transition-colors">
+                        {project.titre}
+                      </h3>
+                      <svg className="w-5 h-5 text-[#6F3FFF] group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                     <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                       project.status === 'en_cours' 
                         ? 'bg-blue-400/10 text-blue-400' 

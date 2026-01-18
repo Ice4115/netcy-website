@@ -177,11 +177,12 @@ export default function SuiviePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project, index) => (
               <SpotlightCard
                 key={project.id}
-                className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#392e4e] rounded-2xl p-6 hover:border-[#6F3FFF]/50 transition-all"
+                className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#392e4e] rounded-2xl p-6 hover:border-[#6F3FFF]/50 transition-all animate-slide-in-up"
                 spotlightColor="rgba(111, 63, 255, 0.25)"
+                style={{ animationDelay: `${index * 150}ms` }}
               >
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 gap-3">
                   <div>
@@ -202,22 +203,29 @@ export default function SuiviePage() {
 
                 {project.messages && project.messages.length > 0 && (
                   <div className="mb-6 space-y-2">
-                    <div className="flex items-center gap-2 mb-3">
-                      <MessageCircle className="text-[#6F3FFF]" size={18} />
+                    <div className="flex items-center gap-2 mb-3 animate-fade-in">
+                      <MessageCircle className="text-[#6F3FFF] animate-pulse" size={18} />
                       <h4 className="text-sm font-semibold text-white">Messages récents</h4>
                     </div>
-                    {project.messages.map((message) => (
+                    {project.messages.map((message, index) => (
                       <div
                         key={message.id}
-                        className="bg-[#060010]/50 border border-[#6F3FFF]/20 rounded-lg p-3 hover:border-[#6F3FFF]/40 transition"
+                        className="bg-[#060010]/50 border border-[#6F3FFF]/20 rounded-lg p-3 hover:border-[#6F3FFF]/40 hover:bg-[#6F3FFF]/5 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#6F3FFF]/10 animate-slide-in-up cursor-pointer"
+                        style={{ animationDelay: `${index * 100}ms` }}
                       >
                         <div className="flex items-start justify-between gap-2 mb-1">
-                          <h5 className="text-sm font-semibold text-white">{message.sujet}</h5>
+                          <h5 className="text-sm font-semibold text-white group-hover:text-[#8FA5FF] transition-colors">{message.sujet}</h5>
                           <span className="text-xs text-gray-500 whitespace-nowrap">
                             {new Date(message.created_at).toLocaleDateString('fr-FR')}
                           </span>
                         </div>
                         <p className="text-xs text-gray-400 line-clamp-2">{message.contenu}</p>
+                        {!message.lu && (
+                          <div className="mt-2 flex items-center gap-1">
+                            <div className="w-2 h-2 bg-[#6F3FFF] rounded-full animate-ping" />
+                            <span className="text-xs text-[#6F3FFF] font-semibold">Nouveau</span>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
