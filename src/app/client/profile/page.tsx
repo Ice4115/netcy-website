@@ -313,26 +313,39 @@ export default function ProfilePage() {
   const [clientData, setClientData] = useState<ClientData | null>(null);
 
   const fetchClientData = async () => {
-    const user = await getCurrentUser();
-    if (!user) {
+    try {
+      const user = await getCurrentUser();
+      console.log('User:', user);
+      
+      if (!user) {
+        console.error('Pas d\'utilisateur connecté');
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      console.log('Data:', data);
+      console.log('Error:', error);
+
+      if (error) {
+        console.error('Erreur chargement profil:', error);
+      }
+
+      if (data) {
+        setClientData(data);
+      } else {
+        console.error('Aucune donnée trouvée pour cet utilisateur');
+      }
+    } catch (err) {
+      console.error('Erreur fetch:', err);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const { data, error } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-
-    if (error) {
-      console.error('Erreur chargement profil:', error);
-    }
-
-    if (data) {
-      setClientData(data);
-    }
-    setLoading(false);
   };
 
   useEffect(() => {
