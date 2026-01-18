@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getCurrentUser } from '@/lib/supabase';
 import Dock from '@/components/Dock';
-import { Home, Activity, FileText, User, Settings } from 'lucide-react';
+import { Home, Activity, FileText, User, Settings, LayoutDashboard } from 'lucide-react';
 
 export default function ClientLayout({
   children,
@@ -34,6 +34,12 @@ export default function ClientLayout({
     {
       label: 'Accueil',
       icon: <Home size={24} className="text-white" />,
+      onClick: () => window.location.href = '/',
+      className: ''
+    },
+    {
+      label: 'Dashboard',
+      icon: <LayoutDashboard size={24} className="text-white" />,
       onClick: () => router.push('/client'),
       className: pathname === '/client' ? 'bg-gradient-to-br from-[#6F3FFF] to-[#7A8FFF]' : ''
     },

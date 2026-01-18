@@ -35,7 +35,6 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
           videoRef.current.srcObject = stream;
         }
       } catch (err) {
-        console.error('Error accessing webcam:', err);
       }
     };
 
@@ -315,10 +314,8 @@ export default function ProfilePage() {
   const fetchClientData = async () => {
     try {
       const user = await getCurrentUser();
-      console.log('User:', user);
       
       if (!user) {
-        console.error('Pas d\'utilisateur connecté');
         setLoading(false);
         return;
       }
@@ -329,20 +326,10 @@ export default function ProfilePage() {
         .eq('id', user.id)
         .single();
 
-      console.log('Data:', data);
-      console.log('Error:', error);
-
-      if (error) {
-        console.error('Erreur chargement profil:', error);
-      }
-
       if (data) {
         setClientData(data);
-      } else {
-        console.error('Aucune donnée trouvée pour cet utilisateur');
       }
     } catch (err) {
-      console.error('Erreur fetch:', err);
     } finally {
       setLoading(false);
     }
@@ -376,18 +363,20 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
-          <h1 className="text-5xl font-bold text-white mb-2">
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
             Mon <span className="bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Profil</span>
           </h1>
-          <p className="text-gray-400 text-lg">Vos informations personnelles sécurisées</p>
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg">Vos informations personnelles sécurisées</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div className="flex justify-center">
-            <ReflectiveProfileCard clientData={clientData} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-start">
+          <div className="flex justify-center w-full">
+            <div className="w-full max-w-sm">
+              <ReflectiveProfileCard clientData={clientData} />
+            </div>
           </div>
 
           <div className="space-y-6">

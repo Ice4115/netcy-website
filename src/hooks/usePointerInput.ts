@@ -46,7 +46,6 @@ export const usePointerInput = (
   }, [containerRef]);
 
   const handlePointerDown = useCallback((e: PointerEvent) => {
-    console.log('👆 PointerDown:', e.clientX, e.clientY, '| Type:', e.pointerType);
     e.preventDefault();
     e.stopPropagation();
 
@@ -60,9 +59,7 @@ export const usePointerInput = (
       const normalized = normalizeCoords(e.clientX, e.clientY);
       state.coords = normalized;
       state.coordsOld = { ...normalized };
-      console.log('📍 Normalized coords:', normalized.x.toFixed(2), normalized.y.toFixed(2));
       
-      // Debug event
       window.dispatchEvent(new CustomEvent('debug-update', { 
         detail: { 
           touches: activePointers.current.size,
@@ -87,7 +84,6 @@ export const usePointerInput = (
       const normalized = normalizeCoords(e.clientX, e.clientY);
       state.coords = normalized;
     } else if (activePointers.current.size === 2) {
-      console.log('✌️ Two fingers detected');
       const pointers = Array.from(activePointers.current.values());
       const cx = (pointers[0].clientX + pointers[1].clientX) * 0.5;
       const cy = (pointers[0].clientY + pointers[1].clientY) * 0.5;
@@ -135,9 +131,6 @@ export const usePointerInput = (
       state.diff.y = amplifiedDiffY;
       
       if (Math.abs(amplifiedDiffX) > 0.001 || Math.abs(amplifiedDiffY) > 0.001) {
-        console.log('🔥 Diff amplified:', amplifiedDiffX.toFixed(3), amplifiedDiffY.toFixed(3));
-        
-        // Debug event
         window.dispatchEvent(new CustomEvent('debug-update', { 
           detail: { 
             force: `${amplifiedDiffX.toFixed(2)}, ${amplifiedDiffY.toFixed(2)}`,
@@ -157,11 +150,8 @@ export const usePointerInput = (
   useEffect(() => {
     const container = containerRef.current;
     if (!container) {
-      console.error('❌ usePointerInput: container is null');
       return;
     }
-
-    console.log('✅ usePointerInput: Attaching pointer event listeners');
 
     container.addEventListener('pointerdown', handlePointerDown as any, { passive: false });
     container.addEventListener('pointermove', handlePointerMove as any, { passive: false });
@@ -169,10 +159,7 @@ export const usePointerInput = (
     container.addEventListener('pointercancel', handlePointerUp as any);
     container.addEventListener('pointerleave', handlePointerUp as any);
 
-    console.log('🎯 Pointer events attached to:', container.className);
-
     return () => {
-      console.log('🧹 Cleaning up pointer events');
       container.removeEventListener('pointerdown', handlePointerDown as any);
       container.removeEventListener('pointermove', handlePointerMove as any);
       container.removeEventListener('pointerup', handlePointerUp as any);

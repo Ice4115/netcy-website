@@ -92,19 +92,19 @@ export default function SuiviePage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-5xl font-bold text-white mb-2">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
             Suivi des <span className="bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Projets</span>
           </h1>
-          <p className="text-gray-400 text-lg">Suivez l'évolution de vos projets en temps réel</p>
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg">Suivez l'évolution de vos projets en temps réel</p>
         </div>
 
-        <div className="flex gap-4 mb-8 flex-wrap">
+        <div className="flex gap-2 sm:gap-4 mb-6 md:mb-8 flex-wrap">
           <button
             onClick={() => setFilter('all')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
               filter === 'all'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
@@ -114,17 +114,18 @@ export default function SuiviePage() {
           </button>
           <button
             onClick={() => setFilter('en_cours')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
               filter === 'en_cours'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
             }`}
           >
-            En cours ({projects.filter(p => p.status === 'en_cours').length})
+            <span className="hidden sm:inline">En cours</span>
+            <span className="sm:hidden">Cours</span> ({projects.filter(p => p.status === 'en_cours').length})
           </button>
           <button
             onClick={() => setFilter('termine')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
               filter === 'termine'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
@@ -134,13 +135,14 @@ export default function SuiviePage() {
           </button>
           <button
             onClick={() => setFilter('en_attente')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
               filter === 'en_attente'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
             }`}
           >
-            En attente ({projects.filter(p => p.status === 'en_attente').length})
+            <span className="hidden sm:inline">En attente</span>
+            <span className="sm:hidden">Attente</span> ({projects.filter(p => p.status === 'en_attente').length})
           </button>
         </div>
 
@@ -156,16 +158,16 @@ export default function SuiviePage() {
                 className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#392e4e] rounded-2xl p-6 hover:border-[#6F3FFF]/50 transition-all"
                 spotlightColor="rgba(111, 63, 255, 0.25)"
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 gap-3">
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">{project.titre}</h3>
-                    <p className="text-gray-400 text-sm">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{project.titre}</h3>
+                    <p className="text-gray-400 text-xs sm:text-sm">
                       Créé le {new Date(project.created_at).toLocaleDateString('fr-FR')}
                     </p>
                   </div>
-                  <div className={`flex items-center gap-2 px-4 py-2 rounded-full border ${getStatusColor(project.status)}`}>
+                  <div className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border text-xs sm:text-sm ${getStatusColor(project.status)} self-start`}>
                     {getStatusIcon(project.status)}
-                    <span className="font-semibold text-sm">{getStatusLabel(project.status)}</span>
+                    <span className="font-semibold">{getStatusLabel(project.status)}</span>
                   </div>
                 </div>
 

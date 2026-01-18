@@ -20,19 +20,16 @@ export default function AdminLogin() {
       const { data, error } = await signIn(email, password);
       
       if (error) {
-        setError(`Erreur de connexion: ${error.message}`);
-        console.error('Erreur Supabase:', error);
+        setError('Identifiants incorrects');
         setLoading(false);
         return;
       }
 
       if (data.user) {
-        console.log('Utilisateur connecté:', data.user.id);
         router.push('/netcy-secure-access/dashboard');
       }
     } catch (err: any) {
-      setError(`Une erreur est survenue: ${err.message || 'Connexion impossible'}`);
-      console.error('Erreur catch:', err);
+      setError('Une erreur est survenue');
       setLoading(false);
     }
   };

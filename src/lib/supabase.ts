@@ -31,7 +31,6 @@ export const signUp = async (email: string, password: string, additionalData?: a
     });
 
     if (rpcError) {
-      console.error('Erreur création profil:', rpcError);
       return { ...result, error: rpcError };
     }
   }

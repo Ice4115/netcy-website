@@ -535,7 +535,7 @@ export default function Home() {
                 const privacy = formData.get('privacy') as string;
 
                 if (!privacy) {
-                  alert('Veuillez accepter les conditions d\'utilisation et la politique de confidentialité');
+                  alert('Veuillez accepter les conditions d\'utilisation');
                   return;
                 }
 
@@ -567,15 +567,14 @@ export default function Home() {
                   if (result.success) {
                     router.push('/contact-success');
                   } else {
-                    alert('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+                    alert('Une erreur est survenue. Veuillez réessayer.');
                     if (submitButton) {
                       submitButton.disabled = false;
                       submitButton.textContent = 'Envoyer le Message';
                     }
                   }
                 } catch (error) {
-                  console.error('Erreur:', error);
-                  alert('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+                  alert('Une erreur est survenue. Veuillez réessayer.');
                   if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Envoyer le Message';

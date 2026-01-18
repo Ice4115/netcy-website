@@ -156,16 +156,16 @@ export default function ClientDashboard() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
-          <h1 className="text-5xl font-bold text-white mb-2">
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
             Bienvenue, <span className="bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">{userName}</span>
           </h1>
-          <p className="text-gray-400 text-lg">Voici un aperçu de vos projets et activités</p>
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg">Voici un aperçu de vos projets et activités</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           <StatCard
             title="Projets Totaux"
             value={stats.totalProjects}

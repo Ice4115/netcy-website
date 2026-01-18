@@ -83,8 +83,7 @@ function CopyButton({
               onCopiedChange?.(false);
             }, delay);
           })
-          .catch((error) => {
-            console.error('Error copying command', error);
+          .catch(() => {
           });
       }
     },

@@ -196,11 +196,10 @@ export default function InscriptionPage() {
       const { data, error: signUpError } = await signUp(email, password, clientData);
       
       if (signUpError) {
-        console.error('Erreur signUp:', signUpError);
         if (signUpError.message.includes('already registered')) {
           setError('Cet email est déjà utilisé');
         } else {
-          setError(`Erreur lors de l'inscription: ${signUpError.message}`);
+          setError('Une erreur est survenue lors de l\'inscription');
         }
         setLoading(false);
         return;
@@ -213,8 +212,7 @@ export default function InscriptionPage() {
         }, 3000);
       }
     } catch (err: any) {
-      console.error('Erreur catch:', err);
-      setError(`Une erreur est survenue: ${err.message || err}`);
+      setError('Une erreur est survenue');
       setLoading(false);
     }
   };

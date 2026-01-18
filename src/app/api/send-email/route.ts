@@ -245,7 +245,6 @@ SIREN: 995 301 546 | SIRET: 99530154600025`;
 
     return NextResponse.json({ success: true, message: 'Email envoyé avec succès' });
   } catch (error) {
-    console.error('Erreur envoi email:', error);
     return NextResponse.json(
       { success: false, message: 'Erreur lors de l\'envoi de l\'email' },
       { status: 500 }

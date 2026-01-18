@@ -62,16 +62,16 @@ export default function FacturePage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-5xl font-bold text-white mb-2">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
             Mes <span className="bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Factures</span>
           </h1>
-          <p className="text-gray-400 text-lg">Gérez et consultez toutes vos factures</p>
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg">Gérez et consultez toutes vos factures</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-3">
               <FileText className="text-[#6F3FFF]" size={24} />
