@@ -15,7 +15,7 @@ import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { getCurrentUser, signOut } from '@/lib/supabase';
 import Dock from '@/components/Dock';
-import { Home, Activity, FileText, User, Settings, LayoutDashboard } from 'lucide-react';
+import { Home as HomeIcon, Activity, FileText, User, Settings, LayoutDashboard } from 'lucide-react';
 
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
   ssr: false,
@@ -159,7 +159,7 @@ export default function Home() {
   const dockItems = [
     {
       label: 'Accueil',
-      icon: <Home size={24} className="text-white" />,
+      icon: <HomeIcon size={24} className="text-white" />,
       onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
       className: ''
     },
