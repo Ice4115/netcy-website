@@ -110,12 +110,12 @@ export default function ClientDashboard() {
 
     const { data: clientData } = await supabase
       .from('clients')
-      .select('nom')
+      .select('nom, prenom')
       .eq('id', user.id)
       .single();
 
     if (clientData) {
-      setUserName(clientData.nom);
+      setUserName(clientData.prenom || clientData.nom || 'Client');
     }
 
     const { data: projectsData } = await supabase

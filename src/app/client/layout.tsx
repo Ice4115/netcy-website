@@ -84,7 +84,7 @@ export default function ClientLayout({
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#110F1B] to-[#1a0f3a] pb-28">
       {children}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-4">
         <Dock 
           items={dockItems}
           magnification={70}

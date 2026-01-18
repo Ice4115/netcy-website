@@ -60,10 +60,16 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
           --text-color: white;
           --saturation: 0;
           position: relative;
-          aspect-ratio: 1.586;
+          aspect-ratio: 1.2;
           border-radius: 24px;
           overflow: hidden;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        @media (max-width: 640px) {
+          .reflective-card-container {
+            aspect-ratio: 1.1;
+          }
         }
 
         .reflective-svg-filters {

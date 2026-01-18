@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { supabase, getCurrentUser } from '@/lib/supabase';
 import SpotlightCard from '@/components/SpotlightCard';
-import { Clock, CheckCircle, AlertCircle, Activity, MessageCircle } from 'lucide-react';
+import Modal from '@/components/Modal';
+import { Clock, CheckCircle, AlertCircle, Activity, MessageCircle, X } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -67,6 +68,7 @@ export default function SuiviePage() {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
   const [filter, setFilter] = useState<string>('all');
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
   const fetchProjects = async () => {
     const user = await getCurrentUser();
@@ -210,6 +212,7 @@ export default function SuiviePage() {
                     {project.messages.map((message, index) => (
                       <div
                         key={message.id}
+                        onClick={() => setSelectedMessage(message)}
                         className="bg-[#060010]/50 border border-[#6F3FFF]/20 rounded-lg p-3 hover:border-[#6F3FFF]/40 hover:bg-[#6F3FFF]/5 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#6F3FFF]/10 animate-slide-in-up cursor-pointer"
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
@@ -259,6 +262,43 @@ export default function SuiviePage() {
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={!!selectedMessage}
+        onClose={() => setSelectedMessage(null)}
+        title={selectedMessage?.sujet || ''}
+      >
+        {selectedMessage && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between text-sm text-gray-400 pb-3 border-b border-[#392e4e]">
+              <span>Message reçu le {new Date(selectedMessage.created_at).toLocaleDateString('fr-FR', { 
+                day: 'numeric',
+                month: 'long', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}</span>
+              {!selectedMessage.lu && (
+                <span className="flex items-center gap-1 text-[#6F3FFF] font-semibold">
+                  <div className="w-2 h-2 bg-[#6F3FFF] rounded-full" />
+                  Nouveau
+                </span>
+              )}
+            </div>
+            
+            <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/20 rounded-xl p-6">
+              <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">{selectedMessage.contenu}</p>
+            </div>
+
+            <button
+              onClick={() => setSelectedMessage(null)}
+              className="w-full px-6 py-3 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg hover:opacity-90 transition font-semibold"
+            >
+              Fermer
+            </button>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
