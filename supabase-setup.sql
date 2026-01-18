@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS messages (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   client_id UUID NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
   admin_id UUID NOT NULL REFERENCES clients(id),
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
   sujet VARCHAR(255) NOT NULL,
   contenu TEXT NOT NULL,
   lu BOOLEAN DEFAULT FALSE,
@@ -48,6 +49,9 @@ ALTER TABLE projects ADD COLUMN IF NOT EXISTS type VARCHAR(50) DEFAULT 'site_int
 -- Ajouter des colonnes utiles à la table clients
 ALTER TABLE clients ADD COLUMN IF NOT EXISTS prenom VARCHAR(100);
 ALTER TABLE clients ADD COLUMN IF NOT EXISTS ville VARCHAR(100);
+
+-- Ajouter project_id à la table messages si elle n'existe pas déjà
+ALTER TABLE messages ADD COLUMN IF NOT EXISTS project_id UUID REFERENCES projects(id) ON DELETE CASCADE;
 
 -- Fonction pour mettre à jour automatiquement updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()

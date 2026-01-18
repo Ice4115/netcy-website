@@ -117,6 +117,7 @@ export default function AdminDashboard() {
 
   const [messageForm, setMessageForm] = useState({
     client_id: '',
+    project_id: '',
     sujet: '',
     contenu: ''
   });
@@ -347,6 +348,7 @@ export default function AdminDashboard() {
   const resetMessageForm = () => {
     setMessageForm({
       client_id: '',
+      project_id: '',
       sujet: '',
       contenu: ''
     });
@@ -462,6 +464,7 @@ export default function AdminDashboard() {
         .insert([{
           client_id: messageForm.client_id,
           admin_id: user.id,
+          project_id: messageForm.project_id || null,
           sujet: messageForm.sujet,
           contenu: messageForm.contenu
         }]);
@@ -1243,7 +1246,7 @@ export default function AdminDashboard() {
             <label className="block text-sm font-medium text-gray-300 mb-2">Client *</label>
             <select
               value={messageForm.client_id}
-              onChange={(e) => setMessageForm({ ...messageForm, client_id: e.target.value })}
+              onChange={(e) => setMessageForm({ ...messageForm, client_id: e.target.value, project_id: '' })}
               className="w-full px-4 py-2 bg-[#060010] border border-[#6F3FFF]/30 rounded-lg text-white focus:outline-none focus:border-[#6F3FFF]"
               required
             >
@@ -1251,6 +1254,22 @@ export default function AdminDashboard() {
               {clients.filter(c => c.role !== 'admin').map((client) => (
                 <option key={client.id} value={client.id}>
                   {client.nom} {client.prenom} - {client.email}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Projet (optionnel)</label>
+            <select
+              value={messageForm.project_id}
+              onChange={(e) => setMessageForm({ ...messageForm, project_id: e.target.value })}
+              className="w-full px-4 py-2 bg-[#060010] border border-[#6F3FFF]/30 rounded-lg text-white focus:outline-none focus:border-[#6F3FFF]"
+            >
+              <option value="">Message général (non lié à un projet)</option>
+              {messageForm.client_id && projects.filter(p => p.client_id === messageForm.client_id).map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.titre}
                 </option>
               ))}
             </select>

@@ -3,7 +3,15 @@
 import { useState, useEffect } from 'react';
 import { supabase, getCurrentUser } from '@/lib/supabase';
 import SpotlightCard from '@/components/SpotlightCard';
-import { Clock, CheckCircle, AlertCircle, Activity } from 'lucide-react';
+import { Clock, CheckCircle, AlertCircle, Activity, MessageCircle } from 'lucide-react';
+
+interface Message {
+  id: string;
+  sujet: string;
+  contenu: string;
+  created_at: string;
+  lu: boolean;
+}
 
 interface Project {
   id: string;
@@ -13,6 +21,7 @@ interface Project {
   progress: number;
   created_at: string;
   updated_at: string;
+  messages?: Message[];
 }
 
 const getStatusIcon = (status: string) => {
@@ -63,14 +72,30 @@ export default function SuiviePage() {
     const user = await getCurrentUser();
     if (!user) return;
 
-    const { data } = await supabase
+    const { data: projectsData } = await supabase
       .from('projects')
       .select('*')
       .eq('client_id', user.id)
       .order('created_at', { ascending: false });
 
-    if (data) {
-      setProjects(data);
+    if (projectsData) {
+      const projectsWithMessages = await Promise.all(
+        projectsData.map(async (project) => {
+          const { data: messagesData } = await supabase
+            .from('messages')
+            .select('*')
+            .eq('project_id', project.id)
+            .order('created_at', { ascending: false })
+            .limit(3);
+
+          return {
+            ...project,
+            messages: messagesData || []
+          };
+        })
+      );
+
+      setProjects(projectsWithMessages);
     }
     setLoading(false);
   };
@@ -174,6 +199,29 @@ export default function SuiviePage() {
                 <p className="text-gray-300 mb-6 leading-relaxed">
                   {project.description}
                 </p>
+
+                {project.messages && project.messages.length > 0 && (
+                  <div className="mb-6 space-y-2">
+                    <div className="flex items-center gap-2 mb-3">
+                      <MessageCircle className="text-[#6F3FFF]" size={18} />
+                      <h4 className="text-sm font-semibold text-white">Messages récents</h4>
+                    </div>
+                    {project.messages.map((message) => (
+                      <div
+                        key={message.id}
+                        className="bg-[#060010]/50 border border-[#6F3FFF]/20 rounded-lg p-3 hover:border-[#6F3FFF]/40 transition"
+                      >
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <h5 className="text-sm font-semibold text-white">{message.sujet}</h5>
+                          <span className="text-xs text-gray-500 whitespace-nowrap">
+                            {new Date(message.created_at).toLocaleDateString('fr-FR')}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-400 line-clamp-2">{message.contenu}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
