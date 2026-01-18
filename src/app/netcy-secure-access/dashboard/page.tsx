@@ -346,8 +346,13 @@ export default function AdminDashboard() {
 
     try {
       const invoiceData = {
-        ...invoiceForm,
-        montant: parseFloat(invoiceForm.montant)
+        numero_facture: invoiceForm.numero_facture || null,
+        montant: parseFloat(invoiceForm.montant),
+        statut: invoiceForm.statut,
+        description: invoiceForm.description || null,
+        client_id: invoiceForm.client_id,
+        project_id: invoiceForm.project_id || null,
+        due_date: invoiceForm.due_date || null
       };
 
       if (editingInvoice) {
@@ -368,8 +373,8 @@ export default function AdminDashboard() {
       setIsInvoiceModalOpen(false);
       resetInvoiceForm();
       fetchData();
-    } catch (error) {
-      alert('Une erreur est survenue');
+    } catch (error: any) {
+      alert('Erreur: ' + (error?.message || 'Une erreur est survenue'));
     }
   };
 
@@ -386,8 +391,10 @@ export default function AdminDashboard() {
       const { error } = await supabase
         .from('messages')
         .insert([{
-          ...messageForm,
-          admin_id: user.id
+          client_id: messageForm.client_id,
+          admin_id: user.id,
+          sujet: messageForm.sujet,
+          contenu: messageForm.contenu
         }]);
 
       if (error) throw error;
@@ -395,8 +402,9 @@ export default function AdminDashboard() {
       setIsMessageModalOpen(false);
       resetMessageForm();
       fetchData();
-    } catch (error) {
-      alert('Une erreur est survenue');
+      alert('Message envoyé avec succès');
+    } catch (error: any) {
+      alert('Erreur: ' + (error?.message || 'Une erreur est survenue'));
     }
   };
 
@@ -472,22 +480,22 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#110F1B] to-[#1a0f3a] p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#110F1B] to-[#1a0f3a] p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-white">Dashboard Admin</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white">Dashboard Admin</h1>
           <button
             onClick={handleSignOut}
-            className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition border border-red-500/50"
+            className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition border border-red-500/50 text-sm sm:text-base"
           >
             Déconnexion
           </button>
         </div>
 
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-2 sm:gap-4 mb-6 md:mb-8 overflow-x-auto pb-2">
           <button
             onClick={() => setActiveTab('clients')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
               activeTab === 'clients'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#0f0a20] text-gray-400 hover:text-white'
@@ -497,7 +505,7 @@ export default function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('projects')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
               activeTab === 'projects'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#0f0a20] text-gray-400 hover:text-white'
@@ -507,7 +515,7 @@ export default function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('invoices')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
               activeTab === 'invoices'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#0f0a20] text-gray-400 hover:text-white'
@@ -517,7 +525,7 @@ export default function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('messages')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
               activeTab === 'messages'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#0f0a20] text-gray-400 hover:text-white'

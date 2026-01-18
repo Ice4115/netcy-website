@@ -97,10 +97,10 @@ export default function FacturePage() {
           </div>
         </div>
 
-        <div className="flex gap-4 mb-8 flex-wrap">
+        <div className="flex gap-2 sm:gap-4 mb-6 md:mb-8 flex-wrap">
           <button
             onClick={() => setFilter('all')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
               filter === 'all'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
@@ -110,7 +110,7 @@ export default function FacturePage() {
           </button>
           <button
             onClick={() => setFilter('payee')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
               filter === 'payee'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
@@ -120,7 +120,7 @@ export default function FacturePage() {
           </button>
           <button
             onClick={() => setFilter('en_attente')}
-            className={`px-6 py-3 rounded-lg font-semibold transition ${
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition ${
               filter === 'en_attente'
                 ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
@@ -131,16 +131,16 @@ export default function FacturePage() {
         </div>
 
         <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="w-full min-w-[640px]">
               <thead className="bg-[#060010]">
                 <tr className="border-b border-[#392e4e]">
-                  <th className="text-left py-4 px-6 text-gray-400 font-semibold">Date</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-semibold">Projet</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-semibold">Montant</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-semibold">Statut</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-semibold">Échéance</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-semibold">Actions</th>
+                  <th className="text-left py-3 sm:py-4 px-3 sm:px-6 text-gray-400 font-semibold text-xs sm:text-sm">Date</th>
+                  <th className="text-left py-3 sm:py-4 px-3 sm:px-6 text-gray-400 font-semibold text-xs sm:text-sm">Projet</th>
+                  <th className="text-left py-3 sm:py-4 px-3 sm:px-6 text-gray-400 font-semibold text-xs sm:text-sm">Montant</th>
+                  <th className="text-left py-3 sm:py-4 px-3 sm:px-6 text-gray-400 font-semibold text-xs sm:text-sm">Statut</th>
+                  <th className="text-left py-3 sm:py-4 px-3 sm:px-6 text-gray-400 font-semibold text-xs sm:text-sm">Échéance</th>
+                  <th className="text-left py-3 sm:py-4 px-3 sm:px-6 text-gray-400 font-semibold text-xs sm:text-sm">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -156,40 +156,41 @@ export default function FacturePage() {
                       key={invoice.id} 
                       className="border-b border-[#392e4e]/50 hover:bg-[#060010]/50 transition-colors"
                     >
-                      <td className="py-4 px-6 text-gray-300">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-300 text-xs sm:text-sm">
                         {new Date(invoice.created_at).toLocaleDateString('fr-FR')}
                       </td>
-                      <td className="py-4 px-6 text-white font-semibold">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 text-white font-semibold text-xs sm:text-sm">
                         {invoice.projects?.titre || 'N/A'}
                       </td>
-                      <td className="py-4 px-6 text-white font-bold">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 text-white font-bold text-xs sm:text-sm">
                         {invoice.montant.toFixed(2)} €
                       </td>
-                      <td className="py-4 px-6">
-                        <span className={`px-4 py-2 rounded-full text-sm font-semibold inline-flex items-center gap-2 ${
+                      <td className="py-3 sm:py-4 px-3 sm:px-6">
+                        <span className={`px-2 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold inline-flex items-center gap-1 sm:gap-2 ${
                           invoice.statut === 'payee'
                             ? 'bg-green-400/10 text-green-400'
                             : 'bg-yellow-400/10 text-yellow-400'
                         }`}>
                           {invoice.statut === 'payee' ? (
                             <>
-                              <CheckCircle size={16} />
+                              <CheckCircle size={14} className="hidden sm:inline" />
                               Payée
                             </>
                           ) : (
                             <>
-                              <Clock size={16} />
-                              En attente
+                              <Clock size={14} className="hidden sm:inline" />
+                              <span className="hidden sm:inline">En attente</span>
+                              <span className="sm:hidden">Attente</span>
                             </>
                           )}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-gray-300">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-300 text-xs sm:text-sm">
                         {invoice.due_date ? new Date(invoice.due_date).toLocaleDateString('fr-FR') : '-'}
                       </td>
-                      <td className="py-4 px-6">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-[#6F3FFF]/20 hover:bg-[#6F3FFF]/30 text-[#8FA5FF] rounded-lg transition border border-[#6F3FFF]/50">
-                          <Download size={16} />
+                      <td className="py-3 sm:py-4 px-3 sm:px-6">
+                        <button className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-[#6F3FFF]/20 hover:bg-[#6F3FFF]/30 text-[#8FA5FF] rounded-lg transition border border-[#6F3FFF]/50 text-xs sm:text-sm">
+                          <Download size={14} />
                           PDF
                         </button>
                       </td>

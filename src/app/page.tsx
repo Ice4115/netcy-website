@@ -13,6 +13,9 @@ import GlareHover from "@/components/GlareHover";
 import { Checkbox } from '@/components/animate-ui/components/base/checkbox';
 import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { getCurrentUser, signOut } from '@/lib/supabase';
+import Dock from '@/components/Dock';
+import { Home, Activity, FileText, User, Settings, LayoutDashboard } from 'lucide-react';
 
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
   ssr: false,
@@ -62,9 +65,18 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
+  }, []);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const user = await getCurrentUser();
+      setIsAuthenticated(!!user);
+    };
+    checkAuth();
   }, []);
 
   useEffect(() => {
@@ -101,6 +113,12 @@ export default function Home() {
   }, []);
 
 
+  const handleSignOut = async () => {
+    await signOut();
+    setIsAuthenticated(false);
+    router.push('/');
+  };
+
   const navItems = [
     {
       label: 'Expertise',
@@ -126,11 +144,54 @@ export default function Home() {
       label: 'Compte',
       bgColor: '#251550',
       textColor: '#CFDBFF',
-      links: [
+      links: isAuthenticated ? [
+        { label: 'Mon profil', href: '/client/profile', ariaLabel: 'Voir mon profil' },
+        { label: 'Déconnexion', href: '#', ariaLabel: 'Se déconnecter', onClick: handleSignOut },
+        { label: 'Nous Contacter', href: '#contact', ariaLabel: 'Nous contacter' }
+      ] : [
         { label: 'Connexion', href: '/connexion', ariaLabel: 'Se connecter' },
-        { label: 'Inscription', href: '/inscription', ariaLabel: 'S&apos;inscrire' },
+        { label: 'Inscription', href: '/inscription', ariaLabel: 'S\'inscrire' },
         { label: 'Nous Contacter', href: '#contact', ariaLabel: 'Nous contacter' }
       ]
+    }
+  ];
+
+  const dockItems = [
+    {
+      label: 'Accueil',
+      icon: <Home size={24} className="text-white" />,
+      onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+      className: ''
+    },
+    {
+      label: 'Dashboard',
+      icon: <LayoutDashboard size={24} className="text-white" />,
+      onClick: () => router.push('/client'),
+      className: ''
+    },
+    {
+      label: 'Suivie',
+      icon: <Activity size={24} className="text-white" />,
+      onClick: () => router.push('/client/suivie'),
+      className: ''
+    },
+    {
+      label: 'Facture',
+      icon: <FileText size={24} className="text-white" />,
+      onClick: () => router.push('/client/facture'),
+      className: ''
+    },
+    {
+      label: 'Profile',
+      icon: <User size={24} className="text-white" />,
+      onClick: () => router.push('/client/profile'),
+      className: ''
+    },
+    {
+      label: 'Settings',
+      icon: <Settings size={24} className="text-white" />,
+      onClick: () => router.push('/client/settings'),
+      className: ''
     }
   ];
 
@@ -725,6 +786,18 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      {isAuthenticated && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-4">
+          <Dock 
+            items={dockItems}
+            magnification={70}
+            distance={200}
+            panelHeight={68}
+            baseItemSize={50}
+          />
+        </div>
+      )}
 
       <footer className="border-t border-[#6F3FFF]/30 py-8 px-4 md:px-8 backdrop-blur-sm relative z-40" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(17, 15, 27, 0.5)' }}>
         <div className="max-w-6xl mx-auto text-center text-gray-400">

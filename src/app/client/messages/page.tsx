@@ -70,13 +70,13 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-5xl font-bold text-white mb-2">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
             Mes <span className="bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Messages</span>
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg">
             {unreadCount > 0 ? (
               <>Vous avez <span className="text-[#6F3FFF] font-semibold">{unreadCount}</span> nouveau{unreadCount > 1 ? 'x' : ''} message{unreadCount > 1 ? 's' : ''}</>
             ) : (
@@ -91,13 +91,13 @@ export default function MessagesPage() {
             <p className="text-gray-400 text-lg">Aucun message pour le moment</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1 space-y-3">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="lg:col-span-1 space-y-2 sm:space-y-3">
               {messages.map((message) => (
                 <button
                   key={message.id}
                   onClick={() => handleMessageClick(message)}
-                  className={`w-full text-left p-4 rounded-xl border transition-all ${
+                  className={`w-full text-left p-3 sm:p-4 rounded-xl border transition-all ${
                     selectedMessage?.id === message.id
                       ? 'bg-gradient-to-r from-[#6F3FFF]/20 to-[#7A8FFF]/20 border-[#6F3FFF]'
                       : message.lu
@@ -112,12 +112,12 @@ export default function MessagesPage() {
                       <Mail className="text-[#6F3FFF] flex-shrink-0 mt-1" size={20} />
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className={`font-semibold mb-1 truncate ${
+                      <h3 className={`text-sm sm:text-base font-semibold mb-1 truncate ${
                         message.lu ? 'text-gray-300' : 'text-white'
                       }`}>
                         {message.sujet}
                       </h3>
-                      <p className="text-gray-400 text-xs flex items-center gap-1">
+                      <p className="text-gray-400 text-[10px] sm:text-xs flex items-center gap-1">
                         <Clock size={12} />
                         {new Date(message.created_at).toLocaleDateString('fr-FR', {
                           day: 'numeric',
@@ -137,10 +137,10 @@ export default function MessagesPage() {
 
             <div className="lg:col-span-2">
               {selectedMessage ? (
-                <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-8">
-                  <div className="mb-6 pb-6 border-b border-[#392e4e]">
-                    <div className="flex items-start justify-between mb-4">
-                      <h2 className="text-3xl font-bold text-white">{selectedMessage.sujet}</h2>
+                <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-4 sm:p-6 md:p-8">
+                  <div className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-[#392e4e]">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
+                      <h2 className="text-2xl sm:text-3xl font-bold text-white">{selectedMessage.sujet}</h2>
                       <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                         selectedMessage.lu 
                           ? 'bg-gray-400/10 text-gray-400' 
