@@ -21,7 +21,6 @@ const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
 const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
   ssr: false,
 });
-
 const LoadingScreen = dynamic(() => import("@/components/LoadingScreen"), {
   ssr: false,
 });
