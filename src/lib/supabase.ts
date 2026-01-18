@@ -38,11 +38,33 @@ export const signUp = async (email: string, password: string, additionalData?: a
   return result;
 };
 
-export const signIn = async (email: string, password: string) => {
-  return await supabase.auth.signInWithPassword({
+export const signIn = async (email: string, password: string, rememberMe: boolean = true) => {
+  const result = await supabase.auth.signInWithPassword({
     email,
     password
   });
+
+  if (result.data.session && !rememberMe) {
+    await supabase.auth.setSession({
+      access_token: result.data.session.access_token,
+      refresh_token: result.data.session.refresh_token
+    });
+    
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('rememberMe', 'false');
+      
+      const sessionData = {
+        access_token: result.data.session.access_token,
+        refresh_token: result.data.session.refresh_token
+      };
+      sessionStorage.setItem('supabase.session', JSON.stringify(sessionData));
+      localStorage.removeItem('sb-' + supabaseUrl.split('//')[1].split('.')[0] + '-auth-token');
+    }
+  } else if (typeof window !== 'undefined') {
+    localStorage.setItem('rememberMe', 'true');
+  }
+
+  return result;
 };
 
 export const signOut = async () => {

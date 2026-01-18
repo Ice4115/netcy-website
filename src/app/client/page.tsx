@@ -167,7 +167,7 @@ export default function ClientDashboard() {
           <p className="text-gray-400 text-sm sm:text-base md:text-lg">Voici un aperçu de vos projets et activités</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           <StatCard
             title="Projets Totaux"
             value={stats.totalProjects}

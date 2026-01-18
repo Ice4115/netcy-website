@@ -20,6 +20,7 @@ export default function ConnexionPage() {
   const [loading, setLoading] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
+  const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     checkIfLoggedIn();
@@ -67,7 +68,7 @@ export default function ConnexionPage() {
     setLoading(true);
 
     try {
-      const { data, error: signInError } = await signIn(email, password);
+      const { data, error: signInError } = await signIn(email, password, rememberMe);
       
       if (signInError) {
         const newAttempts = attempts + 1;
@@ -165,9 +166,10 @@ export default function ConnexionPage() {
               </div>
 
               <div className="flex items-center justify-between">
-                <label className="flex items-center opacity-50 cursor-not-allowed">
+                <label className="flex items-center cursor-pointer">
                   <Checkbox
-                    disabled
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
                     className="bg-white/10 border-white/20 focus-visible:ring-purple-500 [&[data-checked]]:bg-purple-500 [&[data-checked]]:text-white"
                   />
                   <span className="ml-2 text-sm text-gray-300">Se souvenir de moi</span>
