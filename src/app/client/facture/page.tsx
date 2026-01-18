@@ -10,6 +10,7 @@ interface Invoice {
   statut: string;
   created_at: string;
   due_date: string;
+  pdf_url?: string;
   projects?: {
     titre: string;
   };
@@ -91,7 +92,7 @@ export default function FacturePage() {
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-yellow-500/30 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-3">
               <Clock className="text-yellow-400" size={24} />
-              <h3 className="text-gray-400 font-semibold">En attente</h3>
+              <h3 className="text-gray-400 font-semibold">En Attente</h3>
             </div>
             <p className="text-3xl font-bold text-yellow-400">{pendingAmount.toFixed(2)} €</p>
           </div>
@@ -126,7 +127,7 @@ export default function FacturePage() {
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
             }`}
           >
-            En attente ({invoices.filter(i => i.statut === 'en_attente').length})
+            En Attente ({invoices.filter(i => i.statut === 'en_attente').length})
           </button>
         </div>
 
@@ -179,7 +180,7 @@ export default function FacturePage() {
                           ) : (
                             <>
                               <Clock size={14} className="hidden sm:inline" />
-                              <span className="hidden sm:inline">En attente</span>
+                              <span className="hidden sm:inline">En Attente</span>
                               <span className="sm:hidden">Attente</span>
                             </>
                           )}
@@ -189,10 +190,19 @@ export default function FacturePage() {
                         {invoice.due_date ? new Date(invoice.due_date).toLocaleDateString('fr-FR') : '-'}
                       </td>
                       <td className="py-3 sm:py-4 px-3 sm:px-6">
-                        <button className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-[#6F3FFF]/20 hover:bg-[#6F3FFF]/30 text-[#8FA5FF] rounded-lg transition border border-[#6F3FFF]/50 text-xs sm:text-sm">
-                          <Download size={14} />
-                          PDF
-                        </button>
+                        {invoice.pdf_url ? (
+                          <a 
+                            href={invoice.pdf_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-[#6F3FFF]/20 hover:bg-[#6F3FFF]/30 text-[#8FA5FF] rounded-lg transition border border-[#6F3FFF]/50 text-xs sm:text-sm"
+                          >
+                            <Download size={14} />
+                            PDF
+                          </a>
+                        ) : (
+                          <span className="text-gray-500 text-xs sm:text-sm">Non disponible</span>
+                        )}
                       </td>
                     </tr>
                   ))

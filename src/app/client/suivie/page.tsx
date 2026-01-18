@@ -31,11 +31,11 @@ const getStatusIcon = (status: string) => {
 const getStatusLabel = (status: string) => {
   switch (status) {
     case 'en_cours':
-      return 'En cours';
+      return 'En Cours';
     case 'termine':
       return 'Terminé';
     case 'en_attente':
-      return 'En attente';
+      return 'En Attente';
     default:
       return status;
   }
@@ -120,7 +120,7 @@ export default function SuiviePage() {
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
             }`}
           >
-            <span className="hidden sm:inline">En cours</span>
+            <span className="hidden sm:inline">En Cours</span>
             <span className="sm:hidden">Cours</span> ({projects.filter(p => p.status === 'en_cours').length})
           </button>
           <button
@@ -141,7 +141,7 @@ export default function SuiviePage() {
                 : 'bg-[#060010] border border-[#392e4e] text-gray-400 hover:text-white'
             }`}
           >
-            <span className="hidden sm:inline">En attente</span>
+            <span className="hidden sm:inline">En Attente</span>
             <span className="sm:hidden">Attente</span> ({projects.filter(p => p.status === 'en_attente').length})
           </button>
         </div>

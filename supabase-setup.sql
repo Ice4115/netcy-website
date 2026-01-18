@@ -37,6 +37,8 @@ CREATE POLICY "Les admins peuvent tout faire sur les messages"
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS project_id UUID REFERENCES projects(id) ON DELETE SET NULL;
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS numero_facture VARCHAR(50);
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS description TEXT;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS due_date DATE;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS pdf_url TEXT;
 
 -- Ajouter des colonnes manquantes à la table projects
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS url VARCHAR(255);

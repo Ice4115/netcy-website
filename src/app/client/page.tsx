@@ -219,7 +219,7 @@ export default function ClientDashboard() {
                         ? 'bg-green-400/10 text-green-400'
                         : 'bg-yellow-400/10 text-yellow-400'
                     }`}>
-                      {project.status === 'en_cours' ? 'En cours' : project.status === 'termine' ? 'Terminé' : 'En attente'}
+                      {project.status === 'en_cours' ? 'En Cours' : project.status === 'termine' ? 'Terminé' : 'En Attente'}
                     </span>
                   </div>
                   

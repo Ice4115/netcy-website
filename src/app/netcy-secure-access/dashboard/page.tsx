@@ -42,6 +42,7 @@ interface Invoice {
   client_id: string;
   project_id?: string;
   due_date?: string;
+  pdf_url?: string;
   created_at: string;
   clients?: {
     nom: string;
@@ -108,8 +109,11 @@ export default function AdminDashboard() {
     description: '',
     client_id: '',
     project_id: '',
-    due_date: ''
+    due_date: '',
+    pdf_url: ''
   });
+
+  const [uploadingPdf, setUploadingPdf] = useState(false);
 
   const [messageForm, setMessageForm] = useState({
     client_id: '',
@@ -233,7 +237,8 @@ export default function AdminDashboard() {
       description: invoice.description || '',
       client_id: invoice.client_id,
       project_id: invoice.project_id || '',
-      due_date: invoice.due_date || ''
+      due_date: invoice.due_date || '',
+      pdf_url: invoice.pdf_url || ''
     });
     setIsInvoiceModalOpen(true);
   };
@@ -271,9 +276,72 @@ export default function AdminDashboard() {
       description: '',
       client_id: '',
       project_id: '',
-      due_date: ''
+      due_date: '',
+      pdf_url: ''
     });
     setEditingInvoice(null);
+  };
+
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Seuls les fichiers PDF sont acceptés');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Le fichier ne doit pas dépasser 10 MB');
+      return;
+    }
+
+    setUploadingPdf(true);
+
+    try {
+      const fileExt = 'pdf';
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `invoices/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('documents')
+        .getPublicUrl(filePath);
+
+      setInvoiceForm({ ...invoiceForm, pdf_url: publicUrl });
+      alert('PDF uploadé avec succès');
+    } catch (error: any) {
+      alert('Erreur lors de l\'upload: ' + (error?.message || 'Une erreur est survenue'));
+    } finally {
+      setUploadingPdf(false);
+    }
+  };
+
+  const handleRemovePdf = async () => {
+    if (!invoiceForm.pdf_url) return;
+
+    if (!confirm('Voulez-vous vraiment supprimer ce PDF ?')) return;
+
+    try {
+      if (invoiceForm.pdf_url.includes('supabase')) {
+        const urlParts = invoiceForm.pdf_url.split('/');
+        const filePath = `invoices/${urlParts[urlParts.length - 1]}`;
+        
+        await supabase.storage
+          .from('documents')
+          .remove([filePath]);
+      }
+
+      setInvoiceForm({ ...invoiceForm, pdf_url: '' });
+      alert('PDF supprimé avec succès');
+    } catch (error: any) {
+      alert('Erreur lors de la suppression: ' + (error?.message || 'Une erreur est survenue'));
+    }
   };
 
   const resetMessageForm = () => {
@@ -352,7 +420,8 @@ export default function AdminDashboard() {
         description: invoiceForm.description || null,
         client_id: invoiceForm.client_id,
         project_id: invoiceForm.project_id || null,
-        due_date: invoiceForm.due_date || null
+        due_date: invoiceForm.due_date || null,
+        pdf_url: invoiceForm.pdf_url || null
       };
 
       if (editingInvoice) {
@@ -704,7 +773,7 @@ export default function AdminDashboard() {
                       <td className="py-3 px-4 text-white font-semibold">{invoice.montant.toFixed(2)} €</td>
                       <td className="py-3 px-4">
                         <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(invoice.statut)}`}>
-                          {invoice.statut === 'payee' ? 'Payée' : 'En attente'}
+                          {invoice.statut === 'payee' ? 'Payée' : 'En Attente'}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-gray-300">
@@ -968,8 +1037,8 @@ export default function AdminDashboard() {
                 onChange={(e) => setProjectForm({ ...projectForm, status: e.target.value })}
                 className="w-full px-4 py-2 bg-[#060010] border border-[#6F3FFF]/30 rounded-lg text-white focus:outline-none focus:border-[#6F3FFF]"
               >
-                <option value="en_attente">En attente</option>
-                <option value="en_cours">En cours</option>
+                <option value="en_attente">En Attente</option>
+                <option value="en_cours">En Cours</option>
                 <option value="termine">Terminé</option>
               </select>
             </div>
@@ -1090,7 +1159,7 @@ export default function AdminDashboard() {
                 onChange={(e) => setInvoiceForm({ ...invoiceForm, statut: e.target.value })}
                 className="w-full px-4 py-2 bg-[#060010] border border-[#6F3FFF]/30 rounded-lg text-white focus:outline-none focus:border-[#6F3FFF]"
               >
-                <option value="en_attente">En attente</option>
+                <option value="en_attente">En Attente</option>
                 <option value="payee">Payée</option>
               </select>
             </div>
@@ -1103,6 +1172,42 @@ export default function AdminDashboard() {
                 className="w-full px-4 py-2 bg-[#060010] border border-[#6F3FFF]/30 rounded-lg text-white focus:outline-none focus:border-[#6F3FFF]"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Fichier PDF</label>
+            {invoiceForm.pdf_url ? (
+              <div className="flex items-center gap-2">
+                <a 
+                  href={invoiceForm.pdf_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex-1 px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 hover:bg-green-500/30 transition text-center"
+                >
+                  Voir le PDF
+                </a>
+                <button
+                  type="button"
+                  onClick={handleRemovePdf}
+                  className="px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 hover:bg-red-500/30 transition"
+                >
+                  Supprimer
+                </button>
+              </div>
+            ) : (
+              <div className="relative">
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handlePdfUpload}
+                  disabled={uploadingPdf}
+                  className="w-full px-4 py-2 bg-[#060010] border border-[#6F3FFF]/30 rounded-lg text-white focus:outline-none focus:border-[#6F3FFF] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#6F3FFF] file:text-white file:cursor-pointer hover:file:bg-[#5F2FEF]"
+                />
+                {uploadingPdf && (
+                  <p className="text-sm text-gray-400 mt-2">Upload en cours...</p>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-4 pt-4">
