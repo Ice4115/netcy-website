@@ -287,7 +287,9 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
 
         <div className="card-body">
           <div className="user-info">
-            <h2 className="user-name">{clientData.nom} {clientData.prenom}</h2>
+            <h2 className="user-name">
+              {clientData.nom || 'Non renseigné'} {clientData.prenom || ''}
+            </h2>
             <p className="user-role">{clientData.entreprise || 'PARTICULIER'}</p>
           </div>
         </div>
@@ -312,13 +314,20 @@ export default function ProfilePage() {
 
   const fetchClientData = async () => {
     const user = await getCurrentUser();
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('clients')
       .select('*')
       .eq('id', user.id)
       .single();
+
+    if (error) {
+      console.error('Erreur chargement profil:', error);
+    }
 
     if (data) {
       setClientData(data);
@@ -340,8 +349,15 @@ export default function ProfilePage() {
 
   if (!clientData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center flex-col gap-4">
         <p className="text-white text-xl">Données non disponibles</p>
+        <p className="text-gray-400 text-sm">Veuillez vous reconnecter</p>
+        <button 
+          onClick={() => window.location.href = '/connexion'}
+          className="px-6 py-2 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] rounded-lg text-white font-semibold hover:opacity-90 transition"
+        >
+          Se reconnecter
+        </button>
       </div>
     );
   }
@@ -383,7 +399,9 @@ export default function ProfilePage() {
                     </div>
                     <div>
                       <p className="text-gray-400 text-sm mb-1">Téléphone</p>
-                      <p className="text-white font-semibold">{clientData.telephone}</p>
+                      <p className="text-white font-semibold">
+                        {clientData.telephone.replace(/\s/g, '').match(/.{1,2}/g)?.join(' ') || clientData.telephone}
+                      </p>
                     </div>
                   </div>
                 )}

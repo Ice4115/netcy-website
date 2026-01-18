@@ -100,7 +100,8 @@ export default function InscriptionPage() {
         return false;
       }
       if (type === 'entreprise') {
-        if (!siret.trim() || !siret.match(/^\d{14}$/)) {
+        const siretClean = siret.replace(/\s/g, '');
+        if (!siretClean || !siretClean.match(/^\d{14}$/)) {
           setError('Le SIRET doit contenir 14 chiffres');
           return false;
         }
@@ -175,7 +176,7 @@ export default function InscriptionPage() {
         adresse_ligne2: adresseLigne2.trim() || null,
         code_postal: codePostal.trim(),
         pays: pays,
-        telephone: telephone.trim(),
+        telephone: telephone.replace(/\s/g, ''),
         type: type
       };
 
@@ -183,7 +184,7 @@ export default function InscriptionPage() {
         clientData.nom_societe = nomSociete.trim();
         clientData.entreprise = nomSociete.trim();
         if (type === 'entreprise') {
-          clientData.siret = siret.trim();
+          clientData.siret = siret.replace(/\s/g, '');
         }
       } else if (type === 'association') {
         clientData.nom_association = nomAssociation.trim();
@@ -410,11 +411,15 @@ export default function InscriptionPage() {
                             type="text"
                             id="siret"
                             value={siret}
-                            onChange={(e) => setSiret(e.target.value)}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\s/g, '');
+                              const formatted = value.match(/.{1,3}/g)?.join(' ') || value;
+                              setSiret(formatted);
+                            }}
                             required
-                            maxLength={14}
+                            maxLength={18}
                             className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                            placeholder="12345678901234"
+                            placeholder="123 456 789 01234"
                           />
                         </div>
                       )}
@@ -471,7 +476,11 @@ export default function InscriptionPage() {
                         type="tel"
                         id="telephone"
                         value={telephone}
-                        onChange={(e) => setTelephone(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\s/g, '');
+                          const formatted = value.match(/.{1,2}/g)?.join(' ') || value;
+                          setTelephone(formatted);
+                        }}
                         required
                         className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                         placeholder="06 12 34 56 78"
