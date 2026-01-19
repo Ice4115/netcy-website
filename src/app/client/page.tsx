@@ -26,13 +26,13 @@ interface Stats {
 const StatCard = ({ 
   title, 
   value, 
-  icon: Icon, 
+  icon, 
   color, 
   delay = 0 
 }: { 
   title: string; 
   value: string | number; 
-  icon: React.ComponentType<any>; 
+  icon: React.ReactNode; 
   color: string; 
   delay?: number;
 }) => {
@@ -72,7 +72,9 @@ const StatCard = ({
       
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
-          <Icon size={32} className="transition-transform group-hover:scale-110" style={{ color: `rgb(${color})` }} loop={true} loopDelay={2000} />
+          <div className="transition-transform group-hover:scale-110" style={{ color: `rgb(${color})` }}>
+            {icon}
+          </div>
           <div className={`px-3 py-1 rounded-full text-xs font-semibold`} style={{ 
             background: `rgba(${color}, 0.1)`,
             color: `rgb(${color})`
@@ -174,28 +176,28 @@ export default function ClientDashboard() {
           <StatCard
             title="Projets Totaux"
             value={stats.totalProjects}
-            icon={TrendingUp}
+            icon={<TrendingUp size={32} animate={true} loop={true} loopDelay={2000} />}
             color="111, 63, 255"
             delay={0}
           />
           <StatCard
             title="Projets Actifs"
             value={stats.activeProjects}
-            icon={Clock}
+            icon={<Clock size={32} animate={true} loop={true} loopDelay={2000} />}
             color="122, 143, 255"
             delay={0.1}
           />
           <StatCard
             title="Projets Terminés"
             value={stats.completedProjects}
-            icon={CheckCircle}
+            icon={<CheckCircle size={32} animate={true} loop={true} loopDelay={2000} />}
             color="143, 165, 255"
             delay={0.2}
           />
           <StatCard
             title="Progression Moyenne"
             value={`${stats.averageProgress}%`}
-            icon={Percent}
+            icon={<Percent size={32} animate={true} loop={true} loopDelay={2000} />}
             color="74, 47, 255"
             delay={0.3}
           />

@@ -164,37 +164,37 @@ export default function Home() {
   const dockItems = [
     {
       label: 'Accueil',
-      icon: <HomeIcon size={24} className="text-white" loop={true} loopDelay={2000} />,
+      icon: <HomeIcon size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
       onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
       className: ''
     },
     {
       label: 'Dashboard',
-      icon: <LayoutDashboard size={24} className="text-white" loop={true} loopDelay={2000} />,
+      icon: <LayoutDashboard size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client'),
       className: ''
     },
     {
       label: 'Suivie',
-      icon: <Activity size={24} className="text-white" loop={true} loopDelay={2000} />,
+      icon: <Activity size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/suivie'),
       className: ''
     },
     {
       label: 'Facture',
-      icon: <FileText size={24} className="text-white" loop={true} loopDelay={2000} />,
+      icon: <FileText size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/facture'),
       className: ''
     },
     {
       label: 'Profile',
-      icon: <User size={24} className="text-white" loop={true} loopDelay={2000} />,
+      icon: <User size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/profile'),
       className: ''
     },
     {
       label: 'Settings',
-      icon: <Settings size={24} className="text-white" loop={true} loopDelay={2000} />,
+      icon: <Settings size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/settings'),
       className: ''
     }

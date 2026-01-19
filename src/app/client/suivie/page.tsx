@@ -33,13 +33,13 @@ interface Project {
 const getStatusIcon = (status: string) => {
   switch (status) {
     case 'en_cours':
-      return <Activity className="text-blue-400" size={20} loop={true} loopDelay={2000} />;
+      return <Activity className="text-blue-400" size={20} animate={true} loop={true} loopDelay={2000} />;
     case 'termine':
-      return <CheckCircle className="text-green-400" size={20} loop={true} loopDelay={2000} />;
+      return <CheckCircle className="text-green-400" size={20} animate={true} loop={true} loopDelay={2000} />;
     case 'en_attente':
-      return <Clock className="text-yellow-400" size={20} loop={true} loopDelay={2000} />;
+      return <Clock className="text-yellow-400" size={20} animate={true} loop={true} loopDelay={2000} />;
     default:
-      return <AlertCircle className="text-gray-400" size={20} loop={true} loopDelay={2000} />;
+      return <AlertCircle className="text-gray-400" size={20} animate={true} loop={true} loopDelay={2000} />;
   }
 };
 
@@ -211,7 +211,7 @@ export default function SuiviePage() {
                 {project.messages && project.messages.length > 0 && (
                   <div className="mb-6 space-y-2">
                     <div className="flex items-center gap-2 mb-3 animate-fade-in">
-                      <MessageCircle className="text-[#6F3FFF] animate-pulse" size={18} loop={true} loopDelay={2000} />
+                      <MessageCircle className="text-[#6F3FFF] animate-pulse" size={18} animate={true} loop={true} loopDelay={2000} />
                       <h4 className="text-sm font-semibold text-white">Messages récents</h4>
                     </div>
                     {project.messages.map((message, index) => (

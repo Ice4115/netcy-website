@@ -328,7 +328,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
             <Lock size={14} className="security-icon" />
             <span>NETCY CLIENT</span>
           </div>
-          <Activity className="status-icon" size={20} loop={true} loopDelay={2000} />
+          <Activity className="status-icon" size={20} animate={true} loop={true} loopDelay={2000} />
         </div>
 
         <div className="card-body">
@@ -346,7 +346,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
             <span className="value">{formattedId}</span>
           </div>
           <div className="fingerprint-section">
-            <Fingerprint size={32} className="fingerprint-icon" loop={true} loopDelay={2000} />
+            <Fingerprint size={32} className="fingerprint-icon" animate={true} loop={true} loopDelay={2000} />
           </div>
         </div>
       </div>
@@ -433,7 +433,7 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-[#6F3FFF]/20 rounded-lg">
-                    <Mail className="text-[#8FA5FF]" size={20} loop={true} loopDelay={2000} />
+                    <Mail className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={2000} />
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Email</p>
@@ -444,7 +444,7 @@ export default function ProfilePage() {
                 {clientData.telephone && (
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-[#7A8FFF]/20 rounded-lg">
-                      <Phone className="text-[#8FA5FF]" size={20} loop={true} loopDelay={2000} />
+                      <Phone className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={2000} />
                     </div>
                     <div>
                       <p className="text-gray-400 text-sm mb-1">Téléphone</p>
@@ -457,7 +457,7 @@ export default function ProfilePage() {
 
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-[#8FA5FF]/20 rounded-lg">
-                    <Building className="text-[#8FA5FF]" size={20} loop={true} loopDelay={2000} />
+                    <Building className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={2000} />
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Type de compte</p>
@@ -472,7 +472,7 @@ export default function ProfilePage() {
               
               <div className="space-y-4">
                 <div className="p-4 bg-green-400/10 border border-green-400/30 rounded-lg flex items-center gap-3">
-                  <Lock className="text-green-400" size={20} loop={true} loopDelay={2000} />
+                  <Lock className="text-green-400" size={20} animate={true} loop={true} loopDelay={2000} />
                   <div>
                     <p className="text-green-400 font-semibold">Compte Sécurisé</p>
                     <p className="text-gray-400 text-sm">Votre compte est protégé</p>

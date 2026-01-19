@@ -89,7 +89,7 @@ export default function MessagesPage() {
 
         {messages.length === 0 ? (
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-12 text-center">
-            <Mail className="mx-auto mb-4 text-gray-400" size={48} loop={true} loopDelay={2000} />
+            <Mail className="mx-auto mb-4 text-gray-400" size={48} animate={true} loop={true} loopDelay={2000} />
             <p className="text-gray-400 text-lg">Aucun message pour le moment</p>
           </div>
         ) : (
@@ -109,9 +109,9 @@ export default function MessagesPage() {
                 >
                   <div className="flex items-start gap-3">
                     {message.lu ? (
-                      <MailOpen className="text-gray-400 flex-shrink-0 mt-1" size={20} loop={true} loopDelay={2000} />
+                      <MailOpen className="text-gray-400 flex-shrink-0 mt-1" size={20} animate={true} loop={true} loopDelay={2000} />
                     ) : (
-                      <Mail className="text-[#6F3FFF] flex-shrink-0 mt-1" size={20} loop={true} loopDelay={2000} />
+                      <Mail className="text-[#6F3FFF] flex-shrink-0 mt-1" size={20} animate={true} loop={true} loopDelay={2000} />
                     )}
                     <div className="flex-1 min-w-0">
                       <h3 className={`text-sm sm:text-base font-semibold mb-1 truncate ${
@@ -120,7 +120,7 @@ export default function MessagesPage() {
                         {message.sujet}
                       </h3>
                       <p className="text-gray-400 text-[10px] sm:text-xs flex items-center gap-1">
-                        <Clock size={12} loop={true} loopDelay={2000} />
+                        <Clock size={12} animate={true} loop={true} loopDelay={2000} />
                         {new Date(message.created_at).toLocaleDateString('fr-FR', {
                           day: 'numeric',
                           month: 'short',
@@ -152,7 +152,7 @@ export default function MessagesPage() {
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-400 text-sm">
-                      <Clock size={16} loop={true} loopDelay={2000} />
+                      <Clock size={16} animate={true} loop={true} loopDelay={2000} />
                       {new Date(selectedMessage.created_at).toLocaleString('fr-FR', {
                         weekday: 'long',
                         year: 'numeric',
@@ -172,7 +172,7 @@ export default function MessagesPage() {
                 </div>
               ) : (
                 <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-12 flex flex-col items-center justify-center h-full">
-                  <Mail className="text-gray-400 mb-4" size={64} loop={true} loopDelay={2000} />
+                  <Mail className="text-gray-400 mb-4" size={64} animate={true} loop={true} loopDelay={2000} />
                   <p className="text-gray-400 text-lg">Sélectionnez un message pour le lire</p>
                 </div>
               )}

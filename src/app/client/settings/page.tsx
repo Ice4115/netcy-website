@@ -168,7 +168,7 @@ export default function SettingsPage() {
         <div className="space-y-8">
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <User className="text-[#8FA5FF]" size={24} loop={true} loopDelay={2000} />
+              <User className="text-[#8FA5FF]" size={24} animate={true} loop={true} loopDelay={2000} />
               <h2 className="text-2xl font-bold text-white">Informations Personnelles</h2>
             </div>
 
@@ -223,7 +223,7 @@ export default function SettingsPage() {
                 disabled={saving}
                 className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg font-semibold hover:from-[#7A4FFF] hover:to-[#8A9FFF] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Save size={20} loop={true} loopDelay={2000} />
+                <Save size={20} animate={true} loop={true} loopDelay={2000} />
                 {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
               </button>
             </form>
@@ -231,7 +231,7 @@ export default function SettingsPage() {
 
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <Lock className="text-[#8FA5FF]" size={24} loop={true} loopDelay={2000} />
+              <Lock className="text-[#8FA5FF]" size={24} animate={true} loop={true} loopDelay={2000} />
               <h2 className="text-2xl font-bold text-white">Sécurité</h2>
             </div>
 
@@ -251,7 +251,7 @@ export default function SettingsPage() {
                     onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition"
                   >
-                    {showPasswords.new ? <EyeOff size={20} loop={true} loopDelay={2000} /> : <Eye size={20} loop={true} loopDelay={2000} />}
+                    {showPasswords.new ? <EyeOff size={20} animate={true} loop={true} loopDelay={2000} /> : <Eye size={20} animate={true} loop={true} loopDelay={2000} />}
                   </button>
                 </div>
               </div>
@@ -270,7 +270,7 @@ export default function SettingsPage() {
                     onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition"
                   >
-                    {showPasswords.confirm ? <EyeOff size={20} loop={true} loopDelay={2000} /> : <Eye size={20} loop={true} loopDelay={2000} />}
+                    {showPasswords.confirm ? <EyeOff size={20} animate={true} loop={true} loopDelay={2000} /> : <Eye size={20} animate={true} loop={true} loopDelay={2000} />}
                   </button>
                 </div>
               </div>
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                 disabled={saving || !passwordData.newPassword || !passwordData.confirmPassword}
                 className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg font-semibold hover:from-[#7A4FFF] hover:to-[#8A9FFF] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Lock size={20} loop={true} loopDelay={2000} />
+                <Lock size={20} animate={true} loop={true} loopDelay={2000} />
                 {saving ? 'Mise à jour...' : 'Mettre à jour le mot de passe'}
               </button>
             </form>
@@ -288,7 +288,7 @@ export default function SettingsPage() {
 
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-red-500/30 rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <LogOut className="text-red-400" size={24} loop={true} loopDelay={2000} />
+              <LogOut className="text-red-400" size={24} animate={true} loop={true} loopDelay={2000} />
               <h2 className="text-2xl font-bold text-white">Déconnexion</h2>
             </div>
 
@@ -300,7 +300,7 @@ export default function SettingsPage() {
               onClick={handleSignOut}
               className="flex items-center gap-2 px-6 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg font-semibold transition border border-red-500/50"
             >
-              <LogOut size={20} loop={true} loopDelay={2000} />
+              <LogOut size={20} animate={true} loop={true} loopDelay={2000} />
               Se déconnecter
             </button>
           </div>
