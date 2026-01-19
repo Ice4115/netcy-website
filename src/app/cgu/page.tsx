@@ -97,39 +97,58 @@ export default function CGUPage() {
           <div className="space-y-8 text-white/90">
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">
-                1. Acceptation des conditions
+                1. Acceptation et objet
               </h2>
               <p className="leading-relaxed">
-                En accédant et utilisant ce site, vous acceptez sans réserve les présentes conditions d&apos;utilisation.
+                En accédant au site et à l&apos;espace client, vous acceptez sans réserve les présentes conditions d&apos;utilisation qui encadrent les services de NETCY.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">
-                2. Contenu du site
+                2. Services et comptes utilisateur
+              </h2>
+              <div className="space-y-3 leading-relaxed">
+                <p>La création d&apos;un compte est nécessaire pour accéder aux fonctionnalités clients (tableau de bord, factures, support). Vous vous engagez à fournir des informations exactes et à les maintenir à jour.</p>
+                <ul className="list-disc list-inside space-y-2 pl-4">
+                  <li>Les identifiants sont personnels et ne doivent pas être partagés.</li>
+                  <li>Vous devez informer NETCY sans délai en cas d&apos;accès non autorisé ou de suspicion de compromission.</li>
+                  <li>NETCY peut suspendre ou fermer un compte en cas de violation des présentes conditions ou d&apos;usage abusif.</li>
+                </ul>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-white mb-4">
+                3. Disponibilité et sécurité
+              </h2>
+              <div className="space-y-3 leading-relaxed">
+                <p>NETCY met en œuvre des mesures techniques et organisationnelles pour sécuriser l&apos;accès et les données clients. L&apos;accès peut être temporairement interrompu pour maintenance ou amélioration.</p>
+                <p>Vous vous engagez à n&apos;entraver ni à altérer le fonctionnement du site et à utiliser les services dans le respect des lois applicables.</p>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-white mb-4">
+                4. Propriété intellectuelle
               </h2>
               <p className="leading-relaxed">
-                Tout le contenu du site (textes, images, logos, vidéos) est la propriété de NETCY ou de ses partenaires. Toute reproduction, modification, diffusion ou exploitation sans autorisation écrite est interdite.
+                Les contenus du site (textes, images, logos, vidéos, composants interactifs) sont la propriété de NETCY ou de ses partenaires. Toute reproduction ou exploitation sans autorisation écrite est interdite.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">
-                3. Utilisation du site
+                5. Données personnelles et cookies
               </h2>
               <p className="leading-relaxed mb-3">
-                Le site est fourni « tel quel ». NETCY n&apos;est pas responsable :
+                Le traitement des données et l&apos;usage des cookies (dont Google Analytics soumis à votre consentement) sont décrits dans la Politique de Confidentialité et la politique de cookies. Vous pouvez modifier vos choix à tout moment via la bannière ou le lien "Gérer les cookies".
               </p>
-              <ul className="list-disc list-inside space-y-2 pl-4">
-                <li>des erreurs, omissions ou interruptions du site,</li>
-                <li>des dommages directs ou indirects liés à l&apos;utilisation du site,</li>
-                <li>des contenus accessibles via des liens externes.</li>
-              </ul>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">
-                4. Liens externes
+                6. Liens externes
               </h2>
               <p className="leading-relaxed">
                 Le site peut contenir des liens vers des sites tiers. NETCY n&apos;assume aucune responsabilité pour leur contenu, services ou politiques de confidentialité.
@@ -138,11 +157,22 @@ export default function CGUPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">
-                5. Modifications
+                7. Responsabilité et suspension
               </h2>
-              <p className="leading-relaxed">
-                NETCY se réserve le droit de modifier le site, ses contenus et les présentes conditions à tout moment. La version en ligne prévaut.
-              </p>
+              <div className="space-y-3 leading-relaxed">
+                <p>Le site est fourni « tel quel ». NETCY ne saurait être tenue responsable des dommages résultant d&apos;une utilisation non conforme ou de causes externes (panne réseau, fournisseur tiers).</p>
+                <p>En cas de non-respect des présentes conditions ou de risque pour la sécurité, NETCY peut suspendre ou limiter l&apos;accès aux services.</p>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-white mb-4">
+                8. Modifications et contact
+              </h2>
+              <div className="space-y-3 leading-relaxed">
+                <p>NETCY peut adapter les présentes conditions. La version en ligne prévaut ; les utilisateurs sont invités à les consulter régulièrement.</p>
+                <p>Pour toute question : <a href="mailto:contact@netcy.fr" className="text-[#7A8FFF] hover:text-[#8FA5FF] underline">contact@netcy.fr</a>.</p>
+              </div>
             </section>
           </div>
 

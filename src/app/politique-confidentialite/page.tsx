@@ -97,65 +97,68 @@ export default function PolitiqueConfidentialitePage() {
           <div className="space-y-8 text-white/90">
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">
-                1. Collecte des données
+                1. Données collectées
               </h2>
-              <p className="leading-relaxed mb-3">
-                Nous collectons uniquement les informations nécessaires pour la gestion des contacts et services :
-              </p>
-              <ul className="list-disc list-inside space-y-2 pl-4">
-                <li>Nom, prénom, email, téléphone (via formulaire de contact)</li>
-                <li>Données de navigation (cookies, IP, analytics)</li>
+              <div className="space-y-3 leading-relaxed">
+                <p>Nous collectons uniquement les informations nécessaires à la création et à la gestion de votre compte client :</p>
+                <ul className="list-disc list-inside space-y-2 pl-4">
+                  <li>Identifiants de compte : nom, prénom, email, mot de passe (haché), téléphone facultatif.</li>
+                  <li>Données de profil et de facturation : coordonnées professionnelles, références de factures et historique des paiements le cas échéant.</li>
+                  <li>Journaux techniques : connexions, actions importantes dans l&apos;espace client, adresses IP horodatées à des fins de sécurité.</li>
+                  <li>Données de navigation soumises à consentement : cookies de mesure d&apos;audience Google Analytics.</li>
+                </ul>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-white mb-4">
+                2. Finalités et bases légales
+              </h2>
+              <div className="space-y-3 leading-relaxed">
+                <p>Nous utilisons vos données pour :</p>
+                <ul className="list-disc list-inside space-y-2 pl-4">
+                  <li>Authentifier et gérer les comptes, fournir le tableau de bord, les factures et le support client (exécution du contrat).</li>
+                  <li>Assurer la sécurité, prévenir la fraude et tracer les accès sensibles (intérêt légitime).</li>
+                  <li>Respecter nos obligations légales et comptables (facturation, conservation légale).</li>
+                  <li>Mesurer l&apos;audience et améliorer le site via Google Analytics uniquement si vous y consentez (consentement).</li>
+                </ul>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-white mb-4">
+                3. Partage et sous-traitants
+              </h2>
+              <div className="space-y-3 leading-relaxed">
+                <p>Vos données ne sont jamais vendues. Elles peuvent être traitées par :</p>
+                <ul className="list-disc list-inside space-y-2 pl-4">
+                  <li>Nos prestataires techniques (hébergement, authentification, messagerie) pour fournir le service.</li>
+                  <li>Google Analytics pour les mesures d&apos;audience si vous avez accepté les cookies statistiques.</li>
+                  <li>Les autorités compétentes si la loi l&apos;exige.</li>
+                </ul>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-white mb-4">
+                4. Durées de conservation
+              </h2>
+              <ul className="list-disc list-inside space-y-2 pl-4 leading-relaxed">
+                <li>Compte et données de facturation : pendant la relation contractuelle puis 3 ans après la dernière activité, sauf obligations plus longues (factures : 10 ans).</li>
+                <li>Journaux de connexion et de sécurité : jusqu&apos;à 12 mois.</li>
+                <li>Consentement cookies : 6 mois.</li>
+                <li>Mesures d&apos;audience Google Analytics : 14 mois maximum.</li>
               </ul>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">
-                2. Finalités
+                5. Vos droits
               </h2>
-              <p className="leading-relaxed mb-3">
-                Les données sont utilisées pour :
-              </p>
-              <ul className="list-disc list-inside space-y-2 pl-4">
-                <li>Répondre aux demandes des utilisateurs,</li>
-                <li>Fournir les services proposés,</li>
-                <li>Améliorer le site et ses fonctionnalités.</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">
-                3. Partage des données
-              </h2>
-              <p className="leading-relaxed">
-                Les données ne sont jamais vendues à des tiers. Elles peuvent être partagées uniquement avec des prestataires techniques pour assurer le fonctionnement du site (hébergement, messagerie).
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">
-                4. Durée de conservation
-              </h2>
-              <p className="leading-relaxed">
-                Les données personnelles sont conservées maximum 3 ans après le dernier contact, sauf obligation légale contraire.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">
-                5. Droits des utilisateurs
-              </h2>
-              <p className="leading-relaxed mb-3">
-                Conformément au RGPD, vous pouvez :
-              </p>
-              <ul className="list-disc list-inside space-y-2 pl-4">
-                <li>Accéder à vos données,</li>
-                <li>Les rectifier ou supprimer,</li>
-                <li>Vous opposer à leur traitement,</li>
-                <li>Demander leur portabilité.</li>
-              </ul>
-              <p className="leading-relaxed mt-3">
-                Pour exercer vos droits, contactez : <a href="mailto:contact@netcy.fr" className="text-[#7A8FFF] hover:text-[#8FA5FF] underline">contact@netcy.fr</a>
-              </p>
+              <div className="space-y-3 leading-relaxed">
+                <p>Conformément au RGPD, vous pouvez demander l&apos;accès, la rectification, la suppression, la limitation, l&apos;opposition et la portabilité de vos données.</p>
+                <p>Pour exercer vos droits ou retirer votre consentement aux cookies statistiques : <a href="mailto:contact@netcy.fr" className="text-[#7A8FFF] hover:text-[#8FA5FF] underline">contact@netcy.fr</a>. Vous pouvez également saisir la CNIL si nécessaire.</p>
+              </div>
             </section>
 
             <section>
@@ -163,96 +166,65 @@ export default function PolitiqueConfidentialitePage() {
                 6. Sécurité
               </h2>
               <p className="leading-relaxed">
-                NETCY met en œuvre des mesures techniques et organisationnelles pour protéger vos données contre tout accès non autorisé, divulgation ou perte.
+                Nous appliquons le chiffrement des communications, le hachage des mots de passe, le cloisonnement des accès et des sauvegardes régulières. En cas d&apos;incident de sécurité impactant vos données, vous serez informé conformément à la réglementation.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-white mb-4">
-                7. Cookies
+                7. Cookies et traceurs
               </h2>
-              <p className="leading-relaxed mb-4">
-                Le site utilise des cookies pour améliorer la navigation et analyser le trafic. Vous pouvez gérer vos préférences via la bannière de cookies ou via le lien &quot;Gérer les cookies&quot; en bas de page.
-              </p>
-              
-              <h3 className="text-xl font-semibold text-white mb-3 mt-6">
-                Types de cookies utilisés
-              </h3>
-              
-              <div className="space-y-4">
+              <div className="space-y-4 leading-relaxed">
+                <p>Vous pouvez accepter ou refuser les cookies via la bannière ou le lien « Gérer les cookies ». Seuls les cookies nécessaires sont déposés par défaut.</p>
+
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">🔒 Cookies Nécessaires (Toujours actifs)</h4>
+                  <h4 className="font-semibold text-white mb-2">Cookies nécessaires (toujours actifs)</h4>
                   <div className="text-sm space-y-2">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Nom:</span>
+                      <span className="text-gray-400">Nom</span>
                       <span className="text-white md:col-span-2">netcy_cookie_consent</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Finalité:</span>
-                      <span className="text-white md:col-span-2">Mémoriser vos préférences de cookies</span>
+                      <span className="text-gray-400">Finalité</span>
+                      <span className="text-white md:col-span-2">Mémoriser vos choix de consentement</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Durée:</span>
+                      <span className="text-gray-400">Durée</span>
                       <span className="text-white md:col-span-2">6 mois</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Fournisseur:</span>
-                      <span className="text-white md:col-span-2">NETCY (First-party)</span>
+                      <span className="text-gray-400">Fournisseur</span>
+                      <span className="text-white md:col-span-2">NETCY (first-party)</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">📊 Cookies Statistiques (Optionnels)</h4>
-                  <p className="text-sm text-gray-400 mb-3">Ces cookies nous aident à comprendre comment vous utilisez notre site.</p>
+                  <h4 className="font-semibold text-white mb-2">Cookies statistiques (soumis à consentement)</h4>
                   <div className="text-sm space-y-2">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Service:</span>
-                      <span className="text-white md:col-span-2">Google Analytics (si activé)</span>
+                      <span className="text-gray-400">Service</span>
+                      <span className="text-white md:col-span-2">Google Analytics</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Cookies:</span>
-                      <span className="text-white md:col-span-2">_ga, _gid, _gat</span>
+                      <span className="text-gray-400">Cookies</span>
+                      <span className="text-white md:col-span-2">_ga, _gid, _ga_*</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Finalité:</span>
-                      <span className="text-white md:col-span-2">Analyse d&apos;audience, statistiques de navigation</span>
+                      <span className="text-gray-400">Finalité</span>
+                      <span className="text-white md:col-span-2">Mesure d&apos;audience et amélioration de l&apos;expérience</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Durée:</span>
-                      <span className="text-white md:col-span-2">_ga: 2 ans, _gid: 24h, _gat: 1 minute</span>
+                      <span className="text-gray-400">Durée</span>
+                      <span className="text-white md:col-span-2">_ga et _ga_* : 14 mois, _gid : 24h</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Fournisseur:</span>
-                      <span className="text-white md:col-span-2">Google LLC (Third-party)</span>
+                      <span className="text-gray-400">Fournisseur</span>
+                      <span className="text-white md:col-span-2">Google LLC (tiers)</span>
                     </div>
                   </div>
+                  <p className="text-xs text-gray-400 mt-3">Aucune donnée statistique n&apos;est collectée sans votre accord. Les adresses IP sont anonymisées avant transmission à Google lorsque cela est proposé par le service.</p>
                 </div>
-
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <h4 className="font-semibold text-white mb-2">📢 Cookies Marketing (Optionnels)</h4>
-                  <p className="text-sm text-gray-400 mb-3">Ces cookies permettent de personnaliser les publicités.</p>
-                  <div className="text-sm space-y-2">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Services possibles:</span>
-                      <span className="text-white md:col-span-2">Facebook Pixel, Google Ads (si activés)</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Finalité:</span>
-                      <span className="text-white md:col-span-2">Ciblage publicitaire, remarketing, mesure de conversion</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <span className="text-gray-400">Durée:</span>
-                      <span className="text-white md:col-span-2">Variable selon le service (90 jours à 2 ans)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 p-4 bg-[#6F3FFF]/10 border border-[#6F3FFF]/30 rounded-lg">
-                <p className="text-sm text-white">
-                  💡 <strong>Bon à savoir :</strong> Vous pouvez modifier vos préférences à tout moment en cliquant sur &quot;Gérer les cookies&quot; en bas de page. Votre choix sera mémorisé pendant 6 mois maximum.
-                </p>
               </div>
             </section>
           </div>
