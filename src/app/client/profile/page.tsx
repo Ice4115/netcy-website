@@ -68,18 +68,25 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
       const xPercent = (x / rect.width) * 100;
       const yPercent = (y / rect.height) * 100;
       
-      glare.style.background = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(255, 255, 255, 0.5) 0%, transparent 50%)`;
+      glare.style.background = `radial-gradient(circle 300px at ${xPercent}% ${yPercent}%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 40%, transparent 70%)`;
+    };
+
+    const handleMouseEnter = () => {
+      glare.style.opacity = '1';
     };
 
     const handleMouseLeave = () => {
+      glare.style.opacity = '0';
       glare.style.background = 'transparent';
     };
 
     card.addEventListener('mousemove', handleMouseMove);
+    card.addEventListener('mouseenter', handleMouseEnter);
     card.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
       card.removeEventListener('mousemove', handleMouseMove);
+      card.removeEventListener('mouseenter', handleMouseEnter);
       card.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
@@ -141,9 +148,15 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
         }
 
         .reflective-glare {
-          transition: background 0.1s ease;
-          mix-blend-mode: overlay;
+          background: transparent;
+          mix-blend-mode: screen;
           z-index: 5;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .reflective-card-container:hover .reflective-glare {
+          opacity: 1;
         }
 
         .reflective-border {

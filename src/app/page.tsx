@@ -796,10 +796,10 @@ export default function Home() {
         <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-4">
           <Dock 
             items={dockItems}
-            magnification={70}
-            distance={200}
-            panelHeight={68}
-            baseItemSize={50}
+            magnification={isMobile ? 55 : 70}
+            distance={isMobile ? 100 : 200}
+            panelHeight={isMobile ? 60 : 68}
+            baseItemSize={isMobile ? 42 : 50}
           />
         </div>
       )}
