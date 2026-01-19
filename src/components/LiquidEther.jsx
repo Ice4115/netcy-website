@@ -1,103 +1,38 @@
-'use client';
-
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import './LiquidEther.css';
 
-const isMobileDevice = () => {
-  if (typeof window === 'undefined') return false;
-  const ua = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isSmallScreen = window.innerWidth <= 1024;
-  return ua || isSmallScreen;
-};
-
-/**
- * @param {Object} props
- * @param {number} [props.mouseForce]
- * @param {number} [props.cursorSize]
- * @param {boolean} [props.isViscous]
- * @param {number} [props.viscous]
- * @param {number} [props.iterationsViscous]
- * @param {number} [props.iterationsPoisson]
- * @param {number} [props.dt]
- * @param {boolean} [props.BFECC]
- * @param {number} [props.resolution]
- * @param {boolean} [props.isBounce]
- * @param {string[]} [props.colors]
- * @param {Object} [props.style]
- * @param {string} [props.className]
- * @param {boolean} [props.autoDemo]
- * @param {number} [props.autoSpeed]
- * @param {number} [props.autoIntensity]
- * @param {number} [props.takeoverDuration]
- * @param {number} [props.autoResumeDelay]
- * @param {number} [props.autoRampDuration]
- */
 export default function LiquidEther({
-  mouseForce,
-  cursorSize,
+  mouseForce = 20,
+  cursorSize = 100,
   isViscous = false,
   viscous = 30,
-  iterationsViscous,
-  iterationsPoisson,
+  iterationsViscous = 32,
+  iterationsPoisson = 32,
   dt = 0.014,
   BFECC = true,
-  resolution,
-  isBounce = true,
-  colors = ['#3F12F3', '#4670D2', '#5670A4'],
+  resolution = 0.5,
+  isBounce = false,
+  colors = ['#5227FF', '#FF9FFC', '#B19EEF'],
   style = {},
   className = '',
-  autoDemo,
+  autoDemo = true,
   autoSpeed = 0.5,
   autoIntensity = 2.2,
   takeoverDuration = 0.25,
   autoResumeDelay = 1000,
   autoRampDuration = 0.6
-} = {}) {
+}) {
   const mountRef = useRef(null);
+  const webglRef = useRef(null);
+  const resizeObserverRef = useRef(null);
   const rafRef = useRef(null);
-
-  const isMobile = useMemo(() => isMobileDevice(), []);
-
-  const finalMouseForce = mouseForce ?? (isMobile ? 80 : 20);
-  const finalCursorSize = cursorSize ?? (isMobile ? 250 : 100);
-  const finalIterationsViscous = iterationsViscous ?? (isMobile ? 16 : 32);
-  const finalIterationsPoisson = iterationsPoisson ?? (isMobile ? 16 : 32);
-  const finalResolution = resolution ?? (isMobile ? 0.35 : 0.5);
-  const finalAutoDemo = autoDemo ?? (isMobile ? false : true);
+  const intersectionObserverRef = useRef(null);
+  const isVisibleRef = useRef(true);
+  const resizeRafRef = useRef(null);
 
   useEffect(() => {
     if (!mountRef.current) return;
-
-    window.dispatchEvent(new CustomEvent('debug-update', { 
-      detail: { component: 'desktop', lastTouch: 'mounting...' } 
-    }));
-
-    const checkWebGLSupport = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (!gl) {
-          console.error('LiquidEther: WebGL not supported');
-          return false;
-        }
-        return true;
-      } catch (e) {
-        console.error('LiquidEther: Error checking WebGL support', e);
-        return false;
-      }
-    };
-
-    if (!checkWebGLSupport()) {
-      const fallback = document.createElement('div');
-      fallback.style.cssText = 'width:100%;height:100%;background:linear-gradient(135deg, #6F3FFF 0%, #7A8FFF 50%, #8FA5FF 100%);';
-      mountRef.current.appendChild(fallback);
-      return () => {
-        if (mountRef.current && fallback.parentNode === mountRef.current) {
-          mountRef.current.removeChild(fallback);
-        }
-      };
-    }
 
     function makePaletteTexture(stops) {
       let arr;
@@ -136,200 +71,265 @@ export default function LiquidEther({
       constructor() {
         this.width = 0;
         this.height = 0;
+        this.aspect = 1;
         this.pixelRatio = 1;
+        this.isMobile = false;
+        this.breakpoint = 768;
+        this.fboWidth = null;
+        this.fboHeight = null;
+        this.time = 0;
+        this.delta = 0;
+        this.container = null;
         this.renderer = null;
         this.clock = null;
       }
       init(container) {
         this.container = container;
-        this.pixelRatio = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
         this.resize();
-        this.renderer = new THREE.WebGLRenderer({
-          alpha: true,
-          antialias: false,
-          powerPreference: 'high-performance'
-        });
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.autoClear = false;
-        this.renderer.setClearColor(0x110F1B, 0);
+        this.renderer.setClearColor(new THREE.Color(0x000000), 0);
         this.renderer.setPixelRatio(this.pixelRatio);
         this.renderer.setSize(this.width, this.height);
         this.renderer.domElement.style.width = '100%';
         this.renderer.domElement.style.height = '100%';
         this.renderer.domElement.style.display = 'block';
-        container.appendChild(this.renderer.domElement);
         this.clock = new THREE.Clock();
         this.clock.start();
       }
       resize() {
-        const r = this.container.getBoundingClientRect();
-        this.width = Math.max(1, Math.floor(r.width));
-        this.height = Math.max(1, Math.floor(r.height));
+        if (!this.container) return;
+        const rect = this.container.getBoundingClientRect();
+        this.width = Math.max(1, Math.floor(rect.width));
+        this.height = Math.max(1, Math.floor(rect.height));
+        this.aspect = this.width / this.height;
         if (this.renderer) this.renderer.setSize(this.width, this.height, false);
       }
       update() {
         this.delta = this.clock.getDelta();
+        this.time += this.delta;
       }
     }
-
     const Common = new CommonClass();
 
     class MouseClass {
       constructor() {
+        this.mouseMoved = false;
         this.coords = new THREE.Vector2();
         this.coords_old = new THREE.Vector2();
         this.diff = new THREE.Vector2();
-        this.velocity = new THREE.Vector2();
-        this.inertia = isMobile ? 0.90 : 0.95;
+        this.timer = null;
         this.container = null;
-        this.touches = [];
-        this.isTouching = false;
-        this.isAutoActive = false;
+        this.docTarget = null;
+        this.listenerTarget = null;
+        this.isHoverInside = false;
         this.hasUserControl = false;
-        this.lastTouchTime = 0;
-        this._onMouseMove = this.onMouseMove.bind(this);
-        this._onTouchStart = this.onTouchStart.bind(this);
-        this._onTouchMove = this.onTouchMove.bind(this);
+        this.isAutoActive = false;
+        this.autoIntensity = 2.0;
+        this.takeoverActive = false;
+        this.takeoverStartTime = 0;
+        this.takeoverDuration = 0.25;
+        this.takeoverFrom = new THREE.Vector2();
+        this.takeoverTo = new THREE.Vector2();
+        this.onInteract = null;
+        this._onMouseMove = this.onDocumentMouseMove.bind(this);
+        this._onTouchStart = this.onDocumentTouchStart.bind(this);
+        this._onTouchMove = this.onDocumentTouchMove.bind(this);
         this._onTouchEnd = this.onTouchEnd.bind(this);
+        this._onDocumentLeave = this.onDocumentLeave.bind(this);
       }
-
       init(container) {
         this.container = container;
-        if (isMobile) {
-          container.addEventListener('touchstart', this._onTouchStart, { passive: false });
-          container.addEventListener('touchmove', this._onTouchMove, { passive: false });
-          container.addEventListener('touchend', this._onTouchEnd, { passive: false });
-          container.addEventListener('touchcancel', this._onTouchEnd, { passive: false });
-        } else {
-          window.addEventListener('mousemove', this._onMouseMove);
+        this.docTarget = container.ownerDocument || null;
+        const defaultView =
+          (this.docTarget && this.docTarget.defaultView) || (typeof window !== 'undefined' ? window : null);
+        if (!defaultView) return;
+        this.listenerTarget = defaultView;
+        this.listenerTarget.addEventListener('mousemove', this._onMouseMove);
+        this.listenerTarget.addEventListener('touchstart', this._onTouchStart, { passive: true });
+        this.listenerTarget.addEventListener('touchmove', this._onTouchMove, { passive: true });
+        this.listenerTarget.addEventListener('touchend', this._onTouchEnd);
+        if (this.docTarget) {
+          this.docTarget.addEventListener('mouseleave', this._onDocumentLeave);
         }
       }
-
       dispose() {
-        if (!this.container) return;
-        if (isMobile) {
-          this.container.removeEventListener('touchstart', this._onTouchStart);
-          this.container.removeEventListener('touchmove', this._onTouchMove);
-          this.container.removeEventListener('touchend', this._onTouchEnd);
-          this.container.removeEventListener('touchcancel', this._onTouchEnd);
-        } else {
-          window.removeEventListener('mousemove', this._onMouseMove);
+        if (this.listenerTarget) {
+          this.listenerTarget.removeEventListener('mousemove', this._onMouseMove);
+          this.listenerTarget.removeEventListener('touchstart', this._onTouchStart);
+          this.listenerTarget.removeEventListener('touchmove', this._onTouchMove);
+          this.listenerTarget.removeEventListener('touchend', this._onTouchEnd);
         }
+        if (this.docTarget) {
+          this.docTarget.removeEventListener('mouseleave', this._onDocumentLeave);
+        }
+        this.listenerTarget = null;
+        this.docTarget = null;
+        this.container = null;
       }
-
-      setFromEvent(clientX, clientY) {
-        const r = this.container.getBoundingClientRect();
-        const nx = (clientX - r.left) / r.width;
-        const ny = (clientY - r.top) / r.height;
+      isPointInside(clientX, clientY) {
+        if (!this.container) return false;
+        const rect = this.container.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return false;
+        return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+      }
+      updateHoverState(clientX, clientY) {
+        this.isHoverInside = this.isPointInside(clientX, clientY);
+        return this.isHoverInside;
+      }
+      setCoords(x, y) {
+        if (!this.container) return;
+        if (this.timer) window.clearTimeout(this.timer);
+        const rect = this.container.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+        const nx = (x - rect.left) / rect.width;
+        const ny = (y - rect.top) / rect.height;
         this.coords.set(nx * 2 - 1, -(ny * 2 - 1));
+        this.mouseMoved = true;
+        this.timer = window.setTimeout(() => {
+          this.mouseMoved = false;
+        }, 100);
       }
-
-      onMouseMove(e) {
-        this.setFromEvent(e.clientX, e.clientY);
+      setNormalized(nx, ny) {
+        this.coords.set(nx, ny);
+        this.mouseMoved = true;
+      }
+      onDocumentMouseMove(event) {
+        if (!this.updateHoverState(event.clientX, event.clientY)) return;
+        if (this.onInteract) this.onInteract();
+        if (this.isAutoActive && !this.hasUserControl && !this.takeoverActive) {
+          if (!this.container) return;
+          const rect = this.container.getBoundingClientRect();
+          if (rect.width === 0 || rect.height === 0) return;
+          const nx = (event.clientX - rect.left) / rect.width;
+          const ny = (event.clientY - rect.top) / rect.height;
+          this.takeoverFrom.copy(this.coords);
+          this.takeoverTo.set(nx * 2 - 1, -(ny * 2 - 1));
+          this.takeoverStartTime = performance.now();
+          this.takeoverActive = true;
+          this.hasUserControl = true;
+          this.isAutoActive = false;
+          return;
+        }
+        this.setCoords(event.clientX, event.clientY);
         this.hasUserControl = true;
       }
-
-      onTouchStart(e) {
-        try {
-          e.preventDefault();
-          e.stopPropagation();
-          this.touches = [...e.touches];
-          this.isTouching = true;
-          this.lastTouchTime = Date.now();
-          
-          if (this.touches.length > 0) {
-            const touch = this.touches[0];
-            this.setFromEvent(touch.clientX, touch.clientY);
-            this.coords_old.copy(this.coords);
-            this.hasUserControl = true;
-          }
-        } catch (err) {
-          console.error('Touch start error:', err);
-        }
+      onDocumentTouchStart(event) {
+        if (event.touches.length !== 1) return;
+        const t = event.touches[0];
+        if (!this.updateHoverState(t.clientX, t.clientY)) return;
+        if (this.onInteract) this.onInteract();
+        this.setCoords(t.clientX, t.clientY);
+        this.hasUserControl = true;
       }
-
-      onTouchMove(e) {
-        try {
-          e.preventDefault();
-          e.stopPropagation();
-          this.touches = [...e.touches];
-          this.lastTouchTime = Date.now();
-
-          if (this.touches.length === 1) {
-            const touch = this.touches[0];
-            this.setFromEvent(touch.clientX, touch.clientY);
-            this.hasUserControl = true;
-          } else if (this.touches.length === 2) {
-            const a = this.touches[0];
-            const b = this.touches[1];
-            const cx = (a.clientX + b.clientX) * 0.5;
-            const cy = (a.clientY + b.clientY) * 0.5;
-            this.setFromEvent(cx, cy);
-
-            const dx = a.clientX - b.clientX;
-            const dy = a.clientY - b.clientY;
-            this.velocity.x += -dy * 0.003;
-            this.velocity.y += dx * 0.003;
-            this.hasUserControl = true;
-          }
-        } catch (err) {
-          console.error('Touch move error:', err);
-        }
+      onDocumentTouchMove(event) {
+        if (event.touches.length !== 1) return;
+        const t = event.touches[0];
+        if (!this.updateHoverState(t.clientX, t.clientY)) return;
+        if (this.onInteract) this.onInteract();
+        this.setCoords(t.clientX, t.clientY);
       }
-
-      onTouchEnd(e) {
-        try {
-          e.preventDefault();
-          this.touches = [...e.touches];
-          if (this.touches.length === 0) {
-            this.isTouching = false;
-          }
-        } catch (err) {
-          console.error('Touch end error:', err);
-        }
+      onTouchEnd() {
+        this.isHoverInside = false;
       }
-
+      onDocumentLeave() {
+        this.isHoverInside = false;
+      }
       update() {
-        const rawDiff = new THREE.Vector2();
-        rawDiff.subVectors(this.coords, this.coords_old);
-        this.coords_old.copy(this.coords);
-        
-        if (isMobile) {
-          if (this.isTouching) {
-            const amplifiedDiff = rawDiff.clone().multiplyScalar(12.0);
-            this.velocity.add(amplifiedDiff);
-            this.velocity.multiplyScalar(0.80);
-            this.diff.copy(amplifiedDiff);
+        if (this.takeoverActive) {
+          const t = (performance.now() - this.takeoverStartTime) / (this.takeoverDuration * 1000);
+          if (t >= 1) {
+            this.takeoverActive = false;
+            this.coords.copy(this.takeoverTo);
+            this.coords_old.copy(this.coords);
+            this.diff.set(0, 0);
           } else {
-            this.velocity.multiplyScalar(this.inertia);
-            this.diff.copy(this.velocity);
+            const k = t * t * (3 - 2 * t);
+            this.coords.copy(this.takeoverFrom).lerp(this.takeoverTo, k);
           }
-        } else {
-          this.diff.copy(rawDiff);
         }
+        this.diff.subVectors(this.coords, this.coords_old);
+        this.coords_old.copy(this.coords);
+        if (this.coords_old.x === 0 && this.coords_old.y === 0) this.diff.set(0, 0);
+        if (this.isAutoActive && !this.takeoverActive) this.diff.multiplyScalar(this.autoIntensity);
       }
     }
-
     const Mouse = new MouseClass();
 
-    const getPrecision = () => {
-      const gl = document.createElement('canvas').getContext('webgl') || 
-                 document.createElement('canvas').getContext('experimental-webgl');
-      if (!gl) return 'mediump';
-      const fragmentPrecision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
-      if (fragmentPrecision && fragmentPrecision.precision > 0) {
-        return 'highp';
+    class AutoDriver {
+      constructor(mouse, manager, opts) {
+        this.mouse = mouse;
+        this.manager = manager;
+        this.enabled = opts.enabled;
+        this.speed = opts.speed;
+        this.resumeDelay = opts.resumeDelay || 3000;
+        this.rampDurationMs = (opts.rampDuration || 0) * 1000;
+        this.active = false;
+        this.current = new THREE.Vector2(0, 0);
+        this.target = new THREE.Vector2();
+        this.lastTime = performance.now();
+        this.activationTime = 0;
+        this.margin = 0.2;
+        this._tmpDir = new THREE.Vector2();
+        this.pickNewTarget();
       }
-      return 'mediump';
-    };
-
-    const precision = getPrecision();
+      pickNewTarget() {
+        const r = Math.random;
+        this.target.set((r() * 2 - 1) * (1 - this.margin), (r() * 2 - 1) * (1 - this.margin));
+      }
+      forceStop() {
+        this.active = false;
+        this.mouse.isAutoActive = false;
+      }
+      update() {
+        if (!this.enabled) return;
+        const now = performance.now();
+        const idle = now - this.manager.lastUserInteraction;
+        if (idle < this.resumeDelay) {
+          if (this.active) this.forceStop();
+          return;
+        }
+        if (this.mouse.isHoverInside) {
+          if (this.active) this.forceStop();
+          return;
+        }
+        if (!this.active) {
+          this.active = true;
+          this.current.copy(this.mouse.coords);
+          this.lastTime = now;
+          this.activationTime = now;
+        }
+        if (!this.active) return;
+        this.mouse.isAutoActive = true;
+        let dtSec = (now - this.lastTime) / 1000;
+        this.lastTime = now;
+        if (dtSec > 0.2) dtSec = 0.016;
+        const dir = this._tmpDir.subVectors(this.target, this.current);
+        const dist = dir.length();
+        if (dist < 0.01) {
+          this.pickNewTarget();
+          return;
+        }
+        dir.normalize();
+        let ramp = 1;
+        if (this.rampDurationMs > 0) {
+          const t = Math.min(1, (now - this.activationTime) / this.rampDurationMs);
+          ramp = t * t * (3 - 2 * t);
+        }
+        const step = this.speed * dtSec * ramp;
+        const move = Math.min(step, dist);
+        this.current.addScaledVector(dir, move);
+        this.mouse.setNormalized(this.current.x, this.current.y);
+      }
+    }
 
     const face_vert = `
   attribute vec3 position;
   uniform vec2 px;
   uniform vec2 boundarySpace;
   varying vec2 uv;
-  precision ${precision} float;
+  precision highp float;
   void main(){
   vec3 pos = position;
   vec2 scale = 1.0 - boundarySpace * 2.0;
@@ -341,7 +341,7 @@ export default function LiquidEther({
     const line_vert = `
   attribute vec3 position;
   uniform vec2 px;
-  precision ${precision} float;
+  precision highp float;
   varying vec2 uv;
   void main(){
   vec3 pos = position;
@@ -353,7 +353,7 @@ export default function LiquidEther({
 }
 `;
     const mouse_vert = `
-    precision ${precision} float;
+    precision highp float;
     attribute vec3 position;
     attribute vec2 uv;
     uniform vec2 center;
@@ -367,7 +367,7 @@ export default function LiquidEther({
 }
 `;
     const advection_frag = `
-    precision ${precision} float;
+    precision highp float;
     uniform sampler2D velocity;
     uniform float dt;
     uniform bool isBFECC;
@@ -397,7 +397,7 @@ export default function LiquidEther({
 }
 `;
     const color_frag = `
-    precision ${precision} float;
+    precision highp float;
     uniform sampler2D velocity;
     uniform sampler2D palette;
     uniform vec4 bgColor;
@@ -412,7 +412,7 @@ export default function LiquidEther({
 }
 `;
     const divergence_frag = `
-    precision ${precision} float;
+    precision highp float;
     uniform sampler2D velocity;
     uniform float dt;
     uniform vec2 px;
@@ -427,7 +427,7 @@ export default function LiquidEther({
 }
 `;
     const externalForce_frag = `
-    precision ${precision} float;
+    precision highp float;
     uniform vec2 force;
     uniform vec2 center;
     uniform vec2 scale;
@@ -441,7 +441,7 @@ export default function LiquidEther({
 }
 `;
     const poisson_frag = `
-    precision ${precision} float;
+    precision highp float;
     uniform sampler2D pressure;
     uniform sampler2D divergence;
     uniform vec2 px;
@@ -457,7 +457,7 @@ export default function LiquidEther({
 }
 `;
     const pressure_frag = `
-    precision ${precision} float;
+    precision highp float;
     uniform sampler2D pressure;
     uniform sampler2D velocity;
     uniform vec2 px;
@@ -476,7 +476,7 @@ export default function LiquidEther({
 }
 `;
     const viscous_frag = `
-    precision ${precision} float;
+    precision highp float;
     uniform sampler2D velocity;
     uniform sampler2D velocity_new;
     uniform float v;
@@ -509,15 +509,10 @@ export default function LiquidEther({
         this.scene = new THREE.Scene();
         this.camera = new THREE.Camera();
         if (this.uniforms) {
-          try {
-            this.material = new THREE.RawShaderMaterial(this.props.material);
-            this.geometry = new THREE.PlaneGeometry(2.0, 2.0);
-            this.plane = new THREE.Mesh(this.geometry, this.material);
-            this.scene.add(this.plane);
-          } catch (e) {
-            console.error('LiquidEther: Shader compilation error', e);
-            throw e;
-          }
+          this.material = new THREE.RawShaderMaterial(this.props.material);
+          this.geometry = new THREE.PlaneGeometry(2.0, 2.0);
+          this.plane = new THREE.Mesh(this.geometry, this.material);
+          this.scene.add(this.plane);
         }
       }
       update() {
@@ -597,10 +592,8 @@ export default function LiquidEther({
         this.scene.add(this.mouse);
       }
       update(props) {
-        const diffMultiplier = isMobile ? 1.0 : 0.5;
-        const forceX = (Mouse.diff.x * diffMultiplier) * props.mouse_force;
-        const forceY = (Mouse.diff.y * diffMultiplier) * props.mouse_force;
-        
+        const forceX = (Mouse.diff.x / 2) * props.mouse_force;
+        const forceY = (Mouse.diff.y / 2) * props.mouse_force;
         const cursorSizeX = props.cursor_size * props.cellScale.x;
         const cursorSizeY = props.cursor_size * props.cellScale.y;
         const centerX = Math.min(
@@ -746,18 +739,19 @@ export default function LiquidEther({
     }
 
     class Simulation {
-      constructor() {
+      constructor(options) {
         this.options = {
-          iterations_poisson: finalIterationsPoisson,
-          iterations_viscous: finalIterationsViscous,
-          mouse_force: finalMouseForce,
-          resolution: finalResolution,
-          cursor_size: finalCursorSize,
-          viscous: viscous,
-          isBounce: isBounce,
-          dt: dt,
-          isViscous: isViscous,
-          BFECC: BFECC
+          iterations_poisson: 32,
+          iterations_viscous: 32,
+          mouse_force: 20,
+          resolution: 0.5,
+          cursor_size: 100,
+          viscous: 30,
+          isBounce: false,
+          dt: 0.014,
+          isViscous: false,
+          BFECC: true,
+          ...options
         };
         this.fbos = {
           vel_0: null,
@@ -913,6 +907,9 @@ export default function LiquidEther({
         );
         this.scene.add(this.output);
       }
+      addScene(mesh) {
+        this.scene.add(mesh);
+      }
       resize() {
         this.simulation.resize();
       }
@@ -926,53 +923,244 @@ export default function LiquidEther({
       }
     }
 
-    Common.init(mountRef.current);
-    Mouse.init(mountRef.current);
+    class WebGLManager {
+      constructor(props) {
+        this.props = props;
+        Common.init(props.$wrapper);
+        Mouse.init(props.$wrapper);
+        Mouse.autoIntensity = props.autoIntensity;
+        Mouse.takeoverDuration = props.takeoverDuration;
+        this.lastUserInteraction = performance.now();
+        Mouse.onInteract = () => {
+          this.lastUserInteraction = performance.now();
+          if (this.autoDriver) this.autoDriver.forceStop();
+        };
+        this.autoDriver = new AutoDriver(Mouse, this, {
+          enabled: props.autoDemo,
+          speed: props.autoSpeed,
+          resumeDelay: props.autoResumeDelay,
+          rampDuration: props.autoRampDuration
+        });
+        this.init();
+        this._loop = this.loop.bind(this);
+        this._resize = this.resize.bind(this);
+        window.addEventListener('resize', this._resize);
+        this._onVisibility = () => {
+          const hidden = document.hidden;
+          if (hidden) {
+            this.pause();
+          } else if (isVisibleRef.current) {
+            this.start();
+          }
+        };
+        document.addEventListener('visibilitychange', this._onVisibility);
+        this.running = false;
+      }
+      init() {
+        this.props.$wrapper.prepend(Common.renderer.domElement);
+        this.output = new Output();
+      }
+      resize() {
+        Common.resize();
+        this.output.resize();
+      }
+      render() {
+        if (this.autoDriver) this.autoDriver.update();
+        Mouse.update();
+        Common.update();
+        this.output.update();
+      }
+      loop() {
+        if (!this.running) return;
+        this.render();
+        rafRef.current = requestAnimationFrame(this._loop);
+      }
+      start() {
+        if (this.running) return;
+        this.running = true;
+        this._loop();
+      }
+      pause() {
+        this.running = false;
+        if (rafRef.current) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+      }
+      dispose() {
+        try {
+          window.removeEventListener('resize', this._resize);
+          document.removeEventListener('visibilitychange', this._onVisibility);
+          Mouse.dispose();
+          if (Common.renderer) {
+            const canvas = Common.renderer.domElement;
+            if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+            Common.renderer.dispose();
+          }
+        } catch (e) {
+          void 0;
+        }
+      }
+    }
 
-    const output = new Output();
-    
-    const animate = () => {
-      Mouse.update();
-      Common.update();
-      output.update();
-      rafRef.current = requestAnimationFrame(animate);
-    };
+    const container = mountRef.current;
+    container.style.position = container.style.position || 'relative';
+    container.style.overflow = container.style.overflow || 'hidden';
 
-    const handleResize = () => {
-      Common.resize();
-      output.resize();
-    };
+    const webgl = new WebGLManager({
+      $wrapper: container,
+      autoDemo,
+      autoSpeed,
+      autoIntensity,
+      takeoverDuration,
+      autoResumeDelay,
+      autoRampDuration
+    });
+    webglRef.current = webgl;
 
-    window.addEventListener('resize', handleResize);
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      Mouse.dispose();
-      if (Common.renderer) {
-        const canvas = Common.renderer.domElement;
-        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
-        Common.renderer.dispose();
+    const applyOptionsFromProps = () => {
+      if (!webglRef.current) return;
+      const sim = webglRef.current.output?.simulation;
+      if (!sim) return;
+      const prevRes = sim.options.resolution;
+      Object.assign(sim.options, {
+        mouse_force: mouseForce,
+        cursor_size: cursorSize,
+        isViscous,
+        viscous,
+        iterations_viscous: iterationsViscous,
+        iterations_poisson: iterationsPoisson,
+        dt,
+        BFECC,
+        resolution,
+        isBounce
+      });
+      if (resolution !== prevRes) {
+        sim.resize();
       }
     };
-  }, [finalMouseForce, finalCursorSize, finalIterationsViscous, finalIterationsPoisson, finalResolution, isViscous, viscous, dt, BFECC, isBounce, colors]);
+    applyOptionsFromProps();
 
-  return (
-    <div
-      ref={mountRef}
-      className={`liquid-ether-container ${className}`}
-      style={{ 
-        position: 'relative',
-        overflow: 'hidden',
-        width: '100%',
-        height: '100%',
-        touchAction: 'none',
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        pointerEvents: 'none',
-        ...style 
-      }}
-    />
-  );
+    webgl.start();
+
+    const io = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        const isVisible = entry.isIntersecting && entry.intersectionRatio > 0;
+        isVisibleRef.current = isVisible;
+        if (!webglRef.current) return;
+        if (isVisible && !document.hidden) {
+          webglRef.current.start();
+        } else {
+          webglRef.current.pause();
+        }
+      },
+      { threshold: [0, 0.01, 0.1] }
+    );
+    io.observe(container);
+    intersectionObserverRef.current = io;
+
+    const ro = new ResizeObserver(() => {
+      if (!webglRef.current) return;
+      if (resizeRafRef.current) cancelAnimationFrame(resizeRafRef.current);
+      resizeRafRef.current = requestAnimationFrame(() => {
+        if (!webglRef.current) return;
+        webglRef.current.resize();
+      });
+    });
+    ro.observe(container);
+    resizeObserverRef.current = ro;
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (resizeObserverRef.current) {
+        try {
+          resizeObserverRef.current.disconnect();
+        } catch (e) {
+          void 0;
+        }
+      }
+      if (intersectionObserverRef.current) {
+        try {
+          intersectionObserverRef.current.disconnect();
+        } catch (e) {
+          void 0;
+        }
+      }
+      if (webglRef.current) {
+        webglRef.current.dispose();
+      }
+      webglRef.current = null;
+    };
+  }, [
+    BFECC,
+    cursorSize,
+    dt,
+    isBounce,
+    isViscous,
+    iterationsPoisson,
+    iterationsViscous,
+    mouseForce,
+    resolution,
+    viscous,
+    colors,
+    autoDemo,
+    autoSpeed,
+    autoIntensity,
+    takeoverDuration,
+    autoResumeDelay,
+    autoRampDuration
+  ]);
+
+  useEffect(() => {
+    const webgl = webglRef.current;
+    if (!webgl) return;
+    const sim = webgl.output?.simulation;
+    if (!sim) return;
+    const prevRes = sim.options.resolution;
+    Object.assign(sim.options, {
+      mouse_force: mouseForce,
+      cursor_size: cursorSize,
+      isViscous,
+      viscous,
+      iterations_viscous: iterationsViscous,
+      iterations_poisson: iterationsPoisson,
+      dt,
+      BFECC,
+      resolution,
+      isBounce
+    });
+    if (webgl.autoDriver) {
+      webgl.autoDriver.enabled = autoDemo;
+      webgl.autoDriver.speed = autoSpeed;
+      webgl.autoDriver.resumeDelay = autoResumeDelay;
+      webgl.autoDriver.rampDurationMs = autoRampDuration * 1000;
+      if (webgl.autoDriver.mouse) {
+        webgl.autoDriver.mouse.autoIntensity = autoIntensity;
+        webgl.autoDriver.mouse.takeoverDuration = takeoverDuration;
+      }
+    }
+    if (resolution !== prevRes) {
+      sim.resize();
+    }
+  }, [
+    mouseForce,
+    cursorSize,
+    isViscous,
+    viscous,
+    iterationsViscous,
+    iterationsPoisson,
+    dt,
+    BFECC,
+    resolution,
+    isBounce,
+    autoDemo,
+    autoSpeed,
+    autoIntensity,
+    takeoverDuration,
+    autoResumeDelay,
+    autoRampDuration
+  ]);
+
+  return <div ref={mountRef} className={`liquid-ether-container ${className || ''}`} style={style} />;
 }
