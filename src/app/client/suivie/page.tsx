@@ -4,7 +4,12 @@ import { useState, useEffect } from 'react';
 import { supabase, getCurrentUser } from '@/lib/supabase';
 import SpotlightCard from '@/components/SpotlightCard';
 import Modal from '@/components/Modal';
-import { Clock, CheckCircle, AlertCircle, Activity, MessageCircle, X } from 'lucide-react';
+import { Clock } from '@/components/animate-ui/icons/clock';
+import { CheckCircle } from '@/components/animate-ui/icons/check-circle';
+import { AlertCircle } from '@/components/animate-ui/icons/alert-circle';
+import { Activity } from '@/components/animate-ui/icons/activity';
+import { MessageCircle } from '@/components/animate-ui/icons/message-circle';
+import { X } from '@/components/animate-ui/icons/x';
 
 interface Message {
   id: string;
@@ -28,13 +33,13 @@ interface Project {
 const getStatusIcon = (status: string) => {
   switch (status) {
     case 'en_cours':
-      return <Activity className="text-blue-400" size={20} />;
+      return <Activity className="text-blue-400" size={20} loop={true} loopDelay={2000} />;
     case 'termine':
-      return <CheckCircle className="text-green-400" size={20} />;
+      return <CheckCircle className="text-green-400" size={20} loop={true} loopDelay={2000} />;
     case 'en_attente':
-      return <Clock className="text-yellow-400" size={20} />;
+      return <Clock className="text-yellow-400" size={20} loop={true} loopDelay={2000} />;
     default:
-      return <AlertCircle className="text-gray-400" size={20} />;
+      return <AlertCircle className="text-gray-400" size={20} loop={true} loopDelay={2000} />;
   }
 };
 
@@ -206,7 +211,7 @@ export default function SuiviePage() {
                 {project.messages && project.messages.length > 0 && (
                   <div className="mb-6 space-y-2">
                     <div className="flex items-center gap-2 mb-3 animate-fade-in">
-                      <MessageCircle className="text-[#6F3FFF] animate-pulse" size={18} />
+                      <MessageCircle className="text-[#6F3FFF] animate-pulse" size={18} loop={true} loopDelay={2000} />
                       <h4 className="text-sm font-semibold text-white">Messages récents</h4>
                     </div>
                     {project.messages.map((message, index) => (

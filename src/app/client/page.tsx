@@ -3,7 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase, getCurrentUser } from '@/lib/supabase';
-import { TrendingUp, CheckCircle, Clock, Percent } from 'lucide-react';
+import { TrendingUp } from '@/components/animate-ui/icons/trending-up';
+import { CheckCircle } from '@/components/animate-ui/icons/check-circle';
+import { Clock } from '@/components/animate-ui/icons/clock';
+import { Percent } from '@/components/animate-ui/icons/percent';
 import { gsap } from 'gsap';
 
 interface Project {
@@ -171,28 +174,28 @@ export default function ClientDashboard() {
           <StatCard
             title="Projets Totaux"
             value={stats.totalProjects}
-            icon={TrendingUp}
+            icon={(props: { size?: number; className?: string; style?: React.CSSProperties }) => <TrendingUp {...props} loop={true} loopDelay={2000} />}
             color="111, 63, 255"
             delay={0}
           />
           <StatCard
             title="Projets Actifs"
             value={stats.activeProjects}
-            icon={Clock}
+            icon={(props: { size?: number; className?: string; style?: React.CSSProperties }) => <Clock {...props} loop={true} loopDelay={2000} />}
             color="122, 143, 255"
             delay={0.1}
           />
           <StatCard
             title="Projets Terminés"
             value={stats.completedProjects}
-            icon={CheckCircle}
+            icon={(props: { size?: number; className?: string; style?: React.CSSProperties }) => <CheckCircle {...props} loop={true} loopDelay={2000} />}
             color="143, 165, 255"
             delay={0.2}
           />
           <StatCard
             title="Progression Moyenne"
             value={`${stats.averageProgress}%`}
-            icon={Percent}
+            icon={(props: { size?: number; className?: string; style?: React.CSSProperties }) => <Percent {...props} loop={true} loopDelay={2000} />}
             color="74, 47, 255"
             delay={0.3}
           />

@@ -15,7 +15,12 @@ import { useGooeyEffect } from "@/hooks/useGooeyEffect";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { getCurrentUser, signOut } from '@/lib/supabase';
 import Dock from '@/components/Dock';
-import { Home as HomeIcon, Activity, FileText, User, Settings, LayoutDashboard } from 'lucide-react';
+import { Home as HomeIcon } from '@/components/animate-ui/icons/home';
+import { Activity } from '@/components/animate-ui/icons/activity';
+import { FileText } from '@/components/animate-ui/icons/file-text';
+import { User } from '@/components/animate-ui/icons/user';
+import { Settings } from '@/components/animate-ui/icons/settings';
+import { LayoutDashboard } from '@/components/animate-ui/icons/layout-dashboard';
 
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
   ssr: false,
@@ -159,37 +164,37 @@ export default function Home() {
   const dockItems = [
     {
       label: 'Accueil',
-      icon: <HomeIcon size={24} className="text-white" />,
+      icon: <HomeIcon size={24} className="text-white" loop={true} loopDelay={2000} />,
       onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
       className: ''
     },
     {
       label: 'Dashboard',
-      icon: <LayoutDashboard size={24} className="text-white" />,
+      icon: <LayoutDashboard size={24} className="text-white" loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client'),
       className: ''
     },
     {
       label: 'Suivie',
-      icon: <Activity size={24} className="text-white" />,
+      icon: <Activity size={24} className="text-white" loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/suivie'),
       className: ''
     },
     {
       label: 'Facture',
-      icon: <FileText size={24} className="text-white" />,
+      icon: <FileText size={24} className="text-white" loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/facture'),
       className: ''
     },
     {
       label: 'Profile',
-      icon: <User size={24} className="text-white" />,
+      icon: <User size={24} className="text-white" loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/profile'),
       className: ''
     },
     {
       label: 'Settings',
-      icon: <Settings size={24} className="text-white" />,
+      icon: <Settings size={24} className="text-white" loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/settings'),
       className: ''
     }

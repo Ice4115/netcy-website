@@ -2,7 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { supabase, getCurrentUser } from '@/lib/supabase';
-import { Fingerprint, Activity, Lock, Building2, Mail, Phone } from 'lucide-react';
+import { Fingerprint } from '@/components/animate-ui/icons/fingerprint';
+import { Activity } from '@/components/animate-ui/icons/activity';
+import { Lock } from '@/components/animate-ui/icons/lock';
+import { Building } from '@/components/animate-ui/icons/building';
+import { Mail } from '@/components/animate-ui/icons/mail';
+import { Phone } from '@/components/animate-ui/icons/phone';
 
 interface ClientData {
   id: string;
@@ -17,6 +22,8 @@ interface ClientData {
 
 const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let stream: MediaStream | null = null;
@@ -47,10 +54,40 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const card = cardRef.current;
+    const glare = glareRef.current;
+
+    if (!card || !glare) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const xPercent = (x / rect.width) * 100;
+      const yPercent = (y / rect.height) * 100;
+      
+      glare.style.background = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(255, 255, 255, 0.5) 0%, transparent 50%)`;
+    };
+
+    const handleMouseLeave = () => {
+      glare.style.background = 'transparent';
+    };
+
+    card.addEventListener('mousemove', handleMouseMove);
+    card.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      card.removeEventListener('mousemove', handleMouseMove);
+      card.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
   const formattedId = clientData.id.slice(0, 13).toUpperCase().replace(/(.{4})/g, '$1-').slice(0, -1);
 
   return (
-    <div className="reflective-card-container max-w-md w-full">
+    <div ref={cardRef} className="reflective-card-container max-w-md w-full">
       <style jsx>{`
         .reflective-card-container {
           --blur-strength: 12px;
@@ -88,7 +125,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
         }
 
         .reflective-noise,
-        .reflective-sheen,
+        .reflective-glare,
         .reflective-border {
           position: absolute;
           inset: 0;
@@ -103,19 +140,10 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
           mix-blend-mode: overlay;
         }
 
-        .reflective-sheen {
-          background: linear-gradient(135deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.1) 45%,
-            rgba(255, 255, 255, 0.2) 50%,
-            rgba(255, 255, 255, 0.1) 55%,
-            transparent 100%);
-          animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-          0%, 100% { opacity: 0.3; transform: translateX(-100%); }
-          50% { opacity: 1; transform: translateX(100%); }
+        .reflective-glare {
+          transition: background 0.1s ease;
+          mix-blend-mode: overlay;
+          z-index: 5;
         }
 
         .reflective-border {
@@ -278,7 +306,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
       <video ref={videoRef} autoPlay playsInline muted className="reflective-video" />
 
       <div className="reflective-noise" />
-      <div className="reflective-sheen" />
+      <div ref={glareRef} className="reflective-glare" />
       <div className="reflective-border" />
 
       <div className="reflective-content">
@@ -287,7 +315,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
             <Lock size={14} className="security-icon" />
             <span>NETCY CLIENT</span>
           </div>
-          <Activity className="status-icon" size={20} />
+          <Activity className="status-icon" size={20} loop={true} loopDelay={2000} />
         </div>
 
         <div className="card-body">
@@ -305,7 +333,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
             <span className="value">{formattedId}</span>
           </div>
           <div className="fingerprint-section">
-            <Fingerprint size={32} className="fingerprint-icon" />
+            <Fingerprint size={32} className="fingerprint-icon" loop={true} loopDelay={2000} />
           </div>
         </div>
       </div>
@@ -392,7 +420,7 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-[#6F3FFF]/20 rounded-lg">
-                    <Mail className="text-[#8FA5FF]" size={20} />
+                    <Mail className="text-[#8FA5FF]" size={20} loop={true} loopDelay={2000} />
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Email</p>
@@ -403,7 +431,7 @@ export default function ProfilePage() {
                 {clientData.telephone && (
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-[#7A8FFF]/20 rounded-lg">
-                      <Phone className="text-[#8FA5FF]" size={20} />
+                      <Phone className="text-[#8FA5FF]" size={20} loop={true} loopDelay={2000} />
                     </div>
                     <div>
                       <p className="text-gray-400 text-sm mb-1">Téléphone</p>
@@ -416,7 +444,7 @@ export default function ProfilePage() {
 
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-[#8FA5FF]/20 rounded-lg">
-                    <Building2 className="text-[#8FA5FF]" size={20} />
+                    <Building className="text-[#8FA5FF]" size={20} loop={true} loopDelay={2000} />
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Type de compte</p>
@@ -431,7 +459,7 @@ export default function ProfilePage() {
               
               <div className="space-y-4">
                 <div className="p-4 bg-green-400/10 border border-green-400/30 rounded-lg flex items-center gap-3">
-                  <Lock className="text-green-400" size={20} />
+                  <Lock className="text-green-400" size={20} loop={true} loopDelay={2000} />
                   <div>
                     <p className="text-green-400 font-semibold">Compte Sécurisé</p>
                     <p className="text-gray-400 text-sm">Votre compte est protégé</p>
