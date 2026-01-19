@@ -78,7 +78,7 @@ export default function FacturePage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-3">
-              <FileText className="text-[#6F3FFF]" size={24} animate={true} loop={true} loopDelay={2000} />
+              <FileText className="text-[#6F3FFF]" size={24} animate={true} loop={true} loopDelay={5000} />
               <h3 className="text-gray-400 font-semibold">Montant Total</h3>
             </div>
             <p className="text-3xl font-bold text-white">{totalAmount.toFixed(2)} €</p>
@@ -86,7 +86,7 @@ export default function FacturePage() {
           
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-green-500/30 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-3">
-              <CheckCircle className="text-green-400" size={24} animate={true} loop={true} loopDelay={2000} />
+              <CheckCircle className="text-green-400" size={24} animate={true} loop={true} loopDelay={5000} />
               <h3 className="text-gray-400 font-semibold">Payé</h3>
             </div>
             <p className="text-3xl font-bold text-green-400">{paidAmount.toFixed(2)} €</p>
@@ -94,7 +94,7 @@ export default function FacturePage() {
 
           <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-yellow-500/30 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-3">
-              <Clock className="text-yellow-400" size={24} animate={true} loop={true} loopDelay={2000} />
+              <Clock className="text-yellow-400" size={24} animate={true} loop={true} loopDelay={5000} />
               <h3 className="text-gray-400 font-semibold">En Attente</h3>
             </div>
             <p className="text-3xl font-bold text-yellow-400">{pendingAmount.toFixed(2)} €</p>
@@ -177,12 +177,12 @@ export default function FacturePage() {
                         }`}>
                           {invoice.statut === 'payee' ? (
                             <>
-                              <CheckCircle size={14} className="hidden sm:inline" animate={true} loop={true} loopDelay={2000} />
+                              <CheckCircle size={14} className="hidden sm:inline" animate={true} loop={true} loopDelay={5000} />
                               Payée
                             </>
                           ) : (
                             <>
-                              <Clock size={14} className="hidden sm:inline" animate={true} loop={true} loopDelay={2000} />
+                              <Clock size={14} className="hidden sm:inline" animate={true} loop={true} loopDelay={5000} />
                               <span className="hidden sm:inline">En Attente</span>
                               <span className="sm:hidden">Attente</span>
                             </>
@@ -200,7 +200,7 @@ export default function FacturePage() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-[#6F3FFF]/20 hover:bg-[#6F3FFF]/30 text-[#8FA5FF] rounded-lg transition border border-[#6F3FFF]/50 text-xs sm:text-sm"
                           >
-                            <Download size={14} animate={true} loop={true} loopDelay={2000} />
+                            <Download size={14} animate={true} loop={true} loopDelay={5000} />
                             PDF
                           </a>
                         ) : (

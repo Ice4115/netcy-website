@@ -3,7 +3,35 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const customStorage = {
+  getItem: (key: string) => {
+    if (typeof window === 'undefined') return null;
+    return sessionStorage.getItem(key) || localStorage.getItem(key);
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window === 'undefined') return;
+    const inSession = sessionStorage.getItem(key) !== null;
+    if (inSession) {
+      sessionStorage.setItem(key, value);
+    } else {
+      localStorage.setItem(key, value);
+    }
+  },
+  removeItem: (key: string) => {
+    if (typeof window === 'undefined') return;
+    sessionStorage.removeItem(key);
+    localStorage.removeItem(key);
+  },
+};
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storage: customStorage,
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
+});
 
 export const signUp = async (email: string, password: string, additionalData?: any) => {
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.netcy.fr';
@@ -39,30 +67,43 @@ export const signUp = async (email: string, password: string, additionalData?: a
 };
 
 export const signIn = async (email: string, password: string, rememberMe: boolean = true) => {
-  const result = await supabase.auth.signInWithPassword({
+  if (typeof window !== 'undefined' && !rememberMe) {
+    const storageKey = `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`;
+    localStorage.removeItem(storageKey);
+  }
+
+  const sessionStorageClient = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      storage: typeof window !== 'undefined' ? {
+        getItem: (key: string) => sessionStorage.getItem(key),
+        setItem: (key: string, value: string) => sessionStorage.setItem(key, value),
+        removeItem: (key: string) => sessionStorage.removeItem(key),
+      } : undefined,
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
+
+  const localStorageClient = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      storage: typeof window !== 'undefined' ? {
+        getItem: (key: string) => localStorage.getItem(key),
+        setItem: (key: string, value: string) => localStorage.setItem(key, value),
+        removeItem: (key: string) => localStorage.removeItem(key),
+      } : undefined,
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
+
+  const clientToUse = rememberMe ? localStorageClient : sessionStorageClient;
+
+  const result = await clientToUse.auth.signInWithPassword({
     email,
     password
   });
-
-  if (result.data.session && !rememberMe) {
-    await supabase.auth.setSession({
-      access_token: result.data.session.access_token,
-      refresh_token: result.data.session.refresh_token
-    });
-    
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('rememberMe', 'false');
-      
-      const sessionData = {
-        access_token: result.data.session.access_token,
-        refresh_token: result.data.session.refresh_token
-      };
-      sessionStorage.setItem('supabase.session', JSON.stringify(sessionData));
-      localStorage.removeItem('sb-' + supabaseUrl.split('//')[1].split('.')[0] + '-auth-token');
-    }
-  } else if (typeof window !== 'undefined') {
-    localStorage.setItem('rememberMe', 'true');
-  }
 
   return result;
 };

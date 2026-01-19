@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase, getCurrentUser } from '@/lib/supabase';
 import { Fingerprint } from '@/components/animate-ui/icons/fingerprint';
 import { Activity } from '@/components/animate-ui/icons/activity';
@@ -8,6 +8,7 @@ import { Lock } from '@/components/animate-ui/icons/lock';
 import { Building } from '@/components/animate-ui/icons/building';
 import { Mail } from '@/components/animate-ui/icons/mail';
 import { Phone } from '@/components/animate-ui/icons/phone';
+import GlareHover from '@/components/GlareHover';
 
 interface ClientData {
   id: string;
@@ -21,80 +22,21 @@ interface ClientData {
 }
 
 const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const glareRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let stream: MediaStream | null = null;
-
-    const startWebcam = async () => {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: 640 },
-            height: { ideal: 480 },
-            facingMode: 'user'
-          }
-        });
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (err) {
-      }
-    };
-
-    startWebcam();
-
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const card = cardRef.current;
-    const glare = glareRef.current;
-
-    if (!card || !glare) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const xPercent = (x / rect.width) * 100;
-      const yPercent = (y / rect.height) * 100;
-      
-      glare.style.background = `radial-gradient(circle 300px at ${xPercent}% ${yPercent}%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 40%, transparent 70%)`;
-    };
-
-    const handleMouseEnter = () => {
-      glare.style.opacity = '1';
-    };
-
-    const handleMouseLeave = () => {
-      glare.style.opacity = '0';
-      glare.style.background = 'transparent';
-    };
-
-    card.addEventListener('mousemove', handleMouseMove);
-    card.addEventListener('mouseenter', handleMouseEnter);
-    card.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      card.removeEventListener('mousemove', handleMouseMove);
-      card.removeEventListener('mouseenter', handleMouseEnter);
-      card.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, []);
-
   const formattedId = clientData.id.slice(0, 13).toUpperCase().replace(/(.{4})/g, '$1-').slice(0, -1);
 
   return (
-    <div ref={cardRef} className="reflective-card-container max-w-md w-full">
+    <GlareHover
+      width="100%"
+      height="100%"
+      background="transparent"
+      borderRadius="24px"
+      borderColor="#6F3FFF"
+      glareColor="#8FA5FF"
+      glareOpacity={0.4}
+      glareSize={300}
+      className="max-w-md w-full"
+    >
+      <div className="reflective-card-container max-w-md w-full">
       <style jsx>{`
         .reflective-card-container {
           --blur-strength: 12px;
@@ -122,17 +64,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
           height: 0;
         }
 
-        .reflective-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          filter: url(#metallic-displacement) blur(var(--blur-strength)) saturate(var(--saturation));
-        }
-
         .reflective-noise,
-        .reflective-glare,
         .reflective-border {
           position: absolute;
           inset: 0;
@@ -145,18 +77,6 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
             transparent 50%, 
             rgba(122, 143, 255, 0.1) 100%);
           mix-blend-mode: overlay;
-        }
-
-        .reflective-glare {
-          background: transparent;
-          mix-blend-mode: screen;
-          z-index: 5;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-
-        .reflective-card-container:hover .reflective-glare {
-          opacity: 1;
         }
 
         .reflective-border {
@@ -316,10 +236,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
         </defs>
       </svg>
 
-      <video ref={videoRef} autoPlay playsInline muted className="reflective-video" />
-
       <div className="reflective-noise" />
-      <div ref={glareRef} className="reflective-glare" />
       <div className="reflective-border" />
 
       <div className="reflective-content">
@@ -328,7 +245,7 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
             <Lock size={14} className="security-icon" />
             <span>NETCY CLIENT</span>
           </div>
-          <Activity className="status-icon" size={20} animate={true} loop={true} loopDelay={2000} />
+          <Activity className="status-icon" size={20} animate={true} loop={true} loopDelay={5000} />
         </div>
 
         <div className="card-body">
@@ -346,11 +263,12 @@ const ReflectiveProfileCard = ({ clientData }: { clientData: ClientData }) => {
             <span className="value">{formattedId}</span>
           </div>
           <div className="fingerprint-section">
-            <Fingerprint size={32} className="fingerprint-icon" animate={true} loop={true} loopDelay={2000} />
+            <Fingerprint size={32} className="fingerprint-icon" animate={true} loop={true} loopDelay={5000} />
           </div>
         </div>
       </div>
     </div>
+    </GlareHover>
   );
 };
 
@@ -433,7 +351,7 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-[#6F3FFF]/20 rounded-lg">
-                    <Mail className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={2000} />
+                    <Mail className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={5000} />
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Email</p>
@@ -444,7 +362,7 @@ export default function ProfilePage() {
                 {clientData.telephone && (
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-[#7A8FFF]/20 rounded-lg">
-                      <Phone className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={2000} />
+                      <Phone className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={5000} />
                     </div>
                     <div>
                       <p className="text-gray-400 text-sm mb-1">Téléphone</p>
@@ -457,7 +375,7 @@ export default function ProfilePage() {
 
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-[#8FA5FF]/20 rounded-lg">
-                    <Building className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={2000} />
+                    <Building className="text-[#8FA5FF]" size={20} animate={true} loop={true} loopDelay={5000} />
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Type de compte</p>
@@ -472,7 +390,7 @@ export default function ProfilePage() {
               
               <div className="space-y-4">
                 <div className="p-4 bg-green-400/10 border border-green-400/30 rounded-lg flex items-center gap-3">
-                  <Lock className="text-green-400" size={20} animate={true} loop={true} loopDelay={2000} />
+                  <Lock className="text-green-400" size={20} animate={true} loop={true} loopDelay={5000} />
                   <div>
                     <p className="text-green-400 font-semibold">Compte Sécurisé</p>
                     <p className="text-gray-400 text-sm">Votre compte est protégé</p>

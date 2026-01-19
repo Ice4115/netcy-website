@@ -176,28 +176,28 @@ export default function ClientDashboard() {
           <StatCard
             title="Projets Totaux"
             value={stats.totalProjects}
-            icon={<TrendingUp size={32} animate={true} loop={true} loopDelay={2000} />}
+            icon={<TrendingUp size={32} animate={true} loop={true} loopDelay={5000} />}
             color="111, 63, 255"
             delay={0}
           />
           <StatCard
             title="Projets Actifs"
             value={stats.activeProjects}
-            icon={<Clock size={32} animate={true} loop={true} loopDelay={2000} />}
+            icon={<Clock size={32} animate={true} loop={true} loopDelay={5000} />}
             color="122, 143, 255"
             delay={0.1}
           />
           <StatCard
             title="Projets Terminés"
             value={stats.completedProjects}
-            icon={<CheckCircle size={32} animate={true} loop={true} loopDelay={2000} />}
+            icon={<CheckCircle size={32} animate={true} loop={true} loopDelay={5000} />}
             color="143, 165, 255"
             delay={0.2}
           />
           <StatCard
             title="Progression Moyenne"
             value={`${stats.averageProgress}%`}
-            icon={<Percent size={32} animate={true} loop={true} loopDelay={2000} />}
+            icon={<Percent size={32} animate={true} loop={true} loopDelay={5000} />}
             color="74, 47, 255"
             delay={0.3}
           />

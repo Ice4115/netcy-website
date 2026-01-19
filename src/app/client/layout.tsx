@@ -54,37 +54,37 @@ export default function ClientLayout({
   const dockItems = [
     {
       label: 'Accueil',
-      icon: <HomeIcon size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
+      icon: <HomeIcon size={24} className="text-white" animate={true} loop={true} loopDelay={5000} />,
       onClick: () => window.location.href = '/',
       className: ''
     },
     {
       label: 'Dashboard',
-      icon: <LayoutDashboard size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
+      icon: <LayoutDashboard size={24} className="text-white" animate={true} loop={true} loopDelay={5000} />,
       onClick: () => router.push('/client'),
       className: pathname === '/client' ? 'bg-gradient-to-br from-[#6F3FFF] to-[#7A8FFF]' : ''
     },
     {
       label: 'Suivie',
-      icon: <Activity size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
+      icon: <Activity size={24} className="text-white" animate={true} loop={true} loopDelay={5000} />,
       onClick: () => router.push('/client/suivie'),
       className: pathname === '/client/suivie' ? 'bg-gradient-to-br from-[#6F3FFF] to-[#7A8FFF]' : ''
     },
     {
       label: 'Facture',
-      icon: <FileText size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
+      icon: <FileText size={24} className="text-white" animate={true} loop={true} loopDelay={5000} />,
       onClick: () => router.push('/client/facture'),
       className: pathname === '/client/facture' ? 'bg-gradient-to-br from-[#6F3FFF] to-[#7A8FFF]' : ''
     },
     {
       label: 'Profile',
-      icon: <User size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
+      icon: <User size={24} className="text-white" animate={true} loop={true} loopDelay={5000} />,
       onClick: () => router.push('/client/profile'),
       className: pathname === '/client/profile' ? 'bg-gradient-to-br from-[#6F3FFF] to-[#7A8FFF]' : ''
     },
     {
       label: 'Settings',
-      icon: <Settings size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
+      icon: <Settings size={24} className="text-white" animate={true} loop={true} loopDelay={5000} />,
       onClick: () => router.push('/client/settings'),
       className: pathname === '/client/settings' ? 'bg-gradient-to-br from-[#6F3FFF] to-[#7A8FFF]' : ''
     }
@@ -109,7 +109,7 @@ export default function ClientLayout({
         className="fixed top-4 right-4 z-50 flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-white bg-[#060010]/80 backdrop-blur-sm border border-[#392e4e] hover:border-[#6F3FFF]/50 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#6F3FFF]/20"
         title="Déconnexion"
       >
-        <LogOut size={18} animate={true} loop={true} loopDelay={2000} />
+        <LogOut size={18} animate={true} loop={true} loopDelay={5000} />
         <span className="hidden sm:inline">Déconnexion</span>
       </button>
       {children}
