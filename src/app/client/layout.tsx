@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { getCurrentUser, signOut } from '@/lib/supabase';
 import Dock from '@/components/Dock';
 import { Home as HomeIcon } from '@/components/animate-ui/icons/home';
@@ -11,6 +12,21 @@ import { User } from '@/components/animate-ui/icons/user';
 import { Settings } from '@/components/animate-ui/icons/settings';
 import { LayoutDashboard } from '@/components/animate-ui/icons/layout-dashboard';
 import { LogOut } from '@/components/animate-ui/icons/log-out';
+
+const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
+  ssr: false,
+});
+
+const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
+  ssr: false,
+});
+
+const isMobileDevice = () => {
+  if (typeof window === 'undefined') return false;
+  const ua = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isSmallScreen = window.innerWidth <= 1024;
+  return ua || isSmallScreen;
+};
 
 export default function ClientLayout({
   children,
@@ -22,6 +38,7 @@ export default function ClientLayout({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [isDeviceMobile, setIsDeviceMobile] = useState(false);
 
   const checkAuth = async () => {
     const user = await getCurrentUser();
@@ -35,6 +52,7 @@ export default function ClientLayout({
 
   useEffect(() => {
     checkAuth();
+    setIsDeviceMobile(isMobileDevice());
     
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -103,24 +121,46 @@ export default function ClientLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#110F1B] to-[#1a0f3a] pb-28">
-      <button
-        onClick={handleSignOut}
-        className="fixed top-4 right-4 z-50 flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-white bg-[#060010]/80 backdrop-blur-sm border border-[#392e4e] hover:border-[#6F3FFF]/50 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#6F3FFF]/20"
-        title="Déconnexion"
-      >
-        <LogOut size={18} animate={true} loop={true} loopDelay={5000} />
-        <span className="hidden sm:inline">Déconnexion</span>
-      </button>
-      {children}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-4">
-        <Dock 
-          items={dockItems}
-          magnification={isMobile ? 55 : 70}
-          distance={isMobile ? 120 : 200}
-          panelHeight={isMobile ? 60 : 68}
-          baseItemSize={isMobile ? 44 : 50}
-        />
+    <div className="min-h-screen w-full text-white overflow-x-hidden relative">
+      <div className="fixed inset-0 w-full h-full z-0">
+        {isDeviceMobile ? (
+          <LiquidEtherMobile 
+            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+            mouseForce={80}
+            cursorSize={250}
+            resolution={0.35}
+          />
+        ) : (
+          <LiquidEther 
+            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+            autoDemo={true}
+            autoSpeed={0.5}
+            autoIntensity={2.2}
+            autoResumeDelay={1000}
+            resolution={0.5}
+          />
+        )}
+      </div>
+
+      <div className="relative z-10 min-h-screen pb-28">
+        <button
+          onClick={handleSignOut}
+          className="fixed top-4 right-4 z-50 flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-white bg-[#060010]/80 backdrop-blur-sm border border-[#392e4e] hover:border-[#6F3FFF]/50 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#6F3FFF]/20"
+          title="Déconnexion"
+        >
+          <LogOut size={18} animate={true} loop={true} loopDelay={5000} />
+          <span className="hidden sm:inline">Déconnexion</span>
+        </button>
+        {children}
+        <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-4">
+          <Dock 
+            items={dockItems}
+            magnification={isMobile ? 55 : 70}
+            distance={isMobile ? 120 : 200}
+            panelHeight={isMobile ? 60 : 68}
+            baseItemSize={isMobile ? 44 : 50}
+          />
+        </div>
       </div>
     </div>
   );
