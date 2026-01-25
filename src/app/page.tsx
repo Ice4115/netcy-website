@@ -217,10 +217,9 @@ export default function Home() {
           mouseForce={isMobile ? 80 : 20}
           cursorSize={isMobile ? 250 : 100}
           autoDemo={!isMobile}
-          autoSpeed={0.5}
-          autoIntensity={2.2}
-          autoResumeDelay={1000}
-          resolution={isMobile ? 0.35 : 0.5}
+          autoIntensity={2}
+          resolution={isMobile ? 0.3 : 0.6}
+          className='fixed inset-0 z-0'
         />
       </div>
       

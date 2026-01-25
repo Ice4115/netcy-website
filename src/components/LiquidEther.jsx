@@ -1,86 +1,30 @@
+'use client'
+
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import './LiquidEther.css'
 
 export default function LiquidEther({
+  colors = ['#5227FF', '#FF9FFC', '#B19EEF'],
+  mouseForce = 20,
+  cursorSize = 100,
+  autoDemo = true,
+  autoSpeed = 0.5,
+  autoIntensity = 2.2,
+  autoResumeDelay = 1000,
+  resolution = 0.5,
   style = {},
   className = ''
 }) {
   const mountRef = useRef(null)
-  const webglRef = useRef(null)
   const rafRef = useRef(null)
 
   useEffect(() => {
     if (!mountRef.current) return
 
-    /* ----------------------------------
-       1. Détection mobile / iOS
-    ---------------------------------- */
     const isMobile =
       /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 
-    const isIOS =
-      /iPad|iPhone|iPod/i.test(navigator.userAgent)
-
-    /* ----------------------------------
-       2. Réglages SAFE par plateforme
-    ---------------------------------- */
-    const SETTINGS = {
-      colors: ['#5227FF', '#FF9FFC', '#B19EEF'],
-
-      // Qualité
-      resolution: isMobile ? 0.3 : 0.5,
-      dt: 0.016,
-
-      // Simulation
-      mouseForce: isMobile ? 10 : 20,
-      cursorSize: isMobile ? 70 : 100,
-
-      // Physique
-      isViscous: !isMobile,
-      viscous: isMobile ? 12 : 30,
-      iterationsViscous: isMobile ? 6 : 32,
-      iterationsPoisson: isMobile ? 12 : 32,
-
-      // Qualité avancée
-      BFECC: !isMobile,
-      isBounce: false,
-
-      // Auto demo
-      autoDemo: !isMobile,
-      autoSpeed: 0.5,
-      autoIntensity: 2.2
-    }
-
-    /* ----------------------------------
-       3. Palette texture (mobile safe)
-    ---------------------------------- */
-    function makePaletteTexture(colors) {
-      const data = new Uint8Array(colors.length * 4)
-      colors.forEach((hex, i) => {
-        const c = new THREE.Color(hex)
-        data[i * 4] = c.r * 255
-        data[i * 4 + 1] = c.g * 255
-        data[i * 4 + 2] = c.b * 255
-        data[i * 4 + 3] = 255
-      })
-      const tex = new THREE.DataTexture(
-        data,
-        colors.length,
-        1,
-        THREE.RGBAFormat
-      )
-      tex.magFilter = THREE.LinearFilter
-      tex.minFilter = THREE.LinearFilter
-      tex.needsUpdate = true
-      return tex
-    }
-
-    const paletteTex = makePaletteTexture(SETTINGS.colors)
-
-    /* ----------------------------------
-       4. Renderer
-    ---------------------------------- */
+    /* Renderer */
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: !isMobile
@@ -94,78 +38,87 @@ export default function LiquidEther({
 
     mountRef.current.appendChild(renderer.domElement)
 
-    /* ----------------------------------
-       5. Gestion iOS WebGL crash
-    ---------------------------------- */
-    renderer.domElement.addEventListener(
-      'webglcontextlost',
-      e => {
-        e.preventDefault()
-        cancelAnimationFrame(rafRef.current)
-      },
-      false
-    )
+    /* Palette texture */
+    function makePaletteTexture(cols) {
+      const data = new Uint8Array(cols.length * 4)
 
-    renderer.domElement.addEventListener(
-      'webglcontextrestored',
-      () => {
-        animate()
-      },
-      false
-    )
+      cols.forEach((hex, i) => {
+        const c = new THREE.Color(hex)
+        data[i * 4] = Math.round(c.r * 255)
+        data[i * 4 + 1] = Math.round(c.g * 255)
+        data[i * 4 + 2] = Math.round(c.b * 255)
+        data[i * 4 + 3] = 255
+      })
 
-    /* ----------------------------------
-       6. Scene simple (output final)
-       ⚠️ Ici tu branches TA simulation
-    ---------------------------------- */
+      const tex = new THREE.DataTexture(
+        data,
+        cols.length,
+        1,
+        THREE.RGBAFormat
+      )
+      tex.magFilter = THREE.LinearFilter
+      tex.minFilter = THREE.LinearFilter
+      tex.needsUpdate = true
+      return tex
+    }
+
+    const paletteTex = makePaletteTexture(colors)
+
+    /* Scene */
     const scene = new THREE.Scene()
     const camera = new THREE.Camera()
 
+    const material = new THREE.RawShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      uniforms: {
+        palette: { value: paletteTex },
+        time: { value: 0 },
+        intensity: { value: autoIntensity }
+      },
+      vertexShader: `
+        precision highp float;
+        attribute vec3 position;
+        void main() {
+          gl_Position = vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        precision highp float;
+        uniform sampler2D palette;
+        uniform float time;
+        uniform float intensity;
+
+        void main() {
+          vec2 uv = gl_FragCoord.xy / 1000.0;
+          float v =
+            sin(uv.x * 10.0 + time) *
+            cos(uv.y * 10.0 + time);
+
+          v = v * 0.5 + 0.5;
+          vec3 col = texture2D(palette, vec2(v, 0.5)).rgb;
+          gl_FragColor = vec4(col, v * intensity);
+        }
+      `
+    })
+
     const quad = new THREE.Mesh(
       new THREE.PlaneGeometry(2, 2),
-      new THREE.RawShaderMaterial({
-        transparent: true,
-        depthWrite: false,
-        uniforms: {
-          palette: { value: paletteTex },
-          time: { value: 0 }
-        },
-        vertexShader: `
-          precision highp float;
-          attribute vec3 position;
-          void main(){
-            gl_Position = vec4(position,1.0);
-          }
-        `,
-        fragmentShader: `
-          precision highp float;
-          uniform sampler2D palette;
-          uniform float time;
-          void main(){
-            float v = sin(time + gl_FragCoord.x*0.01) * 0.5 + 0.5;
-            vec3 c = texture2D(palette, vec2(v,0.5)).rgb;
-            gl_FragColor = vec4(c, v);
-          }
-        `
-      })
+      material
     )
 
     scene.add(quad)
 
-    /* ----------------------------------
-       7. Loop
-    ---------------------------------- */
-    function animate(t = 0) {
-      quad.material.uniforms.time.value = t * 0.001
+    const clock = new THREE.Clock()
+
+    const animate = () => {
+      material.uniforms.time.value += clock.getDelta()
       renderer.render(scene, camera)
       rafRef.current = requestAnimationFrame(animate)
     }
 
     animate()
 
-    /* ----------------------------------
-       8. Resize
-    ---------------------------------- */
     const resize = () => {
       renderer.setSize(
         mountRef.current.clientWidth,
@@ -175,24 +128,22 @@ export default function LiquidEther({
 
     window.addEventListener('resize', resize)
 
-    /* ----------------------------------
-       9. Cleanup
-    ---------------------------------- */
     return () => {
-      cancelAnimationFrame(rafRef.current)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
       window.removeEventListener('resize', resize)
       renderer.dispose()
       mountRef.current.removeChild(renderer.domElement)
     }
-  }, [])
+  }, [colors, autoIntensity])
 
   return (
     <div
       ref={mountRef}
-      className={`liquid-ether-container ${className}`}
+      className={className}
       style={{
         width: '100%',
         height: '100%',
+        position: 'relative',
         overflow: 'hidden',
         ...style
       }}
