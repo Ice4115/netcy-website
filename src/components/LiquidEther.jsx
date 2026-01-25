@@ -2,6 +2,23 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import './LiquidEther.css'
 
+/**
+ * @typedef {Object} LiquidEtherProps
+ * @property {Object} [style]
+ * @property {string} [className]
+ * @property {string[]} [colors]
+ * @property {number} [mouseForce]
+ * @property {number} [cursorSize]
+ * @property {boolean} [autoDemo]
+ * @property {number} [autoSpeed]
+ * @property {number} [autoIntensity]
+ * @property {number} [autoResumeDelay]
+ * @property {number} [resolution]
+ */
+
+/**
+ * @param {LiquidEtherProps} props
+ */
 export default function LiquidEther({
   style = {},
   className = '',
