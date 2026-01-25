@@ -213,13 +213,13 @@ export default function Home() {
         </div>
         <div className="fixed inset-0 w-full h-full z-0">
         <LiquidEther 
-          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF']}
           mouseForce={isMobile ? 80 : 20}
           cursorSize={isMobile ? 250 : 100}
           autoDemo={!isMobile}
           autoIntensity={2}
           resolution={isMobile ? 0.3 : 0.6}
-          className='fixed inset-0 z-0'
+
         />
       </div>
       
