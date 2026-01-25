@@ -10,10 +10,32 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+
+        if (accessToken) {
+          const { data: { session }, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken || '',
+          });
+
+          if (error) {
+            console.error('Error setting session:', error);
+            router.push('/connexion?error=auth_failed');
+            return;
+          }
+
+          if (session) {
+            router.push('/client');
+            return;
+          }
+        }
+
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (error) {
-          console.error('Error during authentication:', error);
+          console.error('Error getting session:', error);
           router.push('/connexion?error=auth_failed');
           return;
         }
