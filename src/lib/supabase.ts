@@ -116,3 +116,20 @@ export const getCurrentUser = async () => {
   const { data: { user } } = await supabase.auth.getUser();
   return user;
 };
+
+export const signInWithGoogle = async () => {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.netcy.fr';
+  
+  const result = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
+    },
+  });
+
+  return result;
+};

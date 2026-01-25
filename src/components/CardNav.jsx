@@ -66,19 +66,24 @@ const CardNav = ({
     const navEl = navRef.current;
     if (!navEl) return null;
 
-    gsap.set(navEl, { width: COLLAPSED_WIDTH, height: 60, overflow: 'hidden' });
+    gsap.set(navEl, { width: COLLAPSED_WIDTH, height: 60, overflow: 'hidden', opacity: 1, y: 0 });
     gsap.set(cardsRef.current, { y: 50, opacity: 0 });
 
     const tl = gsap.timeline({ paused: true });
 
     tl.to(navEl, {
       width: EXPANDED_WIDTH,
-      height: 230,
       duration: 0.4,
       ease
     });
 
-    tl.to(cardsRef.current, { y: 0, opacity: 1, duration: 0.4, ease, stagger: 0.08 }, '-=0.1');
+    tl.to(navEl, {
+      height: 230,
+      duration: 0.3,
+      ease
+    }, '+=0.1');
+
+    tl.to(cardsRef.current, { y: 0, opacity: 1, duration: 0.3, ease, stagger: 0.08 }, '-=0.1');
 
     return tl;
   };
@@ -159,7 +164,9 @@ const CardNav = ({
                 setIsHamburgerOpen(false);
                 const tl = tlRef.current;
                 if (tl) {
-                  tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
+                  tl.eventCallback('onReverseComplete', () => {
+                    setIsExpanded(false);
+                  });
                   tl.reverse();
                 }
               }
@@ -189,36 +196,37 @@ const CardNav = ({
     } else {
       setIsHamburgerOpen(false);
       setIsHovered(false);
-      tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
+      tl.eventCallback('onReverseComplete', () => {
+        setIsExpanded(false);
+      });
       tl.reverse();
     }
   };
 
   const handleMouseEnter = () => {
     if (typeof window !== 'undefined' && window.innerWidth <= 1024) return;
-    if (isExpanded) return;
+    if (isHamburgerOpen) return;
     setIsHovered(true);
-    const navEl = navRef.current;
-    if (navEl) {
-      gsap.to(navEl, {
-        width: EXPANDED_WIDTH,
-        duration: 0.3,
-        ease: 'power2.out'
-      });
+    setIsExpanded(true);
+    const tl = tlRef.current;
+    if (tl) {
+      tl.play();
     }
   };
 
   const handleMouseLeave = () => {
     if (typeof window !== 'undefined' && window.innerWidth <= 1024) return;
-    if (isExpanded) return;
+    if (isHamburgerOpen) return;
+    if (!isHovered) return;
     setIsHovered(false);
-    const navEl = navRef.current;
-    if (navEl) {
-      gsap.to(navEl, {
-        width: COLLAPSED_WIDTH,
-        duration: 0.3,
-        ease: 'power2.out'
+    const tl = tlRef.current;
+    if (tl) {
+      tl.eventCallback('onReverseComplete', () => {
+        if (!isHamburgerOpen) {
+          setIsExpanded(false);
+        }
       });
+      tl.reverse();
     }
   };
 
@@ -237,7 +245,7 @@ const CardNav = ({
       >
         <div className="card-nav-top">
           <div
-            className={`hamburger-menu ${isHamburgerOpen ? 'open' : ''}`}
+            className={`hamburger-menu ${(isHamburgerOpen || isHovered) ? 'open' : ''}`}
             onClick={toggleMenu}
             role="button"
             aria-label={isExpanded ? 'Close menu' : 'Open menu'}
@@ -275,7 +283,9 @@ const CardNav = ({
                           setIsHamburgerOpen(false);
                           const tl = tlRef.current;
                           if (tl) {
-                            tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
+                            tl.eventCallback('onReverseComplete', () => {
+                              setIsExpanded(false);
+                            });
                             tl.reverse();
                           }
                         }

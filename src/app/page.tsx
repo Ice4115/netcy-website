@@ -25,10 +25,6 @@ import { LayoutDashboard } from '@/components/animate-ui/icons/layout-dashboard'
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
   ssr: false,
 });
-
-const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
-  ssr: false,
-});
 const LoadingScreen = dynamic(() => import("@/components/LoadingScreen"), {
   ssr: false,
 });
@@ -216,23 +212,16 @@ export default function Home() {
           <p>Zone d'intervention : Montpellier, Hérault, Occitanie, France. Services pour PME, TPE, entrepreneurs, professionnels. Développement web professionnel, sites responsives, SEO optimisé, performances web, accessibilité, animations modernes.</p>
         </div>
         <div className="fixed inset-0 w-full h-full z-0">
-        {isMobile ? (
-          <LiquidEtherMobile 
-            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-            mouseForce={80}
-            cursorSize={250}
-            resolution={0.35}
-          />
-        ) : (
-          <LiquidEther 
-            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-            autoDemo={true}
-            autoSpeed={0.5}
-            autoIntensity={2.2}
-            autoResumeDelay={1000}
-            resolution={0.5}
-          />
-        )}
+        <LiquidEther 
+          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+          mouseForce={isMobile ? 80 : 20}
+          cursorSize={isMobile ? 250 : 100}
+          autoDemo={!isMobile}
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          autoResumeDelay={1000}
+          resolution={isMobile ? 0.35 : 0.5}
+        />
       </div>
       
       <div className="relative z-10">

@@ -10,9 +10,7 @@ import StarBorder from "@/components/StarBorder";
 import LoadingScreen from "@/components/LoadingScreen";
 import Link from 'next/link';
 
-const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
-  ssr: false,
-});
+
 
 const isMobileDevice = () => {
   if (typeof window === 'undefined') return false;
@@ -67,23 +65,16 @@ export default function QRLandingPage() {
       <LoadingScreen isLoading={isLoading} />
       <div className="w-full text-white overflow-x-hidden relative">
       <div className="fixed inset-0 w-full h-full z-0">
-        {isMobile ? (
-          <LiquidEtherMobile 
-            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-            mouseForce={80}
-            cursorSize={250}
-            resolution={0.35}
-          />
-        ) : (
-          <LiquidEther 
-            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-            autoDemo={true}
-            autoSpeed={0.5}
-            autoIntensity={2.2}
-            autoResumeDelay={1000}
-            resolution={0.5}
-          />
-        )}
+        <LiquidEther 
+          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+          mouseForce={isMobile ? 80 : 20}
+          cursorSize={isMobile ? 250 : 100}
+          autoDemo={!isMobile}
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          autoResumeDelay={1000}
+          resolution={isMobile ? 0.35 : 0.5}
+        />
       </div>
       
       <div className="relative z-10">

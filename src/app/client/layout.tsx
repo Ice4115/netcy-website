@@ -17,10 +17,6 @@ const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
   ssr: false,
 });
 
-const LiquidEtherMobile = dynamic(() => import("@/components/LiquidEtherMobile"), {
-  ssr: false,
-});
-
 const isMobileDevice = () => {
   if (typeof window === 'undefined') return false;
   const ua = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -123,23 +119,16 @@ export default function ClientLayout({
   return (
     <div className="min-h-screen w-full text-white overflow-x-hidden relative">
       <div className="fixed inset-0 w-full h-full z-0">
-        {isDeviceMobile ? (
-          <LiquidEtherMobile 
-            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-            mouseForce={80}
-            cursorSize={250}
-            resolution={0.35}
-          />
-        ) : (
-          <LiquidEther 
-            colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-            autoDemo={true}
-            autoSpeed={0.5}
-            autoIntensity={2.2}
-            autoResumeDelay={1000}
-            resolution={0.5}
-          />
-        )}
+        <LiquidEther 
+          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
+          mouseForce={isDeviceMobile ? 80 : 20}
+          cursorSize={isDeviceMobile ? 250 : 100}
+          autoDemo={!isDeviceMobile}
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          autoResumeDelay={1000}
+          resolution={isDeviceMobile ? 0.35 : 0.5}
+        />
       </div>
 
       <div className="relative z-10 min-h-screen pb-28">
