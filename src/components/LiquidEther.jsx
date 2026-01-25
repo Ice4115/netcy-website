@@ -2,34 +2,9 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import './LiquidEther.css'
 
-/**
- * @typedef {Object} LiquidEtherProps
- * @property {Object} [style]
- * @property {string} [className]
- * @property {string[]} [colors]
- * @property {number} [mouseForce]
- * @property {number} [cursorSize]
- * @property {boolean} [autoDemo]
- * @property {number} [autoSpeed]
- * @property {number} [autoIntensity]
- * @property {number} [autoResumeDelay]
- * @property {number} [resolution]
- */
-
-/**
- * @param {LiquidEtherProps} props
- */
 export default function LiquidEther({
   style = {},
-  className = '',
-  colors,
-  mouseForce,
-  cursorSize,
-  autoDemo,
-  autoSpeed,
-  autoIntensity,
-  autoResumeDelay,
-  resolution
+  className = ''
 }) {
   const mountRef = useRef(null)
   const webglRef = useRef(null)
@@ -51,15 +26,15 @@ export default function LiquidEther({
        2. Réglages SAFE par plateforme
     ---------------------------------- */
     const SETTINGS = {
-      colors: colors || ['#5227FF', '#FF9FFC', '#B19EEF'],
+      colors: ['#5227FF', '#FF9FFC', '#B19EEF'],
 
       // Qualité
-      resolution: resolution !== undefined ? resolution : (isMobile ? 0.3 : 0.5),
+      resolution: isMobile ? 0.3 : 0.5,
       dt: 0.016,
 
       // Simulation
-      mouseForce: mouseForce !== undefined ? mouseForce : (isMobile ? 10 : 20),
-      cursorSize: cursorSize !== undefined ? cursorSize : (isMobile ? 70 : 100),
+      mouseForce: isMobile ? 10 : 20,
+      cursorSize: isMobile ? 70 : 100,
 
       // Physique
       isViscous: !isMobile,
@@ -72,10 +47,9 @@ export default function LiquidEther({
       isBounce: false,
 
       // Auto demo
-      autoDemo: autoDemo !== undefined ? autoDemo : !isMobile,
-      autoSpeed: autoSpeed !== undefined ? autoSpeed : 0.5,
-      autoIntensity: autoIntensity !== undefined ? autoIntensity : 2.2,
-      autoResumeDelay: autoResumeDelay !== undefined ? autoResumeDelay : 1000
+      autoDemo: !isMobile,
+      autoSpeed: 0.5,
+      autoIntensity: 2.2
     }
 
     /* ----------------------------------
