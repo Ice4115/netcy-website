@@ -68,6 +68,7 @@ function CodeBlock({
 
         setHighlightedCode(highlighted);
       } catch (e) {
+        console.error(`Language "${lang}" could not be loaded.`, e);
       }
     };
 

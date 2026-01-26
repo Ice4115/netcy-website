@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -11,8 +11,6 @@ import StarBorder from "@/components/StarBorder";
 import StructuredData from "@/components/StructuredData";
 import GlareHover from "@/components/GlareHover";
 import { Checkbox } from '@/components/animate-ui/components/base/checkbox';
-import { useGooeyEffect } from "@/hooks/useGooeyEffect";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import { getCurrentUser, signOut } from '@/lib/supabase';
 import Dock from '@/components/Dock';
 import { Home as HomeIcon } from '@/components/animate-ui/icons/home';
@@ -61,16 +59,11 @@ const isMobileDevice = () => {
 };
 
 export default function Home() {
-  const initGooey = useGooeyEffect();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMemo(() => isMobileDevice(), []);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(isMobileDevice());
-  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -171,7 +164,7 @@ export default function Home() {
       className: ''
     },
     {
-      label: 'Suivie',
+      label: 'Suivi',
       icon: <Activity size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/suivie'),
       className: ''
@@ -183,7 +176,7 @@ export default function Home() {
       className: ''
     },
     {
-      label: 'Profile',
+      label: 'Profil',
       icon: <User size={24} className="text-white" animate={true} loop={true} loopDelay={2000} />,
       onClick: () => router.push('/client/profile'),
       className: ''
@@ -209,7 +202,7 @@ export default function Home() {
           <p>Services NETCY Montpellier : création site vitrine, site e-commerce sécurisé, développement web sur mesure, maintenance et support technique, audit de sécurité réseau, conformité RGPD, hébergement web sécurisé, protection cybersécurité PME.</p>
           <p>Technologies : Next.js, React, TypeScript, Tailwind CSS, Node.js, PHP, MySQL, PostgreSQL, MariaDB, WordPress, Git, GitHub. Stack technique moderne pour sites web performants et sécurisés.</p>
           <p>Netcy Montpellier - Network Cybersecurity - Jung Jean-Marie - BTS SIO SISR - Développeur web Montpellier - Cybersécurité réseau - Création sites internet - Sites web sécurisés - Maintenance web - Support technique - Audit sécurité - RGPD - Infrastructure réseau - Hébergement sécurisé.</p>
-          <p>Zone d'intervention : Montpellier, Hérault, Occitanie, France. Services pour PME, TPE, entrepreneurs, professionnels. Développement web professionnel, sites responsives, SEO optimisé, performances web, accessibilité, animations modernes.</p>
+          <p>Zone d&apos;intervention : Montpellier, Hérault, Occitanie, France. Services pour PME, TPE, entrepreneurs, professionnels. Développement web professionnel, sites responsives, SEO optimisé, performances web, accessibilité, animations modernes.</p>
         </div>
         <div className="fixed inset-0 w-full h-full z-0">
         <LiquidEther 
@@ -628,7 +621,7 @@ export default function Home() {
                       submitButton.textContent = 'Envoyer le Message';
                     }
                   }
-                } catch (error) {
+                } catch {
                   alert('Une erreur est survenue. Veuillez réessayer.');
                   if (submitButton) {
                     submitButton.disabled = false;

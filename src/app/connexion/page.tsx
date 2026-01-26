@@ -120,6 +120,10 @@ export default function ConnexionPage() {
           mouseForce={20}
           cursorSize={100}
           autoDemo={true}
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          autoResumeDelay={1000}
+          resolution={0.5}
         />
       </div>
       <div className="min-h-screen flex items-center justify-center p-4 relative z-10">

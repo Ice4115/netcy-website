@@ -8,6 +8,7 @@ import { ClipboardList } from '@/components/animate-ui/icons/clipboard-list';
 import { Send } from '@/components/animate-ui/icons/send';
 import { signUp, getCurrentUser, supabase } from '@/lib/supabase';
 import Stepper, { Step } from '@/components/Stepper';
+import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
 
 const LiquidEther = dynamic(() => import('@/components/LiquidEther'), {
   ssr: false,
@@ -37,6 +38,7 @@ export default function InscriptionPage() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [showCodeAnimation, setShowCodeAnimation] = useState(false);
 
   useEffect(() => {
     checkIfLoggedIn();
@@ -206,10 +208,13 @@ export default function InscriptionPage() {
       }
 
       if (data.user) {
-        setSuccess(true);
+        setShowCodeAnimation(true);
         setTimeout(() => {
-          router.push('/connexion');
-        }, 3000);
+          setSuccess(true);
+          setTimeout(() => {
+            router.push('/connexion');
+          }, 3000);
+        }, 4000);
       }
     } catch (err: any) {
       setError('Une erreur est survenue');
@@ -229,6 +234,74 @@ export default function InscriptionPage() {
     return 'Faible';
   };
 
+  if (showCodeAnimation && !success) {
+    const sqlCode = `// Initialisation de votre compte
+const user = {
+  email: '${email}',
+  nom: '${nom}',
+  prenom: '${prenom}',
+  type: '${type}'
+};
+
+// Création de l'espace sécurisé
+mkdir /users/${email.split('@')[0]}
+cd /users/${email.split('@')[0]}
+
+// Configuration de la base de données
+CREATE TABLE users (
+  id PRIMARY KEY,
+  email '${email}',
+  created_at NOW()
+);
+
+INSERT INTO users VALUES ('${email}');
+
+// Génération du token
+const token = generateSecureToken();
+sendConfirmationEmail(user.email, token);
+
+✓ Compte créé avec succès
+✓ Email de confirmation envoyé`;
+
+    return (
+      <div className="relative min-h-screen">
+        <div className="absolute inset-0 w-full h-full">
+          <LiquidEther
+            colors={['#3F12F3', '#4670D2', '#5670A4', '#2A0F7F']}
+            mouseForce={20}
+            cursorSize={100}
+            autoDemo={true}
+            autoSpeed={0.5}
+            autoIntensity={2.2}
+            autoResumeDelay={1000}
+            resolution={0.5}
+          />
+        </div>
+        <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
+          <div className="w-full max-w-2xl">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-white mb-2">Création de votre espace sécurisé</h2>
+                <p className="text-gray-300 text-sm">Configuration en cours...</p>
+              </div>
+              
+              <Code code={sqlCode} className="bg-black/40 border-purple-500/30">
+                <CodeBlock
+                  lang="javascript"
+                  writing={true}
+                  duration={3500}
+                  cursor={true}
+                  inView={true}
+                  className="min-h-[300px]"
+                />
+              </Code>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (success) {
     return (
       <div className="relative min-h-screen">
@@ -238,10 +311,14 @@ export default function InscriptionPage() {
             mouseForce={20}
             cursorSize={100}
             autoDemo={true}
+            autoSpeed={0.5}
+            autoIntensity={2.2}
+            autoResumeDelay={1000}
+            resolution={0.5}
           />
         </div>
         <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
-          <div className="w-full max-w-md">
+          <div className="w-full max-w-md animate-in fade-in duration-700">
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
@@ -291,6 +368,10 @@ export default function InscriptionPage() {
           mouseForce={20}
           cursorSize={100}
           autoDemo={true}
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          autoResumeDelay={1000}
+          resolution={0.5}
         />
       </div>
       <div className="min-h-screen flex items-center justify-center p-4 relative z-10 py-12">
