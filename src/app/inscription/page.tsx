@@ -6,9 +6,10 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { ClipboardList } from '@/components/animate-ui/icons/clipboard-list';
 import { Send } from '@/components/animate-ui/icons/send';
-import { signUp, getCurrentUser, supabase } from '@/lib/supabase';
+import { signUp, getCurrentUser } from '@/lib/supabase';
 import Stepper, { Step } from '@/components/Stepper';
-import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
+import { Code, CodeBlock, CodeHeader } from '@/components/animate-ui/components/animate/code';
+import { FileCode } from 'lucide-react';
 
 const LiquidEther = dynamic(() => import('@/components/LiquidEther'), {
   ssr: false,
@@ -36,20 +37,19 @@ export default function InscriptionPage() {
   const [nomAssociation, setNomAssociation] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [showCodeAnimation, setShowCodeAnimation] = useState(false);
 
   useEffect(() => {
+    const checkIfLoggedIn = async () => {
+      const user = await getCurrentUser();
+      if (user) {
+        router.push('/client');
+      }
+    };
+    
     checkIfLoggedIn();
-  }, []);
-
-  const checkIfLoggedIn = async () => {
-    const user = await getCurrentUser();
-    if (user) {
-      router.push('/client');
-    }
-  };
+  }, [router]);
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -155,8 +155,6 @@ export default function InscriptionPage() {
       return;
     }
 
-    setLoading(true);
-
     try {
       const clientData: {
         nom: string;
@@ -203,7 +201,6 @@ export default function InscriptionPage() {
         } else {
           setError('Une erreur est survenue lors de l\'inscription');
         }
-        setLoading(false);
         return;
       }
 
@@ -213,12 +210,11 @@ export default function InscriptionPage() {
           setSuccess(true);
           setTimeout(() => {
             router.push('/connexion');
-          }, 3000);
-        }, 4000);
+          }, 10000);
+        }, 5500);
       }
-    } catch (err: any) {
+    } catch {
       setError('Une erreur est survenue');
-      setLoading(false);
     }
   };
 
@@ -234,34 +230,164 @@ export default function InscriptionPage() {
     return 'Faible';
   };
 
+  const validateCurrentStep = (step: number) => {
+    setError('');
+    
+    switch (step) {
+      case 1:
+        return true;
+        
+      case 2:
+        if (nom.trim().length < 2) {
+          setError('Le nom doit contenir au moins 2 caractères');
+          return false;
+        }
+        if (prenom.trim().length < 2) {
+          setError('Le prénom doit contenir au moins 2 caractères');
+          return false;
+        }
+        if (type === 'entreprise' || type === 'entreprise_creation') {
+          if (!nomSociete.trim()) {
+            setError('Le nom de la société est requis');
+            return false;
+          }
+          if (type === 'entreprise') {
+            const siretClean = siret.replace(/\s/g, '');
+            if (!siretClean || !siretClean.match(/^\d{14}$/)) {
+              setError('Le SIRET doit contenir 14 chiffres');
+              return false;
+            }
+          }
+        }
+        if (type === 'association' && !nomAssociation.trim()) {
+          setError('Le nom de l\'association est requis');
+          return false;
+        }
+        return true;
+        
+      case 3:
+        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+          setError('Format d\'email invalide');
+          return false;
+        }
+        if (!telephone.trim() || !telephone.match(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/)) {
+          setError('Format de téléphone invalide (ex: 06 12 34 56 78)');
+          return false;
+        }
+        return true;
+        
+      case 4:
+        if (!adresse.trim()) {
+          setError('L\'adresse est requise');
+          return false;
+        }
+        if (!codePostal.trim() || !codePostal.match(/^\d{5}$/)) {
+          setError('Le code postal doit contenir 5 chiffres');
+          return false;
+        }
+        if (!pays.trim()) {
+          setError('Le pays est requis');
+          return false;
+        }
+        return true;
+        
+      case 5:
+        if (password.length < 12) {
+          setError('Le mot de passe doit contenir au moins 12 caractères');
+          return false;
+        }
+        if (!/[A-Z]/.test(password)) {
+          setError('Le mot de passe doit contenir au moins une majuscule');
+          return false;
+        }
+        if (!/[a-z]/.test(password)) {
+          setError('Le mot de passe doit contenir au moins une minuscule');
+          return false;
+        }
+        if (!/\d/.test(password)) {
+          setError('Le mot de passe doit contenir au moins un chiffre');
+          return false;
+        }
+        if (!/[^a-zA-Z0-9]/.test(password)) {
+          setError('Le mot de passe doit contenir au moins un caractère spécial');
+          return false;
+        }
+        if (password !== confirmPassword) {
+          setError('Les mots de passe ne correspondent pas');
+          return false;
+        }
+        return true;
+        
+      default:
+        return true;
+    }
+  };
+
   if (showCodeAnimation && !success) {
-    const sqlCode = `// Initialisation de votre compte
-const user = {
-  email: '${email}',
-  nom: '${nom}',
-  prenom: '${prenom}',
-  type: '${type}'
+    const sqlCode = `'use client';
+
+import * as React from 'react';
+import { supabase } from '@/lib/supabase';
+import { User } from '@/types/user';
+
+// Définition du type utilisateur
+type UserProfile = {
+  email: string;
+  nom: string;
+  prenom: string;
+  type: '${type}';
+  adresse: string;
+  telephone: string;
+} & React.ComponentProps<'div'>;
+
+// Initialisation de votre compte
+const createUserProfile = async (data: UserProfile) => {
+  const user = {
+    email: '${email}',
+    nom: '${nom}',
+    prenom: '${prenom}',
+    type: '${type}',
+    adresse: '${adresse}',
+    telephone: '${telephone}'
+  };
+
+  // Configuration de la base de données
+  const { data: userData, error } = await supabase
+    .from('clients')
+    .insert([
+      {
+        email: user.email,
+        nom: user.nom,
+        prenom: user.prenom,
+        type: user.type,
+        adresse: user.adresse,
+        telephone: user.telephone,
+        created_at: new Date().toISOString()
+      }
+    ])
+    .select();
+
+  if (error) throw error;
+
+  // Génération du token sécurisé
+  const token = await generateSecureToken();
+  await sendConfirmationEmail(user.email, token);
+
+  return userData;
 };
 
 // Création de l'espace sécurisé
-mkdir /users/${email.split('@')[0]}
-cd /users/${email.split('@')[0]}
-
-// Configuration de la base de données
-CREATE TABLE users (
-  id PRIMARY KEY,
-  email '${email}',
-  created_at NOW()
-);
-
-INSERT INTO users VALUES ('${email}');
-
-// Génération du token
-const token = generateSecureToken();
-sendConfirmationEmail(user.email, token);
+export const UserSpace = ({ userId }: { userId: string }) => {
+  return (
+    <div className="user-space">
+      <h1>Bienvenue ${prenom} ${nom}</h1>
+    </div>
+  );
+};
 
 ✓ Compte créé avec succès
-✓ Email de confirmation envoyé`;
+✓ Email de confirmation envoyé à ${email}
+✓ Espace client configuré`;
 
     return (
       <div className="relative min-h-screen">
@@ -285,16 +411,36 @@ sendConfirmationEmail(user.email, token);
                 <p className="text-gray-300 text-xs sm:text-sm">Configuration en cours...</p>
               </div>
               
-              <Code code={sqlCode} className="bg-black/40 border-purple-500/30">
-                <CodeBlock
-                  lang="javascript"
-                  writing={true}
-                  duration={3500}
-                  cursor={true}
-                  inView={true}
-                  className="min-h-[200px] sm:min-h-[300px] text-xs sm:text-sm"
-                />
-              </Code>
+              <div className="dark relative overflow-hidden rounded-lg shadow-2xl z-50" style={{ maxHeight: '500px' }}>
+                <style jsx>{`
+                  @keyframes scrollUp {
+                    0% {
+                      transform: translateY(0);
+                    }
+                    100% {
+                      transform: translateY(-30%);
+                    }
+                  }
+                  .code-scroll-container {
+                    animation: scrollUp 3.5s ease-out forwards;
+                  }
+                `}</style>
+                <div className="code-scroll-container dark">
+                  <Code code={sqlCode} className="w-full min-h-[500px] bg-[#1e1e1e]">
+                    <CodeHeader icon={FileCode} copyButton>
+                      user-registration.tsx
+                    </CodeHeader>
+                    <CodeBlock
+                      lang="tsx"
+                      writing={true}
+                      duration={3500}
+                      cursor={true}
+                      inView={true}
+                      theme="dark"
+                    />
+                  </Code>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -349,7 +495,7 @@ sendConfirmationEmail(user.email, token);
                 
                 <div className="pt-3 sm:pt-4 border-t border-white/10">
                   <p className="text-gray-400 text-xs text-center">
-                    Redirection automatique vers la page de connexion dans 3 secondes...
+                    Redirection automatique vers la page de connexion dans 10 secondes...
                   </p>
                 </div>
               </div>
@@ -402,6 +548,7 @@ sendConfirmationEmail(user.email, token);
 
             <Stepper
               onFinalStepCompleted={handleFinalSubmit}
+              validateStep={validateCurrentStep}
               nextButtonText="Suivant"
               backButtonText="Retour"
             >
@@ -415,7 +562,7 @@ sendConfirmationEmail(user.email, token);
                   <select
                     id="type"
                     value={type}
-                    onChange={(e) => setType(e.target.value as any)}
+                    onChange={(e) => setType(e.target.value as 'particulier' | 'entreprise' | 'entreprise_creation' | 'association')}
                     className="w-full px-4 py-3 sm:py-2.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   >
                     <option value="particulier" className="bg-gray-800">Particulier</option>

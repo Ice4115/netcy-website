@@ -8,6 +8,7 @@ export default function Stepper({
   initialStep = 1,
   onStepChange = () => {},
   onFinalStepCompleted = () => {},
+  validateStep = null,
   stepCircleContainerClassName = '',
   stepContainerClassName = '',
   contentClassName = '',
@@ -36,6 +37,26 @@ export default function Stepper({
     }
   };
 
+  const handleStepClick = async (clickedStep) => {
+    if (clickedStep < currentStep) {
+      setDirection(-1);
+      updateStep(clickedStep);
+      return;
+    }
+    
+    for (let step = currentStep; step < clickedStep; step++) {
+      if (validateStep) {
+        const isValid = await validateStep(step);
+        if (!isValid) {
+          return;
+        }
+      }
+    }
+    
+    setDirection(1);
+    updateStep(clickedStep);
+  };
+
   const handleBack = () => {
     if (currentStep > 1) {
       setDirection(-1);
@@ -43,14 +64,28 @@ export default function Stepper({
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (validateStep) {
+      const isValid = await validateStep(currentStep);
+      if (!isValid) {
+        return;
+      }
+    }
+    
     if (!isLastStep) {
       setDirection(1);
       updateStep(currentStep + 1);
     }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    if (validateStep) {
+      const isValid = await validateStep(currentStep);
+      if (!isValid) {
+        return;
+      }
+    }
+    
     setDirection(1);
     updateStep(totalSteps + 1);
   };
@@ -68,20 +103,14 @@ export default function Stepper({
                   renderStepIndicator({
                     step: stepNumber,
                     currentStep,
-                    onStepClick: clicked => {
-                      setDirection(clicked > currentStep ? 1 : -1);
-                      updateStep(clicked);
-                    }
+                    onStepClick: handleStepClick
                   })
                 ) : (
                   <StepIndicator
                     step={stepNumber}
                     disableStepIndicators={disableStepIndicators}
                     currentStep={currentStep}
-                    onClickStep={clicked => {
-                      setDirection(clicked > currentStep ? 1 : -1);
-                      updateStep(clicked);
-                    }}
+                    onClickStep={handleStepClick}
                   />
                 )}
                 {isNotLastStep && <StepConnector isComplete={currentStep > stepNumber} />}
