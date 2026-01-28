@@ -277,12 +277,12 @@ sendConfirmationEmail(user.email, token);
             resolution={0.5}
           />
         </div>
-        <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
+        <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative z-10">
           <div className="w-full max-w-2xl">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-white mb-2">Création de votre espace sécurisé</h2>
-                <p className="text-gray-300 text-sm">Configuration en cours...</p>
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-8">
+              <div className="text-center mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-2xl font-bold text-white mb-1 sm:mb-2">Création de votre espace sécurisé</h2>
+                <p className="text-gray-300 text-xs sm:text-sm">Configuration en cours...</p>
               </div>
               
               <Code code={sqlCode} className="bg-black/40 border-purple-500/30">
@@ -292,7 +292,7 @@ sendConfirmationEmail(user.email, token);
                   duration={3500}
                   cursor={true}
                   inView={true}
-                  className="min-h-[300px]"
+                  className="min-h-[200px] sm:min-h-[300px] text-xs sm:text-sm"
                 />
               </Code>
             </div>
@@ -317,14 +317,14 @@ sendConfirmationEmail(user.email, token);
             resolution={0.5}
           />
         </div>
-        <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
+        <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative z-10">
           <div className="w-full max-w-md animate-in fade-in duration-700">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 p-6 sm:p-8">
+              <div className="text-center mb-6 sm:mb-8">
+                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-500/20 rounded-full mb-3 sm:mb-4">
                   <Send 
-                    size={32} 
-                    className="text-green-400" 
+                    size={28} 
+                    className="text-green-400 sm:w-8 sm:h-8" 
                     strokeWidth={1.5}
                     animate={true}
                     animation="default"
@@ -332,22 +332,22 @@ sendConfirmationEmail(user.email, token);
                     loopDelay={2000}
                   />
                 </div>
-                <h1 className="text-3xl font-bold text-white mb-2">Inscription réussie !</h1>
-                <p className="text-gray-300">Email de confirmation envoyé</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Inscription réussie !</h1>
+                <p className="text-gray-300 text-sm sm:text-base">Email de confirmation envoyé</p>
               </div>
               
-              <div className="space-y-4">
-                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                  <p className="text-gray-300 text-sm text-center">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 sm:p-4">
+                  <p className="text-gray-300 text-xs sm:text-sm text-center break-words">
                     Un email de confirmation a été envoyé à <strong className="text-white">{email}</strong>
                   </p>
                 </div>
                 
-                <p className="text-gray-300 text-sm text-center">
+                <p className="text-gray-300 text-xs sm:text-sm text-center">
                   Veuillez vérifier votre boîte de réception et cliquer sur le lien de confirmation pour activer votre compte.
                 </p>
                 
-                <div className="pt-4 border-t border-white/10">
+                <div className="pt-3 sm:pt-4 border-t border-white/10">
                   <p className="text-gray-400 text-xs text-center">
                     Redirection automatique vers la page de connexion dans 3 secondes...
                   </p>
@@ -374,15 +374,15 @@ sendConfirmationEmail(user.email, token);
           resolution={0.5}
         />
       </div>
-      <div className="min-h-screen flex items-center justify-center p-4 relative z-10 py-12">
+      <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative z-10 py-8 sm:py-12">
         <div className="w-full max-w-3xl">
           <AnimatedContent distance={30} duration={0.6}>
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 md:p-10">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/20 rounded-full mb-4">
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 p-5 sm:p-8 md:p-10">
+              <div className="text-center mb-6 sm:mb-8">
+                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-purple-500/20 rounded-full mb-3 sm:mb-4">
                   <ClipboardList 
-                    size={32} 
-                    className="text-purple-400" 
+                    size={28} 
+                    className="text-purple-400 sm:w-8 sm:h-8" 
                     strokeWidth={1.5}
                     animate={true}
                     animation="default"
@@ -390,13 +390,13 @@ sendConfirmationEmail(user.email, token);
                     loopDelay={2000}
                   />
                 </div>
-                <h1 className="text-3xl font-bold text-white mb-2">Inscription</h1>
-                <p className="text-gray-300">Créez votre compte NETCY</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Inscription</h1>
+                <p className="text-gray-300 text-sm sm:text-base">Créez votre compte NETCY</p>
               </div>
 
               {error && (
-                <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 mb-6">
-                  <p className="text-red-400 text-sm text-center">{error}</p>
+                <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 mb-4 sm:mb-6">
+                  <p className="text-red-400 text-xs sm:text-sm text-center">{error}</p>
                 </div>
               )}
 
@@ -407,16 +407,16 @@ sendConfirmationEmail(user.email, token);
             >
               {/* Étape 1: Type de compte */}
               <Step>
-                <div className="space-y-4 p-6">
-                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Type de compte</h3>
-                  <label htmlFor="type" className="block text-sm font-medium text-gray-200 mb-2">
+                <div className="space-y-4 p-3 sm:p-6">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">Type de compte</h3>
+                  <label htmlFor="type" className="block text-xs sm:text-sm font-medium text-gray-200 mb-2">
                     Sélectionnez votre type de compte *
                   </label>
                   <select
                     id="type"
                     value={type}
                     onChange={(e) => setType(e.target.value as any)}
-                    className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 sm:py-2.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   >
                     <option value="particulier" className="bg-gray-800">Particulier</option>
                     <option value="entreprise" className="bg-gray-800">Entreprise</option>
@@ -428,12 +428,12 @@ sendConfirmationEmail(user.email, token);
 
               {/* Étape 2: Informations personnelles + Entreprise/Association */}
               <Step>
-                <div className="space-y-6 p-6">
-                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Informations personnelles</h3>
+                <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">Informations personnelles</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex flex-col">
-                      <label htmlFor="nom" className="block text-sm font-medium text-gray-200 mb-2">
+                      <label htmlFor="nom" className="block text-xs sm:text-sm font-medium text-gray-200 mb-2">
                         Nom *
                       </label>
                       <input
@@ -443,12 +443,12 @@ sendConfirmationEmail(user.email, token);
                         onChange={(e) => setNom(e.target.value)}
                         required
                         minLength={2}
-                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 sm:py-2.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                         placeholder="Dupont"
                       />
                     </div>
                     <div className="flex flex-col">
-                      <label htmlFor="prenom" className="block text-sm font-medium text-gray-200 mb-2">
+                      <label htmlFor="prenom" className="block text-xs sm:text-sm font-medium text-gray-200 mb-2">
                         Prénom *
                       </label>
                       <input
@@ -458,7 +458,7 @@ sendConfirmationEmail(user.email, token);
                         onChange={(e) => setPrenom(e.target.value)}
                         required
                         minLength={2}
-                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 sm:py-2.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                         placeholder="Jean"
                       />
                     </div>
@@ -698,8 +698,8 @@ sendConfirmationEmail(user.email, token);
               </Step>
             </Stepper>
 
-            <div className="mt-6 text-center">
-              <p className="text-gray-300 text-sm">
+            <div className="mt-4 sm:mt-6 text-center">
+              <p className="text-gray-300 text-xs sm:text-sm">
                 Déjà un compte?{' '}
                 <Link href="/connexion" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">
                   Se connecter
@@ -710,8 +710,8 @@ sendConfirmationEmail(user.email, token);
           </AnimatedContent>
 
           <AnimatedContent distance={20} duration={0.5} delay={0.8}>
-            <div className="mt-8 text-center">
-              <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <div className="mt-6 sm:mt-8 text-center">
+              <Link href="/" className="text-gray-400 hover:text-white text-xs sm:text-sm transition-colors">
                 ← Retour à l&apos;accueil
               </Link>
             </div>

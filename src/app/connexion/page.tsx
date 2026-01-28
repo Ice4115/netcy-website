@@ -126,14 +126,14 @@ export default function ConnexionPage() {
           resolution={0.5}
         />
       </div>
-      <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
+      <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative z-10">
         <div className="w-full max-w-md">
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/20 rounded-full mb-4">
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 p-6 sm:p-8">
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-purple-500/20 rounded-full mb-3 sm:mb-4">
                 <Fingerprint 
-                  size={32} 
-                  className="text-purple-400" 
+                  size={28} 
+                  className="text-purple-400 sm:w-8 sm:h-8" 
                   strokeWidth={1.5}
                   animate={true}
                   animation="default"
@@ -141,19 +141,19 @@ export default function ConnexionPage() {
                   loopDelay={5000}
                 />
               </div>
-              <h1 className="text-3xl font-bold text-white mb-2">Connexion</h1>
-              <p className="text-gray-300">Accédez à votre espace personnel</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Connexion</h1>
+              <p className="text-gray-300 text-sm sm:text-base">Accédez à votre espace personnel</p>
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 mb-6">
-                <p className="text-red-400 text-sm text-center">{error}</p>
+              <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 mb-4 sm:mb-6">
+                <p className="text-red-400 text-xs sm:text-sm text-center">{error}</p>
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
+                <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-200 mb-2">
                   Email
                 </label>
                 <input
@@ -163,13 +163,13 @@ export default function ConnexionPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={isLocked}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+                  className="w-full px-4 py-3.5 sm:py-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
                   placeholder="votre@email.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-2">
+                <label htmlFor="password" className="block text-xs sm:text-sm font-medium text-gray-200 mb-2">
                   Mot de passe
                 </label>
                 <input
@@ -180,21 +180,21 @@ export default function ConnexionPage() {
                   required
                   disabled={isLocked}
                   minLength={6}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+                  className="w-full px-4 py-3.5 sm:py-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
                   placeholder="••••••••"
                 />
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                 <label className="flex items-center cursor-pointer">
                   <Checkbox
                     checked={rememberMe}
                     onCheckedChange={(checked) => setRememberMe(checked === true)}
                     className="bg-white/10 border-white/20 focus-visible:ring-purple-500 [&[data-checked]]:bg-purple-500 [&[data-checked]]:text-white"
                   />
-                  <span className="ml-2 text-sm text-gray-300">Se souvenir de moi</span>
+                  <span className="ml-2 text-xs sm:text-sm text-gray-300">Se souvenir de moi</span>
                 </label>
-                <Link href="/mot-de-passe-oublie" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
+                <Link href="/mot-de-passe-oublie" className="text-xs sm:text-sm text-purple-400 hover:text-purple-300 transition-colors">
                   Mot de passe oublié?
                 </Link>
               </div>
@@ -202,16 +202,16 @@ export default function ConnexionPage() {
               <button
                 type="submit"
                 disabled={loading || isLocked}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3.5 sm:py-3 px-6 rounded-lg text-sm sm:text-base hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {loading ? 'Connexion...' : isLocked ? 'Compte bloqué' : 'Se connecter'}
               </button>
             </form>
 
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
               <div className="relative flex items-center">
                 <div className="flex-1 border-t border-white/20"></div>
-                <span className="px-4 text-gray-300 text-sm">OU</span>
+                <span className="px-3 sm:px-4 text-gray-300 text-xs sm:text-sm">OU</span>
                 <div className="flex-1 border-t border-white/20"></div>
               </div>
 
@@ -219,20 +219,21 @@ export default function ConnexionPage() {
                 onClick={handleGoogleLogin}
                 disabled={loading || isLocked}
                 type="button"
-                className="mt-4 w-full bg-white hover:bg-gray-50 text-gray-900 font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3"
+                className="mt-3 sm:mt-4 w-full bg-white hover:bg-gray-50 text-gray-900 font-semibold py-3.5 sm:py-3 px-6 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 sm:gap-3"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                 </svg>
-                Continuer avec Google
+                <span className="hidden sm:inline">Continuer avec Google</span>
+                <span className="sm:hidden">Google</span>
               </button>
             </div>
 
-            <div className="mt-6 text-center">
-              <p className="text-gray-300 text-sm">
+            <div className="mt-4 sm:mt-6 text-center">
+              <p className="text-gray-300 text-xs sm:text-sm">
                 Pas encore de compte?{' '}
                 <Link href="/inscription" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">
                   S&apos;inscrire
@@ -241,8 +242,8 @@ export default function ConnexionPage() {
             </div>
           </div>
 
-          <div className="mt-8 text-center">
-            <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
+          <div className="mt-6 sm:mt-8 text-center">
+            <Link href="/" className="text-gray-400 hover:text-white text-xs sm:text-sm transition-colors">
               ← Retour à l&apos;accueil
             </Link>
           </div>
