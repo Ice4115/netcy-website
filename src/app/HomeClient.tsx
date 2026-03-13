@@ -132,7 +132,7 @@ export default function HomeClient() {
       links: [
         { label: 'Netcy c\'est quoi', href: '#netcy', ariaLabel: 'En savoir plus sur Netcy' },
         { label: 'Qui suis-je', href: '#me', ariaLabel: 'En savoir plus sur moi' },
-        { label: 'Mon Portfolio', href: '/portfolio', ariaLabel: 'Voir mon portfolio' }
+        { label: 'Mon Portfolio', href: '#portfolio-preview', ariaLabel: 'Voir mon portfolio' }
       ]
     },
     {
@@ -438,7 +438,7 @@ export default function HomeClient() {
           </div>
         </section>
 
-        <section className="py-16 px-4 md:px-8" style={{ pointerEvents: 'auto' }}>
+        <section id="portfolio-preview" className="py-16 px-4 md:px-8" style={{ pointerEvents: 'auto' }}>
           <div className="max-w-5xl mx-auto">
             <AnimatedContent distance={30} duration={0.6}>
               <div className="relative overflow-hidden bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-8 md:p-12 shadow-2xl shadow-violet-500/10 hover:border-[#6F3FFF]/60 transition">
