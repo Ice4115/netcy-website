@@ -10,7 +10,12 @@ import ResponsiveCardNav from "@/components/ResponsiveCardNav";
 import StarBorder from "@/components/StarBorder";
 import StructuredData from "@/components/StructuredData";
 import GlareHover from "@/components/GlareHover";
-import { Checkbox } from '@/components/animate-ui/components/base/checkbox';
+
+const Checkbox = dynamic(
+  () => import('@/components/animate-ui/components/base/checkbox').then(m => m.Checkbox),
+  { ssr: false }
+);
+
 import { getCurrentUser, signOut } from '@/lib/supabase';
 import Dock from '@/components/Dock';
 import { Home as HomeIcon } from '@/components/animate-ui/icons/home';
