@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase, signOut, getCurrentUser } from '@/lib/supabase';
 import Modal from '@/components/Modal';
-import { Plus, Edit, Trash2, Send } from 'lucide-react';
+import { Plus, Edit, Trash2, Send, MapPin, Mail, Phone, Globe, Linkedin, Download } from 'lucide-react';
 
 interface Client {
   id: string;
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [activeTab, setActiveTab] = useState<'clients' | 'projects' | 'invoices' | 'messages'>('clients');
+  const [activeTab, setActiveTab] = useState<'clients' | 'projects' | 'invoices' | 'messages' | 'cv'>('clients');
   
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
@@ -200,6 +200,107 @@ export default function AdminDashboard() {
   const handleSignOut = async () => {
     await signOut();
     router.push('/netcy-secure-access');
+  };
+
+  const handleDownloadCV = () => {
+    const photoUrl = window.location.origin + '/images/profile.png';
+    const htmlContent = `<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><title>CV - Jung Jean-Marie</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+<style>
+* { margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important; }
+body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
+.cv{width:210mm;min-height:297mm;margin:0 auto;display:flex;flex-direction:column;}
+.header{display:flex;align-items:center;gap:28px;background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:28px 36px;}
+.photo-ring{width:112px;height:112px;border-radius:50%;border:3px solid #6F3FFF;padding:3px;flex-shrink:0;}
+.photo{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center 20%;display:block;}
+.header-name{font-size:33px;font-weight:800;color:white;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px;}
+.header-sub{font-size:12px;color:#a5b4fc;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.header-badge{display:inline-block;background:#6F3FFF;color:white;font-size:11.5px;font-weight:700;padding:5px 14px;border-radius:20px;}
+.body{display:flex;flex:1;}
+.left-col{width:34%;background:#f1f5f9;padding:26px 20px;}
+.right-col{width:66%;background:white;padding:22px 24px;border-left:1px solid #e2e8f0;}
+.sec-title{font-size:10.5px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#6F3FFF;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-title::after{content:'';flex:1;height:1px;background:#cbd5e1;}
+.section{margin-bottom:24px;}
+.contact-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+.c-icon{width:16px;flex-shrink:0;text-align:center;color:#6F3FFF;font-size:13px;margin-top:2px;}
+.c-text{font-size:12px;color:#334155;line-height:1.5;word-break:break-all;}
+.skill-tag{font-size:11.5px;background:#1e293b;color:white;padding:4px 10px;border-radius:4px;font-weight:500;display:inline-block;margin:3px;}
+.soft-tag{font-size:11.5px;background:#ede9fe;color:#5b21b6;padding:4px 10px;border-radius:4px;font-weight:600;display:inline-block;margin:3px;}
+.tl-item{position:relative;padding-left:22px;margin-bottom:14px;}
+.tl-dot{position:absolute;left:0;top:4px;width:11px;height:11px;border-radius:50%;background:#6F3FFF;border:2px solid white;box-shadow:0 0 0 2px #6F3FFF;}
+.tl-dot.stage{background:#0ea5e9;box-shadow:0 0 0 2px #0ea5e9;}
+.exp-title{font-size:13px;font-weight:700;color:#0f172a;}
+.exp-badge{display:inline-block;font-size:9.5px;font-weight:700;background:#0ea5e9;color:white;padding:1px 5px;border-radius:3px;margin-left:5px;vertical-align:middle;}
+.exp-co{font-size:11px;color:#6F3FFF;font-weight:600;margin:2px 0;text-transform:uppercase;letter-spacing:0.5px;}
+.exp-date{font-size:10.5px;color:#94a3b8;margin-bottom:3px;}
+.exp-desc{font-size:11.5px;color:#64748b;line-height:1.5;}
+.proj-item{margin-bottom:12px;padding-left:10px;border-left:2px solid #6F3FFF;}
+.proj-title{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:2px;}
+.proj-sub{font-size:11.5px;font-weight:600;color:#6F3FFF;margin-bottom:2px;}
+.proj-desc{font-size:11.5px;color:#64748b;line-height:1.5;}
+.profile-text{font-size:12px;color:#475569;line-height:1.8;}
+.edu-item{margin-bottom:16px;}
+.edu-degree{font-size:13px;font-weight:700;color:#0f172a;}
+.edu-school{font-size:11.5px;color:#64748b;margin-top:3px;}
+.edu-year{display:inline-block;font-size:10.5px;color:#6F3FFF;background:#ede9fe;padding:2px 9px;border-radius:10px;margin-top:5px;font-weight:600;}
+@media print{@page{margin:0;size:A4 portrait;}body{margin:0;}.cv{width:100%;}}
+</style></head>
+<body><div class="cv">
+<div class="header">
+  <div class="photo-ring"><img class="photo" src="${photoUrl}" alt="Jung Jean-Marie" /></div>
+  <div>
+    <div class="header-name">Jung Jean-Marie</div>
+    <div class="header-sub">BTS SIO &middot; Option SISR &middot; Major de promotion &middot; 23 ans</div>
+    <div class="header-badge">En recherche d'une alternance &mdash; BTS SIO SISR</div>
+  </div>
+</div>
+<div class="body">
+  <div class="left-col">
+    <div class="section"><div class="sec-title">Contact</div>
+      <div class="contact-row"><span class="c-icon"><i class="fas fa-map-marker-alt"></i></span><span class="c-text">3 Rue des Soldats, 34000 Montpellier</span></div>
+      <div class="contact-row"><span class="c-icon"><i class="fas fa-envelope"></i></span><span class="c-text">jeanmarie.jung.pro@gmail.com</span></div>
+      <div class="contact-row"><span class="c-icon"><i class="fas fa-phone"></i></span><span class="c-text">07 49 64 44 78</span></div>
+      <div class="contact-row"><span class="c-icon"><i class="fas fa-globe"></i></span><span class="c-text">netcy.fr</span></div>
+      <div class="contact-row"><span class="c-icon"><i class="fab fa-linkedin"></i></span><span class="c-text">linkedin.com/in/jean-marie-jung-40683b218</span></div>
+    </div>
+    <div class="section"><div class="sec-title">Formation</div>
+      <div class="edu-item"><div class="edu-degree">BTS SIO &ndash; SISR</div><div class="edu-school">EPSI Montpellier</div><div class="edu-year">2024 &ndash; 2026 (en cours)</div></div>
+      <div class="edu-item"><div class="edu-degree">Baccalaur&eacute;at G&eacute;n&eacute;ral S</div><div class="edu-school">Lyc&eacute;e Polyvalent Philippe de Girard</div><div class="edu-year">2017 &ndash; 2021</div></div>
+    </div>
+    <div class="section"><div class="sec-title">Comp&eacute;tences</div>
+      <div><span class="skill-tag">PHP</span><span class="skill-tag">SQL</span><span class="skill-tag">HTML/CSS/JS</span><span class="skill-tag">Python</span><span class="skill-tag">C++</span><span class="skill-tag">Next.js/React</span><span class="skill-tag">R&eacute;seaux &amp; Infra</span><span class="skill-tag">Cybers&eacute;curit&eacute;</span></div>
+    </div>
+    <div class="section"><div class="sec-title">Soft Skills</div>
+      <div><span class="soft-tag">Autonomie</span><span class="soft-tag">Travail en &eacute;quipe</span><span class="soft-tag">Polyvalence</span><span class="soft-tag">Entrepreneuriat</span></div>
+    </div>
+  </div>
+  <div class="right-col">
+    <div class="section"><div class="sec-title">Profil</div>
+      <p class="profile-text">Pratiquant le Viet Vo Dao depuis 9 ans, j'ai développé rigueur, discipline et esprit d'équipe. Étudiant en 2e année à l'EPSI en BTS SIO option SISR et major de ma promotion. Orienté vers les réseaux et la cybersécurité, je suis à la recherche d'une alternance.</p>
+    </div>
+    <div class="section"><div class="sec-title">Exp&eacute;riences</div>
+      <div class="tl-item"><div class="tl-dot stage"></div><div class="exp-title">Stage &ndash; Technicien Informatique <span class="exp-badge">STAGE</span></div><div class="exp-co">Devensys Cybers&eacute;curit&eacute; &middot; Montpellier</div><div class="exp-date">19 janvier 2026 &ndash; 20 f&eacute;vrier 2026</div><div class="exp-desc">D&eacute;ploiement de PC, journées d&eacute;couverte, mise en place d'un serveur PKI.</div></div>
+      <div class="tl-item"><div class="tl-dot stage"></div><div class="exp-title">Stage &ndash; Technicien Informatique <span class="exp-badge">STAGE</span></div><div class="exp-co">Infoboost &middot; Mauguio</div><div class="exp-date">23 avril 2025 &ndash; 4 juillet 2025</div><div class="exp-desc">Reconditionnement de PC, infog&eacute;rance.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="exp-title">Vendeur &ndash; Polyvalent</div><div class="exp-co">Boulangerie Paul &middot; Saint-R&eacute;my-de-Provence</div><div class="exp-date">Sept. 2023 &ndash; Juin 2024 &middot; CDI</div></div>
+    </div>
+    <div class="section"><div class="sec-title">Projets R&eacute;alis&eacute;s</div>
+      <div class="proj-item"><div class="proj-title">NETCY &ndash; Micro-entreprise</div><div class="proj-sub">Création de sites web s&eacute;curis&eacute;s</div><div class="proj-desc">Site vitrine Next.js/React/TypeScript sp&eacute;cialis&eacute; en cybers&eacute;curit&eacute;.</div></div>
+      <div class="proj-item"><div class="proj-title">H&ocirc;tel Neptune</div><div class="proj-desc">Application web h&ocirc;teli&egrave;re &ndash; PHP, MySQL, Bootstrap.</div></div>
+      <div class="proj-item"><div class="proj-title">E-Commerce &ndash; Le Seigneur des Goodies</div><div class="proj-desc">Boutique en ligne &ndash; PHP, MySQL, JS.</div></div>
+    </div>
+  </div>
+</div>
+</div></body></html>`;
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+    if (win) {
+      win.onload = () => {
+        setTimeout(() => { win.print(); URL.revokeObjectURL(url); }, 500);
+      };
+    }
   };
 
   const openEditClient = (client: Client) => {
@@ -605,6 +706,16 @@ export default function AdminDashboard() {
           >
             Messages ({messages.length})
           </button>
+          <button
+            onClick={() => setActiveTab('cv')}
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
+              activeTab === 'cv'
+                ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
+                : 'bg-[#0f0a20] text-gray-400 hover:text-white'
+            }`}
+          >
+            Mon CV
+          </button>
 
         </div>
 
@@ -861,6 +972,138 @@ export default function AdminDashboard() {
               {messages.length === 0 && (
                 <p className="text-gray-400 text-center py-8">Aucun message pour le moment</p>
               )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'cv' && (
+          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-lg p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Mon CV</h2>
+              <button
+                onClick={handleDownloadCV}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg hover:opacity-90 transition"
+              >
+                <Download size={18} />
+                Télécharger / Imprimer
+              </button>
+            </div>
+            <div className="rounded-xl overflow-hidden shadow-2xl" style={{ maxWidth: '900px', margin: '0 auto', fontFamily: "'Segoe UI', Arial, sans-serif" }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '28px', background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)', padding: '28px 36px' }}>
+                <div style={{ width: '112px', height: '112px', borderRadius: '50%', border: '3px solid #6F3FFF', padding: '3px', flexShrink: 0 }}>
+                  <img src="/images/profile.png" alt="Jung Jean-Marie" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '33px', fontWeight: 800, color: 'white', letterSpacing: '4px', textTransform: 'uppercase', marginBottom: '4px' }}>Jung Jean-Marie</div>
+                  <div style={{ fontSize: '12px', color: '#a5b4fc', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '14px' }}>BTS SIO · Option SISR · Major de promotion · 23 ans</div>
+                  <div style={{ display: 'inline-block', background: '#6F3FFF', color: 'white', fontSize: '11.5px', fontWeight: 700, padding: '5px 14px', borderRadius: '20px', letterSpacing: '0.5px' }}>En recherche d&apos;une alternance — BTS SIO SISR</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', minHeight: '580px' }}>
+                <div style={{ width: '34%', background: '#f1f5f9', padding: '26px 20px', display: 'flex', flexDirection: 'column' }}>
+                  {([
+                    { title: 'Contact', content: (
+                      <div>
+                        {([
+                          { icon: <MapPin size={15} strokeWidth={2} />, text: '3 Rue des Soldats, 34000 Montpellier' },
+                          { icon: <Mail size={15} strokeWidth={2} />, text: 'jeanmarie.jung.pro@gmail.com' },
+                          { icon: <Phone size={15} strokeWidth={2} />, text: '07 49 64 44 78' },
+                          { icon: <Globe size={15} strokeWidth={2} />, text: 'netcy.fr' },
+                          { icon: <Linkedin size={15} strokeWidth={2} />, text: 'linkedin.com/in/jean-marie-jung-40683b218' },
+                        ] as { icon: React.ReactNode; text: string }[]).map((c, i) => (
+                          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '12px' }}>
+                            <div style={{ color: '#6F3FFF', flexShrink: 0, marginTop: '1px' }}>{c.icon}</div>
+                            <div style={{ fontSize: '12px', color: '#334155', lineHeight: 1.5, wordBreak: 'break-all' }}>{c.text}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )},
+                    { title: 'Formation', content: (
+                      <>
+                        {[
+                          { deg: 'BTS SIO – SISR', school: 'EPSI Montpellier', year: '2024 – 2026 (en cours)' },
+                          { deg: 'Baccalauréat Général S', school: 'Lycée Polyvalent Philippe de Girard', year: '2017 – 2021' },
+                        ].map((e, i) => (
+                          <div key={i} style={{ marginBottom: '16px' }}>
+                            <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{e.deg}</div>
+                            <div style={{ fontSize: '11.5px', color: '#64748b', marginTop: '3px' }}>{e.school}</div>
+                            <div style={{ display: 'inline-block', fontSize: '10.5px', color: '#6F3FFF', background: '#ede9fe', padding: '2px 9px', borderRadius: '10px', marginTop: '5px', fontWeight: 600 }}>{e.year}</div>
+                          </div>
+                        ))}
+                      </>
+                    )},
+                    { title: 'Compétences', content: (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                        {['PHP', 'SQL', 'HTML/CSS/JS', 'Python', 'C++', 'Next.js/React', 'Réseaux & Infra', 'Cybersécurité'].map((s, i) => (
+                          <div key={i} style={{ fontSize: '11.5px', background: '#1e293b', color: 'white', padding: '4px 10px', borderRadius: '4px', fontWeight: 500 }}>{s}</div>
+                        ))}
+                      </div>
+                    )},
+                    { title: 'Soft Skills', content: (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                        {['Autonomie', 'Travail en équipe', 'Polyvalence', 'Entrepreneuriat'].map((s, i) => (
+                          <div key={i} style={{ fontSize: '11.5px', background: '#ede9fe', color: '#5b21b6', padding: '4px 10px', borderRadius: '4px', fontWeight: 600 }}>{s}</div>
+                        ))}
+                      </div>
+                    )},
+                  ] as { title: string; content: React.ReactNode }[]).map((sec, i) => (
+                    <div key={i} style={{ marginBottom: '24px' }}>
+                      <div style={{ fontSize: '10.5px', fontWeight: 800, letterSpacing: '3px', textTransform: 'uppercase', color: '#6F3FFF', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {sec.title}<div style={{ flex: 1, height: '1px', background: '#cbd5e1' }}></div>
+                      </div>
+                      {sec.content}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ width: '66%', background: 'white', padding: '22px 24px', borderLeft: '1px solid #e2e8f0' }}>
+                  <div style={{ marginBottom: '20px' }}>
+                    <div style={{ fontSize: '10.5px', fontWeight: 800, letterSpacing: '3px', textTransform: 'uppercase', color: '#6F3FFF', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Profil<div style={{ flex: 1, height: '1px', background: '#cbd5e1' }}></div>
+                    </div>
+                    <p style={{ fontSize: '12px', color: '#475569', lineHeight: 1.8 }}>
+                      Pratiquant le Viet Vo Dao depuis 9 ans, j&apos;ai développé rigueur, discipline et esprit d&apos;équipe. Étudiant en deuxième année à l&apos;EPSI en BTS SIO option SISR et major de ma promotion. Orienté vers les réseaux et la cybersécurité, je suis actuellement à la recherche d&apos;une alternance pour mon BTS SIO SISR.
+                    </p>
+                  </div>
+                  <div style={{ marginBottom: '20px' }}>
+                    <div style={{ fontSize: '10.5px', fontWeight: 800, letterSpacing: '3px', textTransform: 'uppercase', color: '#6F3FFF', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Expériences<div style={{ flex: 1, height: '1px', background: '#cbd5e1' }}></div>
+                    </div>
+                    {[
+                      { title: 'Stage – Technicien Informatique', stage: true, co: 'Devensys Cybersécurité · Montpellier', date: '19 janvier 2026 – 20 février 2026', desc: "Déploiement de PC, journées découverte, mise en place d'un serveur PKI." },
+                      { title: 'Stage – Technicien Informatique', stage: true, co: 'Infoboost · Mauguio', date: '23 avril 2025 – 4 juillet 2025', desc: 'Reconditionnement de PC, infogérance.' },
+                      { title: 'Vendeur – Polyvalent', stage: false, co: 'Boulangerie Paul · Saint-Rémy-de-Provence', date: 'Sept. 2023 – Juin 2024 · CDI', desc: null },
+                    ].map((exp, i, arr) => (
+                      <div key={i} style={{ position: 'relative', paddingLeft: '22px', marginBottom: '14px' }}>
+                        {i < arr.length - 1 && <div style={{ position: 'absolute', left: '5px', top: '16px', width: '1px', height: 'calc(100% + 2px)', background: '#e2e8f0' }}></div>}
+                        <div style={{ position: 'absolute', left: 0, top: '4px', width: '11px', height: '11px', borderRadius: '50%', background: exp.stage ? '#0ea5e9' : '#6F3FFF', border: '2px solid white', boxShadow: `0 0 0 2px ${exp.stage ? '#0ea5e9' : '#6F3FFF'}` }}></div>
+                        <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>
+                          {exp.title}
+                          {exp.stage && <span style={{ display: 'inline-block', fontSize: '9.5px', fontWeight: 700, background: '#0ea5e9', color: 'white', padding: '1px 5px', borderRadius: '3px', marginLeft: '5px', verticalAlign: 'middle' }}>STAGE</span>}
+                        </div>
+                        <div style={{ fontSize: '11px', color: '#6F3FFF', fontWeight: 600, margin: '2px 0', textTransform: 'uppercase' }}>{exp.co}</div>
+                        <div style={{ fontSize: '10.5px', color: '#94a3b8', marginBottom: '3px' }}>{exp.date}</div>
+                        {exp.desc && <div style={{ fontSize: '11.5px', color: '#64748b', lineHeight: 1.5 }}>{exp.desc}</div>}
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '10.5px', fontWeight: 800, letterSpacing: '3px', textTransform: 'uppercase', color: '#6F3FFF', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Projets Réalisés<div style={{ flex: 1, height: '1px', background: '#cbd5e1' }}></div>
+                    </div>
+                    {[
+                      { title: 'NETCY – Micro-entreprise', sub: 'Création de sites web sécurisés', desc: 'Site vitrine Next.js/React/TypeScript spécialisé en cybersécurité réseau.' },
+                      { title: "Création d'un site – Hôtel Neptune", sub: null, desc: 'Application web hôtelière — PHP, MySQL, Bootstrap.' },
+                      { title: "E-Commerce — Le Seigneur des Goodies", sub: null, desc: 'Boutique en ligne — PHP, MySQL, JS.' },
+                    ].map((p, i) => (
+                      <div key={i} style={{ marginBottom: '12px', paddingLeft: '10px', borderLeft: '2px solid #6F3FFF' }}>
+                        <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', marginBottom: '2px' }}>{p.title}</div>
+                        {p.sub && <div style={{ fontSize: '11.5px', fontWeight: 600, color: '#6F3FFF', marginBottom: '2px' }}>{p.sub}</div>}
+                        <div style={{ fontSize: '11.5px', color: '#64748b', lineHeight: 1.5 }}>{p.desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -124,15 +124,17 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #110F1B;
+    background-color: #0A0A0A; /* Premium Dark Background */
+    color: #FAFAFA;
   }
   img {
     max-width: none !important;
   }
   [id] {
-    scroll-margin-top: 120px;
+    scroll-margin-top: 100px;
   }
-  
+
+  /* ── Dark theme autofill ── */
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
@@ -145,32 +147,24 @@
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus,
   select:-webkit-autofill:active {
-    -webkit-text-fill-color: #ffffff !important;
-    -webkit-box-shadow: 0 0 0px 1000px #0f0a20 inset !important;
-    caret-color: #ffffff !important;
-    color: #ffffff !important;
+    -webkit-text-fill-color: #FAFAFA !important;
+    -webkit-box-shadow: 0 0 0px 1000px #171717 inset !important;
+    caret-color: #FAFAFA !important;
+    color: #FAFAFA !important;
     transition: background-color 5000s ease-in-out 0s;
     font-family: inherit !important;
   }
-  
+
   input,
   textarea,
   select {
-    caret-color: #ffffff;
-    color: #ffffff !important;
+    caret-color: #FAFAFA;
+    color: #FAFAFA !important;
   }
-  
-  input[name="nom"]:-webkit-autofill,
-  input[name="email"]:-webkit-autofill,
-  input[name="entreprise"]:-webkit-autofill {
-    -webkit-text-fill-color: #ffffff !important;
-    color: #ffffff !important;
-  }
-  
+
   .select-wrapper {
     position: relative;
   }
-  
   .select-arrow {
     position: absolute;
     right: 0.75rem;
@@ -178,54 +172,50 @@
     transform: translateY(-50%);
     pointer-events: none;
     transition: transform 0.3s ease;
+    color: #A3A3A3;
   }
-  
   .select-wrapper select:focus ~ .select-arrow {
     transform: translateY(-50%) rotate(180deg);
   }
-  
   .select-wrapper select {
     padding-right: 2.5rem;
   }
 
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
+  /* ══════════════════════════════
+     ANIMATIONS (Premium / Subdued)
+  ══════════════════════════════ */
 
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
+  @keyframes fade-up {
+    0%   { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
-
-  @keyframes slide-in-up {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .animate-fade-up {
+    animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
-
-  .animate-slide-in-up {
-    animation: slide-in-up 0.5s ease-out forwards;
-  }
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
 
   @keyframes fade-in {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  .animate-fade-in { animation: fade-in 1s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+  .card-hover-effect {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-hover-effect:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+    border-color: #404040;
   }
 
-  .animate-fade-in {
-    animation: fade-in 0.6s ease-out;
+  @keyframes subtle-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
+  .animate-subtle-pulse { animation: subtle-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 }
