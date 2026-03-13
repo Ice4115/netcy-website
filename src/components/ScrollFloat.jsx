@@ -6,9 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './ScrollFloat.css';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const ScrollFloat = ({
+export default function ScrollFloat({
   children,
   scrollContainerRef,
   containerClassName = '',
@@ -18,7 +16,7 @@ const ScrollFloat = ({
   scrollStart = 'center bottom+=50%',
   scrollEnd = 'bottom bottom-=40%',
   stagger = 0.03
-}) => {
+}) {
   const containerRef = useRef(null);
 
   const splitText = useMemo(() => {
@@ -31,6 +29,7 @@ const ScrollFloat = ({
   }, [children]);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     const el = containerRef.current;
     if (!el) return;
 
@@ -73,5 +72,3 @@ const ScrollFloat = ({
     </h2>
   );
 };
-
-export default ScrollFloat;

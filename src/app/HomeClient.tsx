@@ -36,7 +36,7 @@ const TrueFocus = dynamic(() => import("@/components/TrueFocus"), {
   ssr: false,
 });
 
-const ScrollFloat = dynamic(() => import("@/components/ScrollFloat.jsx"), {
+const ScrollFloat = dynamic(() => import("@/components/ScrollFloat"), {
   ssr: false,
 });
 

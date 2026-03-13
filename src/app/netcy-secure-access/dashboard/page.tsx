@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase, signOut, getCurrentUser } from '@/lib/supabase';
 import Modal from '@/components/Modal';
 import { Plus, Edit, Trash2, Send } from 'lucide-react';
+import Image from 'next/image';
 
 interface Client {
   id: string;
@@ -552,107 +553,180 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#110F1B] to-[#1a0f3a] p-4 sm:p-6 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white">Dashboard Admin</h1>
-          <button
-            onClick={handleSignOut}
-            className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition border border-red-500/50 text-sm sm:text-base"
-          >
-            Déconnexion
-          </button>
-        </div>
+    <>
+      <div className="min-h-screen bg-[#0A061E] flex">
+        {/* Sidebar Navigation */}
+      <aside className="w-64 bg-[#0A061E] border-r border-white/[0.05] flex flex-col hidden md:flex shrink-0 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#6F3FFF]/10 to-transparent pointer-events-none opacity-50"></div>
+        <div className="p-6 relative z-10 flex flex-col h-full">
+          <div className="flex items-center gap-3 mb-12">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shadow-lg shadow-[#6F3FFF]/20">
+              <Image src="/images/logo_tab.png" alt="Netcy Logo" width={40} height={40} className="object-contain" />
+            </div>
+            <h1 className="text-xl font-bold text-white tracking-tight">Admin</h1>
+          </div>
 
-        <div className="flex gap-2 sm:gap-4 mb-6 md:mb-8 overflow-x-auto pb-2">
-          <button
-            onClick={() => setActiveTab('clients')}
-            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
-              activeTab === 'clients'
-                ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
-                : 'bg-[#0f0a20] text-gray-400 hover:text-white'
-            }`}
-          >
-            Clients ({clients.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('projects')}
-            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
-              activeTab === 'projects'
-                ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
-                : 'bg-[#0f0a20] text-gray-400 hover:text-white'
-            }`}
-          >
-            Projets ({projects.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('invoices')}
-            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
-              activeTab === 'invoices'
-                ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
-                : 'bg-[#0f0a20] text-gray-400 hover:text-white'
-            }`}
-          >
-            Factures ({invoices.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('messages')}
-            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition whitespace-nowrap ${
-              activeTab === 'messages'
-                ? 'bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white'
-                : 'bg-[#0f0a20] text-gray-400 hover:text-white'
-            }`}
-          >
-            Messages ({messages.length})
-          </button>
+          <nav className="space-y-2 flex-grow">
+            <button
+              onClick={() => setActiveTab('clients')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                activeTab === 'clients'
+                  ? 'bg-gradient-to-r from-[#6F3FFF]/20 to-transparent text-white border-l-2 border-[#6F3FFF]'
+                  : 'text-gray-400 hover:bg-white/[0.02] hover:text-white border-l-2 border-transparent'
+              }`}
+            >
+              Clients
+              <span className="ml-auto bg-white/[0.05] py-0.5 px-2 rounded-full text-xs">{clients.length}</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('projects')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                activeTab === 'projects'
+                  ? 'bg-gradient-to-r from-[#6F3FFF]/20 to-transparent text-white border-l-2 border-[#6F3FFF]'
+                  : 'text-gray-400 hover:bg-white/[0.02] hover:text-white border-l-2 border-transparent'
+              }`}
+            >
+              Projets
+              <span className="ml-auto bg-white/[0.05] py-0.5 px-2 rounded-full text-xs">{projects.length}</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('invoices')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                activeTab === 'invoices'
+                  ? 'bg-gradient-to-r from-[#6F3FFF]/20 to-transparent text-white border-l-2 border-[#6F3FFF]'
+                  : 'text-gray-400 hover:bg-white/[0.02] hover:text-white border-l-2 border-transparent'
+              }`}
+            >
+              Factures
+              <span className="ml-auto bg-white/[0.05] py-0.5 px-2 rounded-full text-xs">{invoices.length}</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('messages')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                activeTab === 'messages'
+                  ? 'bg-gradient-to-r from-[#6F3FFF]/20 to-transparent text-white border-l-2 border-[#6F3FFF]'
+                  : 'text-gray-400 hover:bg-white/[0.02] hover:text-white border-l-2 border-transparent'
+              }`}
+            >
+              Messages
+              <span className="ml-auto bg-white/[0.05] py-0.5 px-2 rounded-full text-xs">{messages.length}</span>
+            </button>
+          </nav>
 
+          <div className="mt-auto">
+            <button
+              onClick={handleSignOut}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400/80 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
+            >
+              Déconnexion
+            </button>
+          </div>
         </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-y-auto relative py-8 px-6 md:px-12 w-full">
+        {/* Mobile Header / Nav (visible only on small screens) */}
+        <div className="md:hidden mb-8">
+           <div className="flex justify-between items-center mb-6">
+             <div className="flex items-center gap-3">
+               <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
+                 <Image src="/images/logo_tab.png" alt="Netcy Logo" width={32} height={32} className="object-contain" />
+               </div>
+               <h1 className="text-xl font-bold text-white tracking-tight">Admin</h1>
+             </div>
+             <button
+               onClick={handleSignOut}
+               className="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition text-xs font-medium"
+             >
+               Déconnexion
+             </button>
+           </div>
+           
+           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              {/* Mobile tabs similar to old layout but styled better */}
+              {['clients', 'projects', 'invoices', 'messages'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab as any)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap ${
+                    activeTab === tab
+                      ? 'bg-[#6F3FFF]/20 text-white border border-[#6F3FFF]/30'
+                      : 'bg-white/[0.02] border border-white/[0.05] text-gray-400'
+                  }`}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
+        </div>
+        
+        {/* Main Content Area */}
+        <div className="flex-1 p-6 sm:p-10 relative overflow-y-auto w-full">
+          {/* Top decorative glow in main area */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#6F3FFF]/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+          <div className="max-w-6xl mx-auto relative z-10 w-full">
+          {/* Dashboard Header Content */}
+          <header className="mb-10 hidden md:block">
+             <h2 className="text-3xl font-bold text-white tracking-tight mb-2">
+               Tableau de bord
+             </h2>
+             <p className="text-gray-400 text-sm">
+               Gérez vos clients, projets, factures et messages depuis cet espace sécurisé.
+             </p>
+          </header>
 
         {activeTab === 'clients' && (
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-lg p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-white">Liste des Clients</h2>
+          <div className="backdrop-blur-xl bg-white/[0.02] border border-white/[0.05] rounded-2xl shadow-xl overflow-hidden pt-6">
+            <div className="px-6 sm:px-8 mb-6 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-white">Tous les Clients</h3>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[#6F3FFF]/30">
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Nom</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Email</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Type</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Rôle</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Date</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Actions</th>
+                  <tr className="bg-white/[0.02] border-y border-white/[0.05]">
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Nom</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Email</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Type</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Rôle</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Inscription</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-white/[0.05]">
                   {clients.map((client) => (
-                    <tr key={client.id} className="border-b border-[#6F3FFF]/10 hover:bg-[#6F3FFF]/5">
-                      <td className="py-3 px-4 text-white">
+                    <tr key={client.id} className="hover:bg-white/[0.02] transition-colors group">
+                      <td className="py-4 px-6 sm:px-8 text-white font-medium">
                         {client.nom} {client.prenom}
                       </td>
-                      <td className="py-3 px-4 text-gray-300">{client.email}</td>
-                      <td className="py-3 px-4">
-                        <span className="px-3 py-1 rounded-full text-sm bg-blue-400/10 text-blue-400">
+                      <td className="py-4 px-6 sm:px-8 text-gray-400 group-hover:text-gray-300 transition-colors">
+                        {client.email}
+                      </td>
+                      <td className="py-4 px-6 sm:px-8">
+                        <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
                           {client.type}
                         </span>
                       </td>
-                      <td className="py-3 px-4">
-                        <span className={`px-3 py-1 rounded-full text-sm ${
-                          client.role === 'admin' ? 'bg-purple-400/10 text-purple-400' : 'bg-gray-400/10 text-gray-400'
+                      <td className="py-4 px-6 sm:px-8">
+                        <span className={`px-2.5 py-1 rounded-md text-xs font-medium border ${
+                          client.role === 'admin' 
+                            ? 'bg-[#6F3FFF]/10 text-[#8A6FFF] border-[#6F3FFF]/20' 
+                            : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
                         }`}>
                           {client.role}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-gray-300">
+                      <td className="py-4 px-6 sm:px-8 text-gray-500">
                         {new Date(client.created_at).toLocaleDateString('fr-FR')}
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-4 px-6 sm:px-8">
                         <button
                           onClick={() => openEditClient(client)}
-                          className="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg transition"
+                          className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-md transition-all"
+                          title="Modifier"
                         >
-                          <Edit size={18} />
+                          <Edit size={16} />
                         </button>
                       </td>
                     </tr>
@@ -660,142 +734,175 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
               {clients.length === 0 && (
-                <p className="text-gray-400 text-center py-8">Aucun client pour le moment</p>
+                <div className="p-12 text-center text-gray-500 bg-white/[0.01]">
+                  Aucun client pour le moment
+                </div>
               )}
             </div>
           </div>
         )}
 
         {activeTab === 'projects' && (
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-lg p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-white">Liste des Projets</h2>
+          <div className="backdrop-blur-xl bg-white/[0.02] border border-white/[0.05] rounded-2xl shadow-xl p-6 sm:p-8">
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-xl font-bold text-white">Tous les Projets</h3>
               <button
                 onClick={() => {
                   resetProjectForm();
                   setIsProjectModalOpen(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg hover:opacity-90 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6F3FFF] to-[#43209E] text-white rounded-lg hover:shadow-[0_0_15px_rgba(111,63,255,0.4)] transition-all duration-300 text-sm font-medium"
               >
-                <Plus size={20} />
-                Nouveau Projet
+                <Plus size={16} />
+                Nouveau
               </button>
             </div>
-            <div className="grid gap-4">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className="bg-[#0f0a20]/50 border border-[#6F3FFF]/20 rounded-lg p-6 hover:border-[#6F3FFF]/40 transition"
+                  className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-6 hover:bg-white/[0.04] hover:border-white/[0.1] transition-all duration-300 group flex flex-col h-full relative overflow-hidden"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-2">{project.titre}</h3>
-                      <p className="text-gray-400 text-sm">
-                        Client: {project.clients?.nom} {project.clients?.prenom || ''}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#6F3FFF]/5 to-transparent rounded-bl-full pointer-events-none"></div>
+                  
+                  <div className="flex justify-between items-start mb-4 relative z-10">
+                    <div className="pr-4">
+                      <h4 className="text-lg font-bold text-white mb-1 group-hover:text-[#8A6FFF] transition-colors">{project.titre}</h4>
+                      <p className="text-xs font-medium text-gray-400 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+                        {project.clients?.nom} {project.clients?.prenom || ''}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(project.status)}`}>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`px-2.5 py-1 rounded-md text-xs font-medium border capitalize ${
+                         project.status === 'en_cours' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                         project.status === 'termine' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
+                         'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+                      }`}>
                         {project.status.replace('_', ' ')}
                       </span>
-                      <button
-                        onClick={() => openEditProject(project)}
-                        className="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg transition"
-                      >
-                        <Edit size={18} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteProject(project.id)}
-                        className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg transition"
-                      >
-                        <Trash2 size={18} />
-                      </button>
                     </div>
                   </div>
-                  <p className="text-gray-300 mb-4">{project.description}</p>
-                  {project.url && (
-                    <p className="text-sm text-blue-400 mb-4">
-                      <a href={project.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                        {project.url}
-                      </a>
-                    </p>
-                  )}
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <div className="w-full bg-[#6F3FFF]/20 rounded-full h-2">
-                        <div
-                          className="bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] h-2 rounded-full transition-all"
-                          style={{ width: `${project.progress}%` }}
-                        ></div>
+                  
+                  <p className="text-sm text-gray-400 mb-6 line-clamp-2 flex-grow">{project.description}</p>
+                  
+                  <div className="mt-auto relative z-10">
+                    {project.url && (
+                      <p className="text-xs text-[#8A6FFF] mb-4 flex items-center gap-1.5">
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                        <a href={project.url} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-[#A78BFA] transition-colors truncate">
+                          {project.url}
+                        </a>
+                      </p>
+                    )}
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1">
+                        <div className="w-full bg-white/[0.05] rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className="bg-gradient-to-r from-[#6F3FFF] to-[#43209E] h-1.5 rounded-full transition-all duration-500"
+                            style={{ width: `${project.progress}%` }}
+                          ></div>
+                        </div>
                       </div>
+                      <span className="text-xs font-bold text-gray-300 w-8 text-right">{project.progress}%</span>
                     </div>
-                    <span className="text-white font-semibold">{project.progress}%</span>
+                    
+                    <div className="flex gap-2 justify-end mt-4 pt-4 border-t border-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => openEditProject(project)}
+                          className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-md transition-all"
+                          title="Modifier"
+                        >
+                          <Edit size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProject(project.id)}
+                          className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-all"
+                          title="Supprimer"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                    </div>
                   </div>
                 </div>
               ))}
-              {projects.length === 0 && (
-                <p className="text-gray-400 text-center py-8">Aucun projet pour le moment</p>
-              )}
             </div>
+            
+            {projects.length === 0 && (
+              <div className="p-12 text-center text-gray-500 bg-white/[0.01] rounded-xl mt-4 border border-dashed border-white/[0.1]">
+                Aucun projet pour le moment
+              </div>
+            )}
           </div>
         )}
 
         {activeTab === 'invoices' && (
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-lg p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-white">Liste des Factures</h2>
+          <div className="backdrop-blur-xl bg-white/[0.02] border border-white/[0.05] rounded-2xl shadow-xl overflow-hidden pt-6">
+            <div className="px-6 sm:px-8 mb-6 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-white">Toutes les Factures</h3>
               <button
                 onClick={() => {
                   resetInvoiceForm();
                   setIsInvoiceModalOpen(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg hover:opacity-90 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6F3FFF] to-[#43209E] text-white rounded-lg hover:shadow-[0_0_15px_rgba(111,63,255,0.4)] transition-all duration-300 text-sm font-medium"
               >
-                <Plus size={20} />
-                Nouvelle Facture
+                <Plus size={16} />
+                Nouvelle
               </button>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[#6F3FFF]/30">
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">N°</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Client</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Projet</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Montant</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Statut</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Date</th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-semibold">Actions</th>
+                  <tr className="bg-white/[0.02] border-y border-white/[0.05]">
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">N°</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Client</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Projet</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Montant</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Statut</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Date</th>
+                    <th className="text-left py-4 px-6 sm:px-8 text-gray-400 font-medium tracking-wide uppercase text-xs">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-white/[0.05]">
                   {invoices.map((invoice) => (
-                    <tr key={invoice.id} className="border-b border-[#6F3FFF]/10 hover:bg-[#6F3FFF]/5">
-                      <td className="py-3 px-4 text-gray-300">{invoice.numero_facture || '-'}</td>
-                      <td className="py-3 px-4 text-white">{invoice.clients?.nom || 'N/A'}</td>
-                      <td className="py-3 px-4 text-gray-300">{invoice.projects?.titre || 'N/A'}</td>
-                      <td className="py-3 px-4 text-white font-semibold">{invoice.montant.toFixed(2)} €</td>
-                      <td className="py-3 px-4">
-                        <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(invoice.statut)}`}>
+                    <tr key={invoice.id} className="hover:bg-white/[0.02] transition-colors group">
+                      <td className="py-4 px-6 sm:px-8 text-gray-400 font-medium">{invoice.numero_facture || '-'}</td>
+                      <td className="py-4 px-6 sm:px-8 text-white font-medium">{invoice.clients?.nom || 'N/A'}</td>
+                      <td className="py-4 px-6 sm:px-8 text-gray-400 group-hover:text-gray-300 transition-colors">{invoice.projects?.titre || 'N/A'}</td>
+                      <td className="py-4 px-6 sm:px-8">
+                        <span className="text-white font-bold">{invoice.montant.toFixed(2)}</span>
+                        <span className="text-gray-500 ml-1">€</span>
+                      </td>
+                      <td className="py-4 px-6 sm:px-8">
+                        <span className={`px-2.5 py-1 rounded-md text-xs font-medium border capitalize ${
+                          invoice.statut === 'payee' 
+                            ? 'bg-green-500/10 text-green-400 border-green-500/20' 
+                            : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+                        }`}>
                           {invoice.statut === 'payee' ? 'Payée' : 'En Attente'}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-gray-300">
+                      <td className="py-4 px-6 sm:px-8 text-gray-500">
                         {new Date(invoice.created_at).toLocaleDateString('fr-FR')}
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-4 px-6 sm:px-8">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => openEditInvoice(invoice)}
-                            className="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg transition"
+                            className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-md transition-all"
+                            title="Modifier"
                           >
-                            <Edit size={18} />
+                            <Edit size={16} />
                           </button>
                           <button
                             onClick={() => handleDeleteInvoice(invoice.id)}
-                            className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg transition"
+                            className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-all"
+                            title="Supprimer"
                           >
-                            <Trash2 size={18} />
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </td>
@@ -804,69 +911,84 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
               {invoices.length === 0 && (
-                <p className="text-gray-400 text-center py-8">Aucune facture pour le moment</p>
+                <div className="p-12 text-center text-gray-500 bg-white/[0.01]">
+                  Aucune facture pour le moment
+                </div>
               )}
             </div>
           </div>
         )}
 
         {activeTab === 'messages' && (
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-lg p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-white">Messages Clients</h2>
+          <div className="backdrop-blur-xl bg-white/[0.02] border border-white/[0.05] rounded-2xl shadow-xl overflow-hidden pt-6">
+            <div className="px-6 sm:px-8 mb-6 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-white">Messages Clients</h3>
               <button
                 onClick={() => {
                   resetMessageForm();
                   setIsMessageModalOpen(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg hover:opacity-90 transition"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6F3FFF] to-[#43209E] text-white rounded-lg hover:shadow-[0_0_15px_rgba(111,63,255,0.4)] transition-all duration-300 text-sm font-medium"
               >
-                <Send size={20} />
+                <Send size={16} />
                 Nouveau Message
               </button>
             </div>
-            <div className="space-y-4">
+            
+            <div className="divide-y divide-white/[0.05]">
               {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className="bg-[#0f0a20]/50 border border-[#6F3FFF]/20 rounded-lg p-6 hover:border-[#6F3FFF]/40 transition"
-                >
-                  <div className="flex justify-between items-start mb-4">
+                <div key={message.id} className="p-6 sm:px-8 hover:bg-white/[0.02] transition-colors group">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-3">
                     <div>
-                      <h3 className="text-lg font-bold text-white mb-1">{message.sujet}</h3>
-                      <p className="text-gray-400 text-sm">
-                        Pour: {message.clients?.nom} {message.clients?.prenom || ''}
-                      </p>
-                      <p className="text-gray-500 text-xs mt-1">
-                        {new Date(message.created_at).toLocaleString('fr-FR')}
+                      <div className="flex items-center gap-3 mb-1">
+                        <h4 className="text-lg font-semibold text-white group-hover:text-[#8A6FFF] transition-colors">
+                          {message.sujet}
+                        </h4>
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
+                          message.lu 
+                            ? 'bg-green-500/10 text-green-400 border-green-500/20' 
+                            : 'bg-[#6F3FFF]/10 text-[#8A6FFF] border-[#6F3FFF]/20'
+                        }`}>
+                          {message.lu ? 'Lu' : 'Nouveau'}
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium text-gray-400 mt-1">
+                        De: <span className="text-gray-300">{message.clients?.nom} {message.clients?.prenom || ''}</span>
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-3 py-1 rounded-full text-sm ${
-                        message.lu ? 'bg-green-400/10 text-green-400' : 'bg-yellow-400/10 text-yellow-400'
-                      }`}>
-                        {message.lu ? 'Lu' : 'Non lu'}
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="text-xs text-gray-500 bg-white/[0.03] px-2.5 py-1 rounded-md border border-white/[0.05] relative z-10">
+                        {new Date(message.created_at).toLocaleString('fr-FR', {
+                          day: '2-digit', month: 'short', year: 'numeric',
+                          hour: '2-digit', minute:'2-digit'
+                        })}
                       </span>
                       <button
                         onClick={() => handleDeleteMessage(message.id)}
-                        className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg transition"
+                        className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-all sm:opacity-0 group-hover:opacity-100 relative z-10"
+                        title="Supprimer"
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
-                  <p className="text-gray-300 whitespace-pre-wrap">{message.contenu}</p>
+                  <div className="text-gray-400 text-sm bg-white/[0.01] border border-white/[0.02] p-4 rounded-xl relative z-0 mt-4">
+                    <p className="whitespace-pre-wrap leading-relaxed">{message.contenu}</p>
+                  </div>
                 </div>
               ))}
               {messages.length === 0 && (
-                <p className="text-gray-400 text-center py-8">Aucun message pour le moment</p>
+                <div className="p-12 text-center text-gray-500 bg-white/[0.01]">
+                  Aucun message pour le moment
+                </div>
               )}
             </div>
           </div>
         )}
-
-
-      </div>
+          </div>
+        </div>
+      </main>
+    </div>
 
       <Modal
         isOpen={isClientModalOpen}
@@ -1322,6 +1444,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   );
 }
