@@ -130,9 +130,9 @@ export default function HomeClient() {
       bgColor: '#1a1540',
       textColor: '#B5C4FF',
       links: [
+        { label: 'Netcy c\'est quoi', href: '#netcy', ariaLabel: 'En savoir plus sur Netcy' },
         { label: 'Qui suis-je', href: '#me', ariaLabel: 'En savoir plus sur moi' },
-        { label: 'Mes Compétences', href: '#skill', ariaLabel: 'Voir compétences' },
-        { label: 'Netcy c\'est quoi', href: '#netcy', ariaLabel: 'En savoir plus sur Netcy' }
+        { label: 'Mon Portfolio', href: '/portfolio', ariaLabel: 'Voir mon portfolio' }
       ]
     },
     {
