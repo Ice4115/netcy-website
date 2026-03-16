@@ -70,27 +70,26 @@ const FULL_DETAILS = [
 
 const ROWS = [
   { section: 'Réalisation en cours de formation' },
-  { name: 'Infrastructure système & réseaux', date: '03/25 - 04/25', checks: [true, false, false, false, false, false] },
+  { name: 'Infrastructure système & réseaux', date: '31/03/2025 au 18/04/2025', checks: [true, false, false, false, false, false] },
   { section: 'Milieu professionnel (Première année)' },
   { name: 'Installation de postes', date: '-', checks: [false, false, false, false, false, false] },
   { name: 'Couverture wifi', date: '-', checks: [false, true, false, false, true, false] },
   { section: 'Milieu professionnel (Seconde année) - Devensys' },
-  { name: 'Déploiement PKI', date: 'Jan 2026 - Fév 2026', checks: [true, false, false, false, true, false] },
-  { name: 'Audit Cybersécurité', date: 'Jan 2026 - Fév 2026', checks: [true, false, false, true, false, true] },
+  { name: 'Déploiement PKI', date: '01/2026 au 02/2026', checks: [true, false, false, false, true, false] },
   { section: 'Réalisations transverses' },
-  { name: 'Workshop C (Compte rendu)', date: '09/24', checks: [false, false, false, true, false, false] },
-  { name: 'Bataille navale (Algo & PHP)', date: '10/24 - 11/24', checks: [false, false, false, false, false, false] },
-  { name: 'Projet Base de Données (SQL)', date: '10/24 - 11/24', checks: [false, false, false, true, false, false] },
-  { name: 'Open Innovation (Scan IA)', date: '11/24 - 25', checks: [false, false, false, true, false, false] },
-  { name: 'Projet solution web', date: '11/24 - 01/25', checks: [true, false, true, true, false, true] },
-  { name: '(Projet communication digitale)', date: '11/24 - 01/25', checks: [false, false, true, true, false, false] },
-  { name: 'Projet Application Objet', date: '02/25 - 03/25', checks: [false, false, false, true, false, false] }
+  { name: 'Workshop C (Compte rendu)', date: '09/09/2024 au 13/09/2024', checks: [false, false, false, true, false, false] },
+  { name: 'Bataille navale (Algo & PHP)', date: '08/10/2024 au 04/11/2024', checks: [false, false, false, false, false, false] },
+  { name: 'Projet Base de Données (SQL)', date: '15/10/2024 au 26/11/2024', checks: [false, false, false, true, false, false] },
+  { name: 'Open Innovation (Scan IA)', date: '19/11/2024 au 2026', checks: [false, false, false, true, false, false] },
+  { name: 'Projet solution web', date: '26/11/2024 au 09/01/2025', checks: [true, false, true, true, false, true] },
+  { name: '(Projet communication digitale)', date: '28/11/2024 au 30/01/2025', checks: [false, false, true, true, false, false] },
+  { name: 'Projet Application Objet', date: '06/02/2025 au 06/03/2025', checks: [false, false, false, true, false, false] }
 ];
 
 export default function SkillsTableSection() {
   const handleDownloadPDF = () => {
     let rowsHtml = '';
-    
+
     ROWS.forEach((row) => {
       if (row.section) {
         rowsHtml += `<tr><td colspan="8" class="section-title">${row.section}</td></tr>`;
@@ -131,11 +130,10 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: white; color: #11
 h1 { font-size: 24px; color: #0f172a; margin-bottom: 20px; text-align: center; }
 table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
 th, td { border: 1px solid #cbd5e1; padding: 8px 10px; }
-th { background: #f1f5f9; text-align: left; font-weight: 700; color: #334155; }
-.col-header { text-align: center; font-size: 11px; }
+.col-header { text-align: center; font-size: 11px; width: 8%; }
 .section-title { font-weight: 700; color: #2563eb; background: #f8fafc; font-size: 11px; text-transform: uppercase; padding-top: 15px; padding-bottom: 10px; }
-.col-name { font-weight: 600; color: #1e293b; width: 33%; }
-.col-date { font-family: monospace; color: #64748b; text-align: center; font-size: 10px; width: 12%; }
+.col-name { font-weight: 600; color: #1e293b; width: 30%; }
+.col-date { font-family: monospace; color: #64748b; text-align: center; font-size: 10px; width: 22%; }
 .text-center { text-align: center; }
 .check { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #dcfce7; border: 1px solid #bbf7d0; color: #16a34a; font-weight: bold; border-radius: 4px; font-size: 14px; }
 @media print {
@@ -195,8 +193,19 @@ th { background: #f1f5f9; text-align: left; font-weight: 700; color: #334155; }
         </p>
       </div>
 
-      {/* Replaced overflow-hidden with overflow-visible so the absolute tooltips can break out of the container */}
-      <div className="bg-[#0A0A0A] border border-white/10 rounded-xl overflow-visible shadow-2xl">
+      {/* Mobile: download button only */}
+      <div className="flex justify-center md:hidden">
+        <button
+          onClick={handleDownloadPDF}
+          className="flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium text-white transition-colors"
+        >
+          <Download className="w-4 h-4" />
+          Télécharger le PDF
+        </button>
+      </div>
+
+      {/* Desktop: full table */}
+      <div className="hidden md:block bg-[#0A0A0A] border border-white/10 rounded-xl overflow-visible shadow-2xl -mx-4 lg:-mx-8">
 
         {/* Table Header Info */}
         <div className="flex flex-col md:flex-row items-center justify-between p-4 bg-[#121216] border-b border-white/10 gap-4">
@@ -231,14 +240,14 @@ th { background: #f1f5f9; text-align: left; font-weight: 700; color: #334155; }
         {/* The Matrix */}
         <table className="w-full text-left border-collapse table-fixed">
           <colgroup>
-            <col className="w-[35%]" />
-            <col className="w-[11%]" />
-            <col className="w-[9%]" />
-            <col className="w-[9%]" />
-            <col className="w-[9%]" />
-            <col className="w-[9%]" />
-            <col className="w-[9%]" />
-            <col className="w-[9%]" />
+            <col className="w-[30%]" />
+            <col className="w-[22%]" />
+            <col className="w-[8%]" />
+            <col className="w-[8%]" />
+            <col className="w-[8%]" />
+            <col className="w-[8%]" />
+            <col className="w-[8%]" />
+            <col className="w-[8%]" />
           </colgroup>
           <thead className="bg-[#18181C]">
             <tr>

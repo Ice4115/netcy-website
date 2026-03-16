@@ -131,7 +131,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
         <div className="flex flex-col sm:flex-row gap-4 shrink-0 mt-4 md:mt-0">
           <button
             onClick={() => setShowCV(!showCV)}
-            className="group relative flex items-center justify-center gap-3 px-6 py-3 bg-[#121216] border border-white/10 hover:border-white/20 hover:bg-[#18181C] text-white font-medium rounded-lg transition-all duration-300"
+            className="hidden md:flex group relative items-center justify-center gap-3 px-6 py-3 bg-[#121216] border border-white/10 hover:border-white/20 hover:bg-[#18181C] text-white font-medium rounded-lg transition-all duration-300"
           >
             {showCV ? <EyeOff size={18} className="text-zinc-400 group-hover:text-white transition-colors" /> : <Eye size={18} className="text-blue-400 group-hover:text-blue-300 transition-colors" />}
             <span>{showCV ? 'Masquer le CV' : 'Aperçu du CV'}</span>
@@ -149,7 +149,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
       </div>
 
       {showCV && (
-        <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="hidden md:block mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="bg-white text-black p-8 md:p-12 rounded-xl shadow-2xl relative overflow-hidden font-sans">
             <div className="max-w-4xl mx-auto flex flex-col min-h-[800px] border border-zinc-200">
               {/* Header CV */}
