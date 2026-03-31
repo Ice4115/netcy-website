@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Header from '@/components/portfolio/Header';
 import HeroSection from '@/components/portfolio/sections/HeroSection';
 import ExpertiseSection from '@/components/portfolio/sections/ExpertiseSection';
+import BTSSIOSection from '@/components/portfolio/sections/BTSSIOSection';
 import Image from 'next/image';
 
 const AnimatedContent = dynamic(() => import('@/components/AnimatedContent'), { ssr: false });
@@ -32,6 +33,10 @@ export default function PortfolioClient() {
         <div className="max-w-5xl mx-auto px-6 md:px-12 py-24 space-y-40">
           <AnimatedContent distance={40} duration={0.7}>
             <ExpertiseSection />
+          </AnimatedContent>
+
+          <AnimatedContent distance={40} duration={0.7}>
+            <BTSSIOSection />
           </AnimatedContent>
 
           <AnimatedContent distance={40} duration={0.7}>
