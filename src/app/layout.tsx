@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Manrope, Montserrat, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import CookieBanner from "@/components/CookieBanner";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   display: "swap",
   preload: true,
-  adjustFontFallback: true,
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
@@ -17,7 +25,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
   preload: false,
-  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -111,13 +118,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${manrope.variable} ${montserrat.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <CookieBanner />
-        <SpeedInsights />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange={false}>
+          {children}
+          <ThemeToggle />
+          <CookieBanner />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );

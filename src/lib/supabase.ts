@@ -40,7 +40,7 @@ export const signUp = async (email: string, password: string, additionalData?: a
     email,
     password,
     options: {
-      emailRedirectTo: `${origin}/connexion`,
+      emailRedirectTo: `${origin}/auth/callback`,
       data: {
         email: email
       }
@@ -67,42 +67,16 @@ export const signUp = async (email: string, password: string, additionalData?: a
 };
 
 export const signIn = async (email: string, password: string, rememberMe: boolean = true) => {
+  // Si rememberMe = false, on supprime le token localStorage avant de se connecter
   if (typeof window !== 'undefined' && !rememberMe) {
     const storageKey = `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`;
     localStorage.removeItem(storageKey);
   }
 
-  const sessionStorageClient = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      storage: typeof window !== 'undefined' ? {
-        getItem: (key: string) => sessionStorage.getItem(key),
-        setItem: (key: string, value: string) => sessionStorage.setItem(key, value),
-        removeItem: (key: string) => sessionStorage.removeItem(key),
-      } : undefined,
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
-    }
-  });
-
-  const localStorageClient = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      storage: typeof window !== 'undefined' ? {
-        getItem: (key: string) => localStorage.getItem(key),
-        setItem: (key: string, value: string) => localStorage.setItem(key, value),
-        removeItem: (key: string) => localStorage.removeItem(key),
-      } : undefined,
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
-    }
-  });
-
-  const clientToUse = rememberMe ? localStorageClient : sessionStorageClient;
-
-  const result = await clientToUse.auth.signInWithPassword({
+  // On utilise le client partagé pour éviter les fuites de session
+  const result = await supabase.auth.signInWithPassword({
     email,
-    password
+    password,
   });
 
   return result;

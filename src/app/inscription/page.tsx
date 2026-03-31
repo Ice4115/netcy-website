@@ -3,29 +3,112 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import { ClipboardList } from '@/components/animate-ui/icons/clipboard-list';
-import { Send } from '@/components/animate-ui/icons/send';
+import { User, Mail, Lock, Eye, EyeOff, Check, Building2, Users } from 'lucide-react';
 import { signUp, getCurrentUser } from '@/lib/supabase';
-import Stepper, { Step } from '@/components/Stepper';
-import { Code, CodeBlock, CodeHeader } from '@/components/animate-ui/components/animate/code';
-import { FileCode } from 'lucide-react';
+import { Checkbox } from '@/components/animate-ui/components/radix/checkbox';
+import { Label } from '@/components/ui/label';
 
-const LiquidEther = dynamic(() => import('@/components/LiquidEther'), {
-  ssr: false,
-});
+/* ── Formatters ── */
+function formatPhone(v: string): string {
+  const d = v.replace(/\D/g, '').slice(0, 10);
+  const parts: string[] = [];
+  for (let i = 0; i < d.length; i += 2) parts.push(d.slice(i, i + 2));
+  return parts.join(' ');
+}
 
-const AnimatedContent = dynamic(() => import('@/components/AnimatedContent'), {
-  ssr: false,
-});
+function formatSiret(v: string): string {
+  const d = v.replace(/\D/g, '').slice(0, 14);
+  const parts: string[] = [];
+  if (d.length > 0) parts.push(d.slice(0, 3));
+  if (d.length > 3) parts.push(d.slice(3, 6));
+  if (d.length > 6) parts.push(d.slice(6, 9));
+  if (d.length > 9) parts.push(d.slice(9, 14));
+  return parts.join(' ');
+}
+
+/* ── Mini stepper indicator ── */
+function StepDots({ current, total }: { current: number; total: number }) {
+  return (
+    <div className="flex items-center gap-2">
+      {Array.from({ length: total }).map((_, i) => {
+        const done = i + 1 < current;
+        const active = i + 1 === current;
+        return (
+          <div key={i} className="flex items-center gap-2">
+            <div
+              className={`flex items-center justify-center rounded-full transition-all duration-300 font-semibold text-xs
+                ${done ? 'w-7 h-7 bg-[#0052FF] text-white' :
+                  active ? 'w-7 h-7 bg-on-surface text-surface' :
+                    'w-7 h-7 bg-surface-container text-outline'}`}
+            >
+              {done ? <Check size={12} strokeWidth={2.5} /> : i + 1}
+            </div>
+            {i < total - 1 && (
+              <div className={`h-px w-8 transition-all duration-300 ${done ? 'bg-[#0052FF]' : 'bg-surface-container'}`} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Field ── */
+function Field({
+  label, type = 'text', value, onChange, placeholder, icon, required = false,
+  rightElement, hint,
+}: {
+  label: string; type?: string; value: string;
+  onChange: (v: string) => void; placeholder?: string;
+  icon?: React.ReactNode; required?: boolean;
+  rightElement?: React.ReactNode; hint?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider">{label}</label>
+      <div className="flex items-center gap-3 bg-surface-container-low rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-[#0052FF]/30 transition-all">
+        {icon && <span className="text-outline-variant">{icon}</span>}
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required={required}
+          placeholder={placeholder}
+          className="flex-1 bg-transparent text-on-surface text-sm placeholder:text-outline-variant focus:outline-none"
+        />
+        {rightElement}
+      </div>
+      {hint && <p className="text-[10px] text-outline uppercase tracking-wider">{hint}</p>}
+    </div>
+  );
+}
+
+/* ── Password strength bar ── */
+function StrengthBar({ strength }: { strength: number }) {
+  const color = strength >= 80 ? '#166534' : strength >= 50 ? '#854D0E' : '#BF3003';
+  const label = strength >= 80 ? 'Fort' : strength >= 50 ? 'Moyen' : 'Faible';
+  return (
+    <div className="space-y-1">
+      <div className="h-1 bg-surface-container rounded-full overflow-hidden">
+        <div className="h-full rounded-full transition-all duration-300" style={{ width: `${strength}%`, backgroundColor: color }} />
+      </div>
+      {strength > 0 && <p className="text-[10px]" style={{ color }}>{label}</p>}
+    </div>
+  );
+}
 
 export default function InscriptionPage() {
   const router = useRouter();
+  const [step, setStep] = useState(1);
+  const totalSteps = 3;
+
+  // Form state
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPass, setShowPass] = useState(false);
   const [adresse, setAdresse] = useState('');
   const [adresseLigne2, setAdresseLigne2] = useState('');
   const [codePostal, setCodePostal] = useState('');
@@ -35,834 +118,326 @@ export default function InscriptionPage() {
   const [nomSociete, setNomSociete] = useState('');
   const [siret, setSiret] = useState('');
   const [nomAssociation, setNomAssociation] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [showCodeAnimation, setShowCodeAnimation] = useState(false);
 
   useEffect(() => {
-    const checkIfLoggedIn = async () => {
-      const user = await getCurrentUser();
-      if (user) {
-        router.push('/client');
-      }
-    };
-    
-    checkIfLoggedIn();
+    getCurrentUser().then((user) => { if (user) router.push('/client'); });
   }, [router]);
 
-  const calculatePasswordStrength = (pass: string) => {
-    let strength = 0;
-    if (pass.length >= 8) strength += 25;
-    if (pass.length >= 12) strength += 25;
-    if (/[a-z]/.test(pass) && /[A-Z]/.test(pass)) strength += 20;
-    if (/\d/.test(pass)) strength += 15;
-    if (/[^a-zA-Z0-9]/.test(pass)) strength += 15;
-    return strength;
-  };
-
   useEffect(() => {
-    setPasswordStrength(calculatePasswordStrength(password));
+    let s = 0;
+    if (password.length >= 8) s += 25;
+    if (password.length >= 12) s += 25;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) s += 20;
+    if (/\d/.test(password)) s += 15;
+    if (/[^a-zA-Z0-9]/.test(password)) s += 15;
+    setPasswordStrength(s);
   }, [password]);
 
-  const validateForm = () => {
-    if (nom.trim().length < 2) {
-      setError('Le nom doit contenir au moins 2 caractères');
-      return false;
+  const validateStep = () => {
+    setError('');
+    if (step === 1) {
+      if (nom.trim().length < 2) { setError('Nom trop court'); return false; }
+      if (prenom.trim().length < 2) { setError('Prénom trop court'); return false; }
+      if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { setError('Email invalide'); return false; }
+      return true;
     }
-
-    if (prenom.trim().length < 2) {
-      setError('Le prénom doit contenir au moins 2 caractères');
-      return false;
+    if (step === 2) {
+      if (password.length < 12) { setError('Minimum 12 caractères'); return false; }
+      if (!/[A-Z]/.test(password)) { setError('Au moins une majuscule requise'); return false; }
+      if (!/[a-z]/.test(password)) { setError('Au moins une minuscule requise'); return false; }
+      if (!/\d/.test(password)) { setError('Au moins un chiffre requis'); return false; }
+      if (!/[^a-zA-Z0-9]/.test(password)) { setError('Au moins un caractère spécial requis'); return false; }
+      if (password !== confirmPassword) { setError('Les mots de passe ne correspondent pas'); return false; }
+      return true;
     }
-
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setError('Format d\'email invalide');
-      return false;
-    }
-
-    if (!adresse.trim()) {
-      setError('L\'adresse est requise');
-      return false;
-    }
-
-    if (!codePostal.trim() || !codePostal.match(/^\d{5}$/)) {
-      setError('Le code postal doit contenir 5 chiffres');
-      return false;
-    }
-
-    if (!telephone.trim() || !telephone.match(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/)) {
-      setError('Format de téléphone invalide (ex: 06 12 34 56 78)');
-      return false;
-    }
-
-    if (type === 'entreprise' || type === 'entreprise_creation') {
-      if (!nomSociete.trim()) {
-        setError('Le nom de la société est requis');
-        return false;
+    if (step === 3) {
+      if (!adresse.trim()) { setError('Adresse requise'); return false; }
+      if (!codePostal.match(/^\d{5}$/)) { setError('Code postal invalide (5 chiffres)'); return false; }
+      if (!telephone.match(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/)) {
+        setError('Format téléphone invalide (ex : 06 12 34 56 78)'); return false;
       }
-      if (type === 'entreprise') {
-        const siretClean = siret.replace(/\s/g, '');
-        if (!siretClean || !siretClean.match(/^\d{14}$/)) {
-          setError('Le SIRET doit contenir 14 chiffres');
-          return false;
-        }
+      if ((type === 'entreprise' || type === 'entreprise_creation') && !nomSociete.trim()) {
+        setError('Nom de société requis'); return false;
       }
+      if (type === 'entreprise' && !siret.replace(/\s/g, '').match(/^\d{14}$/)) {
+        setError('SIRET invalide (14 chiffres)'); return false;
+      }
+      if (type === 'association' && !nomAssociation.trim()) {
+        setError('Nom d\'association requis'); return false;
+      }
+      if (!acceptTerms) { setError('Vous devez accepter les conditions'); return false; }
+      return true;
     }
-
-    if (type === 'association' && !nomAssociation.trim()) {
-      setError('Le nom de l\'association est requis');
-      return false;
-    }
-
-    if (password.length < 12) {
-      setError('Le mot de passe doit contenir au moins 12 caractères');
-      return false;
-    }
-
-    if (!/[A-Z]/.test(password)) {
-      setError('Le mot de passe doit contenir au moins une majuscule');
-      return false;
-    }
-
-    if (!/[a-z]/.test(password)) {
-      setError('Le mot de passe doit contenir au moins une minuscule');
-      return false;
-    }
-
-    if (!/\d/.test(password)) {
-      setError('Le mot de passe doit contenir au moins un chiffre');
-      return false;
-    }
-
-    if (!/[^a-zA-Z0-9]/.test(password)) {
-      setError('Le mot de passe doit contenir au moins un caractère spécial');
-      return false;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
-      return false;
-    }
-
     return true;
   };
 
-  const handleFinalSubmit = async () => {
-    setError('');
+  const next = () => {
+    if (!validateStep()) return;
+    if (step < totalSteps) setStep(step + 1);
+    else handleSubmit();
+  };
 
-    if (!validateForm()) {
-      return;
-    }
-
+  const handleSubmit = async () => {
+    setLoading(true);
     try {
-      const clientData: {
-        nom: string;
-        prenom: string;
-        adresse: string;
-        adresse_ligne2: string | null;
-        code_postal: string;
-        pays: string;
-        telephone: string;
-        type: string;
-        nom_societe?: string;
-        siret?: string;
-        nom_association?: string;
-        entreprise?: string;
-      } = {
-        nom: nom.trim(),
-        prenom: prenom.trim(),
-        adresse: adresse.trim(),
-        adresse_ligne2: adresseLigne2.trim() || null,
-        code_postal: codePostal.trim(),
-        pays: pays,
+      const clientData: Record<string, string | null> = {
+        nom, prenom, adresse,
+        adresse_ligne2: adresseLigne2 || null,
+        code_postal: codePostal,
+        pays,
         telephone: telephone.replace(/\s/g, ''),
-        type: type
+        type,
+        entreprise: type === 'entreprise' || type === 'entreprise_creation'
+          ? nomSociete
+          : type === 'association' ? nomAssociation : 'Particulier',
       };
-
-      if (type === 'entreprise' || type === 'entreprise_creation') {
-        clientData.nom_societe = nomSociete.trim();
-        clientData.entreprise = nomSociete.trim();
-        if (type === 'entreprise') {
-          clientData.siret = siret.replace(/\s/g, '');
-        }
-      } else if (type === 'association') {
-        clientData.nom_association = nomAssociation.trim();
-        clientData.entreprise = nomAssociation.trim();
-      } else {
-        clientData.entreprise = 'Particulier';
-      }
+      if (type === 'entreprise' || type === 'entreprise_creation') clientData.nom_societe = nomSociete;
+      if (type === 'entreprise') clientData.siret = siret.replace(/\s/g, '');
+      if (type === 'association') clientData.nom_association = nomAssociation;
 
       const { data, error: signUpError } = await signUp(email, password, clientData);
-      
       if (signUpError) {
-        if (signUpError.message.includes('already registered')) {
-          setError('Cet email est déjà utilisé');
-        } else {
-          setError('Une erreur est survenue lors de l\'inscription');
-        }
+        setError(signUpError.message.includes('already registered') ? 'Email déjà utilisé' : 'Erreur lors de l\'inscription');
+        setLoading(false);
         return;
       }
-
-      if (data.user) {
-        setShowCodeAnimation(true);
-        setTimeout(() => {
-          setSuccess(true);
-          setTimeout(() => {
-            router.push('/connexion');
-          }, 10000);
-        }, 5500);
-      }
+      if (data.user) router.push(`/inscription/verification?email=${encodeURIComponent(email)}`);
     } catch {
       setError('Une erreur est survenue');
+      setLoading(false);
     }
   };
 
-  const getStrengthColor = () => {
-    if (passwordStrength >= 80) return 'bg-green-500';
-    if (passwordStrength >= 50) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
-
-  const getStrengthText = () => {
-    if (passwordStrength >= 80) return 'Fort';
-    if (passwordStrength >= 50) return 'Moyen';
-    return 'Faible';
-  };
-
-  const validateCurrentStep = (step: number) => {
-    setError('');
-    
-    switch (step) {
-      case 1:
-        return true;
-        
-      case 2:
-        if (nom.trim().length < 2) {
-          setError('Le nom doit contenir au moins 2 caractères');
-          return false;
-        }
-        if (prenom.trim().length < 2) {
-          setError('Le prénom doit contenir au moins 2 caractères');
-          return false;
-        }
-        if (type === 'entreprise' || type === 'entreprise_creation') {
-          if (!nomSociete.trim()) {
-            setError('Le nom de la société est requis');
-            return false;
-          }
-          if (type === 'entreprise') {
-            const siretClean = siret.replace(/\s/g, '');
-            if (!siretClean || !siretClean.match(/^\d{14}$/)) {
-              setError('Le SIRET doit contenir 14 chiffres');
-              return false;
-            }
-          }
-        }
-        if (type === 'association' && !nomAssociation.trim()) {
-          setError('Le nom de l\'association est requis');
-          return false;
-        }
-        return true;
-        
-      case 3:
-        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-          setError('Format d\'email invalide');
-          return false;
-        }
-        if (!telephone.trim() || !telephone.match(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/)) {
-          setError('Format de téléphone invalide (ex: 06 12 34 56 78)');
-          return false;
-        }
-        return true;
-        
-      case 4:
-        if (!adresse.trim()) {
-          setError('L\'adresse est requise');
-          return false;
-        }
-        if (!codePostal.trim() || !codePostal.match(/^\d{5}$/)) {
-          setError('Le code postal doit contenir 5 chiffres');
-          return false;
-        }
-        if (!pays.trim()) {
-          setError('Le pays est requis');
-          return false;
-        }
-        return true;
-        
-      case 5:
-        if (password.length < 12) {
-          setError('Le mot de passe doit contenir au moins 12 caractères');
-          return false;
-        }
-        if (!/[A-Z]/.test(password)) {
-          setError('Le mot de passe doit contenir au moins une majuscule');
-          return false;
-        }
-        if (!/[a-z]/.test(password)) {
-          setError('Le mot de passe doit contenir au moins une minuscule');
-          return false;
-        }
-        if (!/\d/.test(password)) {
-          setError('Le mot de passe doit contenir au moins un chiffre');
-          return false;
-        }
-        if (!/[^a-zA-Z0-9]/.test(password)) {
-          setError('Le mot de passe doit contenir au moins un caractère spécial');
-          return false;
-        }
-        if (password !== confirmPassword) {
-          setError('Les mots de passe ne correspondent pas');
-          return false;
-        }
-        return true;
-        
-      default:
-        return true;
-    }
-  };
-
-  if (showCodeAnimation && !success) {
-    const sqlCode = `'use client';
-
-import * as React from 'react';
-import { supabase } from '@/lib/supabase';
-import { User } from '@/types/user';
-
-// Définition du type utilisateur
-type UserProfile = {
-  email: string;
-  nom: string;
-  prenom: string;
-  type: '${type}';
-  adresse: string;
-  telephone: string;
-} & React.ComponentProps<'div'>;
-
-// Initialisation de votre compte
-const createUserProfile = async (data: UserProfile) => {
-  const user = {
-    email: '${email}',
-    nom: '${nom}',
-    prenom: '${prenom}',
-    type: '${type}',
-    adresse: '${adresse}',
-    telephone: '${telephone}'
-  };
-
-  // Configuration de la base de données
-  const { data: userData, error } = await supabase
-    .from('clients')
-    .insert([
-      {
-        email: user.email,
-        nom: user.nom,
-        prenom: user.prenom,
-        type: user.type,
-        adresse: user.adresse,
-        telephone: user.telephone,
-        created_at: new Date().toISOString()
-      }
-    ])
-    .select();
-
-  if (error) throw error;
-
-  // Génération du token sécurisé
-  const token = await generateSecureToken();
-  await sendConfirmationEmail(user.email, token);
-
-  return userData;
-};
-
-// Création de l'espace sécurisé
-export const UserSpace = ({ userId }: { userId: string }) => {
-  return (
-    <div className="user-space">
-      <h1>Bienvenue ${prenom} ${nom}</h1>
-    </div>
-  );
-};
-
-✓ Compte créé avec succès
-✓ Email de confirmation envoyé à ${email}
-✓ Espace client configuré`;
-
-    return (
-      <div className="relative min-h-screen">
-        <div className="absolute inset-0 w-full h-full">
-          <LiquidEther
-            colors={['#3F12F3', '#4670D2', '#5670A4', '#2A0F7F']}
-            mouseForce={20}
-            cursorSize={100}
-            autoDemo={true}
-            autoSpeed={0.5}
-            autoIntensity={2.2}
-            autoResumeDelay={1000}
-            resolution={0.5}
-          />
-        </div>
-        <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative z-10">
-          <div className="w-full max-w-2xl">
-            <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 p-4 sm:p-8">
-              <div className="text-center mb-4 sm:mb-6">
-                <h2 className="text-lg sm:text-2xl font-bold text-white mb-1 sm:mb-2">Création de votre espace sécurisé</h2>
-                <p className="text-gray-300 text-xs sm:text-sm">Configuration en cours...</p>
-              </div>
-              
-              <div className="dark relative overflow-hidden rounded-lg shadow-2xl z-50" style={{ maxHeight: '500px' }}>
-                <style jsx>{`
-                  @keyframes scrollUp {
-                    0% {
-                      transform: translateY(0);
-                    }
-                    100% {
-                      transform: translateY(-30%);
-                    }
-                  }
-                  .code-scroll-container {
-                    animation: scrollUp 3.5s ease-out forwards;
-                  }
-                `}</style>
-                <div className="code-scroll-container dark">
-                  <Code code={sqlCode} className="w-full min-h-[500px] bg-[#1e1e1e]">
-                    <CodeHeader icon={FileCode} copyButton>
-                      user-registration.tsx
-                    </CodeHeader>
-                    <CodeBlock
-                      lang="tsx"
-                      writing={true}
-                      duration={3500}
-                      cursor={true}
-                      inView={true}
-                      theme="dark"
-                    />
-                  </Code>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (success) {
-    return (
-      <div className="relative min-h-screen">
-        <div className="absolute inset-0 w-full h-full">
-          <LiquidEther
-            colors={['#3F12F3', '#4670D2', '#5670A4', '#2A0F7F']}
-            mouseForce={20}
-            cursorSize={100}
-            autoDemo={true}
-            autoSpeed={0.5}
-            autoIntensity={2.2}
-            autoResumeDelay={1000}
-            resolution={0.5}
-          />
-        </div>
-        <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative z-10">
-          <div className="w-full max-w-md animate-in fade-in duration-700">
-            <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 p-6 sm:p-8">
-              <div className="text-center mb-6 sm:mb-8">
-                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-500/20 rounded-full mb-3 sm:mb-4">
-                  <Send 
-                    size={28} 
-                    className="text-green-400 sm:w-8 sm:h-8" 
-                    strokeWidth={1.5}
-                    animate={true}
-                    animation="default"
-                    loop={true}
-                    loopDelay={2000}
-                  />
-                </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Inscription réussie !</h1>
-                <p className="text-gray-300 text-sm sm:text-base">Email de confirmation envoyé</p>
-              </div>
-              
-              <div className="space-y-3 sm:space-y-4">
-                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 sm:p-4">
-                  <p className="text-gray-300 text-xs sm:text-sm text-center break-words">
-                    Un email de confirmation a été envoyé à <strong className="text-white">{email}</strong>
-                  </p>
-                </div>
-                
-                <p className="text-gray-300 text-xs sm:text-sm text-center">
-                  Veuillez vérifier votre boîte de réception et cliquer sur le lien de confirmation pour activer votre compte.
-                </p>
-                
-                <div className="pt-3 sm:pt-4 border-t border-white/10">
-                  <p className="text-gray-400 text-xs text-center">
-                    Redirection automatique vers la page de connexion dans 10 secondes...
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const stepTitles = ['Vos informations', 'Sécurité', 'Profil & adresse'];
+  const stepSubtitles = [
+    'Nom, prénom et email',
+    'Création de votre mot de passe',
+    'Coordonnées et type de compte',
+  ];
 
   return (
-    <div className="relative min-h-screen">
-      <div className="absolute inset-0 w-full h-full">
-        <LiquidEther
-          colors={['#3F12F3', '#4670D2', '#5670A4', '#2A0F7F']}
-          mouseForce={20}
-          cursorSize={100}
-          autoDemo={true}
-          autoSpeed={0.5}
-          autoIntensity={2.2}
-          autoResumeDelay={1000}
-          resolution={0.5}
+    <div className="min-h-screen flex bg-surface">
+      {/* ── Left panel ── */}
+      <div className="hidden lg:flex lg:w-1/2 bg-[#1A1C1E] flex-col justify-between p-12 relative overflow-hidden">
+        {/* Mesh decorative */}
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)`,
+            backgroundSize: '32px 32px',
+          }}
         />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#0052FF]/20 rounded-full blur-3xl pointer-events-none" />
+
+        <Link href="/" className="relative z-10">
+          <img src="/images/logo_netcy_t.svg" alt="NETCY" className="h-30 w-auto brightness-0 invert" />
+        </Link>
+
+        <div className="space-y-8 relative z-10">
+          <span className="inline-block chip bg-white/10 text-white/70">DIGITAL CORE</span>
+          <div>
+            <h2 className="font-display font-extrabold text-4xl lg:text-5xl text-white leading-tight mb-4">
+              Rejoignez les{' '}
+              <span className="text-[#0052FF] italic">premiers</span>
+              <br />clients NETCY.
+            </h2>
+            <p className="text-white/60 leading-relaxed max-w-sm">
+              NETCY vient tout juste de se lancer. En nous rejoignant maintenant, vous bénéficiez d'une attention 100% personnalisée, de tarifs de lancement et d'un suivi direct avec le fondateur.
+            </p>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="font-display font-extrabold text-3xl text-white">100%</p>
+              <p className="text-xs text-white/40 uppercase tracking-wider mt-1">Attention personnalisée</p>
+            </div>
+            <div>
+              <p className="font-display font-extrabold text-3xl text-white">2026</p>
+              <p className="text-xs text-white/40 uppercase tracking-wider mt-1">Nouvelle agence</p>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-xs text-white/30 relative z-10">© {new Date().getFullYear()} NETCY DIGITAL</p>
       </div>
-      <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative z-10 py-8 sm:py-12">
-        <div className="w-full max-w-3xl">
-          <AnimatedContent distance={30} duration={0.6}>
-            <div className="bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 p-5 sm:p-8 md:p-10">
-              <div className="text-center mb-6 sm:mb-8">
-                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-purple-500/20 rounded-full mb-3 sm:mb-4">
-                  <ClipboardList 
-                    size={28} 
-                    className="text-purple-400 sm:w-8 sm:h-8" 
-                    strokeWidth={1.5}
-                    animate={true}
-                    animation="default"
-                    loop={true}
-                    loopDelay={2000}
+
+      {/* ── Right panel ── */}
+      <div className="flex-1 flex flex-col justify-between p-4 sm:p-8 lg:p-16 bg-surface-container-lowest">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="lg:hidden">
+            <img src="/images/logo_netcy_t.svg" alt="NETCY" className="h-12 w-auto" />
+          </Link>
+          <div className="hidden lg:block" />
+          <Link href="/connexion" className="text-sm font-medium text-on-surface-variant">
+            Déjà membre ? <span className="text-[#0052FF] font-semibold hover:underline">Se connecter</span>
+          </Link>
+        </div>
+
+        <div className="max-w-md mx-auto w-full space-y-8">
+          {/* Stepper */}
+          <div className="space-y-3">
+            <StepDots current={step} total={totalSteps} />
+            <div>
+              <h1 className="font-display font-bold text-2xl text-on-surface">{stepTitles[step - 1]}</h1>
+              <p className="text-sm text-outline">{stepSubtitles[step - 1]}</p>
+            </div>
+          </div>
+
+          {error && (
+            <div className="bg-[#FEE2E2] dark:bg-[#450A0A] rounded-xl px-4 py-3">
+              <p className="text-[#BF3003] dark:text-[#FCA5A5] text-sm">{error}</p>
+            </div>
+          )}
+
+          {/* ── Step 1: Identity ── */}
+          {step === 1 && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="Nom" value={nom} onChange={setNom} placeholder="Dupont" required icon={<User size={15} strokeWidth={1.5} />} />
+                <Field label="Prénom" value={prenom} onChange={setPrenom} placeholder="Jean" required />
+              </div>
+              <Field label="Email professionnel" type="email" value={email} onChange={setEmail} placeholder="nom@entreprise.com" required icon={<Mail size={15} strokeWidth={1.5} />} />
+            </div>
+          )}
+
+          {/* ── Step 2: Password ── */}
+          {step === 2 && (
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Mot de passe</label>
+                <div className="flex items-center gap-3 bg-surface-container-low rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-[#0052FF]/30 transition-all">
+                  <Lock size={15} className="text-outline-variant" strokeWidth={1.5} />
+                  <input
+                    type={showPass ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                    className="flex-1 bg-transparent text-on-surface text-sm placeholder:text-outline-variant focus:outline-none"
                   />
+                  <button type="button" onClick={() => setShowPass(!showPass)} className="text-outline-variant hover:text-outline">
+                    {showPass ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
+                  </button>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Inscription</h1>
-                <p className="text-gray-300 text-sm sm:text-base">Créez votre compte NETCY</p>
+                <StrengthBar strength={passwordStrength} />
+                <p className="text-[10px] text-outline uppercase tracking-wider">Minimum 8 caractères avec un symbole spécial</p>
+              </div>
+              <Field
+                label="Confirmer le mot de passe"
+                type="password"
+                value={confirmPassword}
+                onChange={setConfirmPassword}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+          )}
+
+          {/* ── Step 3: Profile ── */}
+          {step === 3 && (
+            <div className="space-y-4">
+              {/* Account type */}
+              <div>
+                <label className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Type de compte</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { value: 'particulier', label: 'Particulier', icon: <User size={14} strokeWidth={1.5} /> },
+                    { value: 'entreprise', label: 'Entreprise', icon: <Building2 size={14} strokeWidth={1.5} /> },
+                    { value: 'entreprise_creation', label: 'En création', icon: <Building2 size={14} strokeWidth={1.5} /> },
+                    { value: 'association', label: 'Association', icon: <Users size={14} strokeWidth={1.5} /> },
+                  ].map((t) => (
+                    <button
+                      key={t.value}
+                      type="button"
+                      onClick={() => setType(t.value as typeof type)}
+                      className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                        ${type === t.value ? 'bg-[#0052FF] text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}
+                    >
+                      {t.icon} {t.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              {error && (
-                <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 mb-4 sm:mb-6">
-                  <p className="text-red-400 text-xs sm:text-sm text-center">{error}</p>
-                </div>
+              {(type === 'entreprise' || type === 'entreprise_creation') && (
+                <Field label="Nom de la société" value={nomSociete} onChange={setNomSociete} placeholder="NETCY SAS" required icon={<Building2 size={15} strokeWidth={1.5} />} />
+              )}
+              {type === 'entreprise' && (
+                <Field label="SIRET" value={siret} onChange={(v) => setSiret(formatSiret(v))} placeholder="123 456 789 01234" required hint="14 chiffres" />
+              )}
+              {type === 'association' && (
+                <Field label="Nom de l'association" value={nomAssociation} onChange={setNomAssociation} placeholder="Association..." required icon={<Users size={15} strokeWidth={1.5} />} />
               )}
 
-            <Stepper
-              onFinalStepCompleted={handleFinalSubmit}
-              validateStep={validateCurrentStep}
-              nextButtonText="Suivant"
-              backButtonText="Retour"
+              <Field label="Adresse" value={adresse} onChange={setAdresse} placeholder="12 rue de la Paix" required />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="Code postal" value={codePostal} onChange={setCodePostal} placeholder="75001" required />
+                <Field label="Téléphone" value={telephone} onChange={(v) => setTelephone(formatPhone(v))} placeholder="06 12 34 56 78" required />
+              </div>
+
+              {/* Terms */}
+              <label htmlFor="terms" className="flex items-start gap-3 cursor-pointer">
+                <Checkbox
+                  id="terms"
+                  checked={acceptTerms}
+                  onCheckedChange={(v) => setAcceptTerms(!!v)}
+                  className="mt-0.5 flex-shrink-0"
+                />
+                <span className="text-sm text-on-surface-variant leading-relaxed select-none">
+                  J'accepte les{' '}
+                  <Link href="/cgu" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium whitespace-nowrap">Conditions d'utilisation</Link>
+                  {' '}et la{' '}
+                  <Link href="/politique-confidentialite" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium whitespace-nowrap">Politique de Confidentialité</Link>
+                  {' '}de NETCY.
+                </span>
+              </label>
+            </div>
+          )}
+
+          {/* Navigation buttons */}
+          <div className="flex gap-3">
+            {step > 1 && (
+              <button
+                type="button"
+                onClick={() => { setError(''); setStep(step - 1); }}
+                className="btn-ghost flex-1 py-3.5 text-sm"
+              >
+                Retour
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={next}
+              disabled={loading}
+              className="btn-primary flex-1 py-3.5 text-sm flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {/* Étape 1: Type de compte */}
-              <Step>
-                <div className="space-y-4 p-3 sm:p-6">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">Type de compte</h3>
-                  <label htmlFor="type" className="block text-xs sm:text-sm font-medium text-gray-200 mb-2">
-                    Sélectionnez votre type de compte *
-                  </label>
-                  <select
-                    id="type"
-                    value={type}
-                    onChange={(e) => setType(e.target.value as 'particulier' | 'entreprise' | 'entreprise_creation' | 'association')}
-                    className="w-full px-4 py-3 sm:py-2.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  >
-                    <option value="particulier" className="bg-gray-800">Particulier</option>
-                    <option value="entreprise" className="bg-gray-800">Entreprise</option>
-                    <option value="entreprise_creation" className="bg-gray-800">Entreprise en création</option>
-                    <option value="association" className="bg-gray-800">Association</option>
-                  </select>
-                </div>
-              </Step>
+              {loading ? 'Création...' : step === totalSteps ? 'INITIALISER L\'INSCRIPTION →' : 'Continuer →'}
+            </button>
+          </div>
+        </div>
 
-              {/* Étape 2: Informations personnelles + Entreprise/Association */}
-              <Step>
-                <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">Informations personnelles</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex flex-col">
-                      <label htmlFor="nom" className="block text-xs sm:text-sm font-medium text-gray-200 mb-2">
-                        Nom *
-                      </label>
-                      <input
-                        type="text"
-                        id="nom"
-                        value={nom}
-                        onChange={(e) => setNom(e.target.value)}
-                        required
-                        minLength={2}
-                        className="w-full px-4 py-3 sm:py-2.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                        placeholder="Dupont"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <label htmlFor="prenom" className="block text-xs sm:text-sm font-medium text-gray-200 mb-2">
-                        Prénom *
-                      </label>
-                      <input
-                        type="text"
-                        id="prenom"
-                        value={prenom}
-                        onChange={(e) => setPrenom(e.target.value)}
-                        required
-                        minLength={2}
-                        className="w-full px-4 py-3 sm:py-2.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm sm:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                        placeholder="Jean"
-                      />
-                    </div>
-                  </div>
+        {/* Footer */}
+        <div className="max-w-md mx-auto w-full">
+          <div className="flex items-center justify-between text-xs text-outline-variant pt-6">
+            <Link href="/#contact" className="hover:text-outline transition-colors underline underline-offset-2">Centre d'aide</Link>
+            <span>·</span>
+            <Link href="/politique-confidentialite" className="hover:text-outline transition-colors underline underline-offset-2">Confidentialité</Link>
+            <span className="ml-auto flex items-center gap-1">
+              🌐 FR (FR)
+            </span>
+          </div>
+        </div>
+      </div>
 
-                  {(type === 'entreprise' || type === 'entreprise_creation') && (
-                    <div className="space-y-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg p-4 border border-purple-500/20 mt-6">
-                      <h4 className="text-lg font-semibold text-white border-b border-purple-500/30 pb-2">Informations entreprise</h4>
-                      <div>
-                        <label htmlFor="nomSociete" className="block text-sm font-medium text-gray-200 mb-2">
-                          Nom de la société *
-                        </label>
-                        <input
-                          type="text"
-                          id="nomSociete"
-                          value={nomSociete}
-                          onChange={(e) => setNomSociete(e.target.value)}
-                          required
-                          className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                          placeholder="Ma Société SARL"
-                        />
-                      </div>
-                      {type === 'entreprise' && (
-                        <div>
-                          <label htmlFor="siret" className="block text-sm font-medium text-gray-200 mb-2">
-                            SIRET *
-                          </label>
-                          <input
-                            type="text"
-                            id="siret"
-                            value={siret}
-                            onChange={(e) => {
-                              const value = e.target.value.replace(/\s/g, '');
-                              const formatted = value.match(/.{1,3}/g)?.join(' ') || value;
-                              setSiret(formatted);
-                            }}
-                            required
-                            maxLength={18}
-                            className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                            placeholder="123 456 789 01234"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {type === 'association' && (
-                    <div className="space-y-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg p-4 border border-purple-500/20 mt-6">
-                      <h4 className="text-lg font-semibold text-white border-b border-purple-500/30 pb-2">Informations association</h4>
-                      <div>
-                        <label htmlFor="nomAssociation" className="block text-sm font-medium text-gray-200 mb-2">
-                          Nom de l&apos;association *
-                        </label>
-                        <input
-                          type="text"
-                          id="nomAssociation"
-                          value={nomAssociation}
-                          onChange={(e) => setNomAssociation(e.target.value)}
-                          required
-                          className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                          placeholder="Mon Association"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Step>
-
-              {/* Étape 3: Contact */}
-              <Step>
-                <div className="space-y-6 p-6">
-                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Contact</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex flex-col">
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
-                        Email *
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                        placeholder="votre@email.com"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <label htmlFor="telephone" className="block text-sm font-medium text-gray-200 mb-2">
-                        Téléphone *
-                      </label>
-                      <input
-                        type="tel"
-                        id="telephone"
-                        value={telephone}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\s/g, '');
-                          const formatted = value.match(/.{1,2}/g)?.join(' ') || value;
-                          setTelephone(formatted);
-                        }}
-                        required
-                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                        placeholder="06 12 34 56 78"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Step>
-
-              {/* Étape 4: Adresse */}
-              <Step>
-                <div className="space-y-6 p-6">
-                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Adresse</h3>
-                  
-                  <div>
-                    <label htmlFor="adresse" className="block text-sm font-medium text-gray-200 mb-2">
-                      Adresse *
-                    </label>
-                    <input
-                      type="text"
-                      id="adresse"
-                      value={adresse}
-                      onChange={(e) => setAdresse(e.target.value)}
-                      required
-                      className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                      placeholder="123 Rue de la Paix"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="adresseLigne2" className="block text-sm font-medium text-gray-200 mb-2">
-                      Complément d&apos;adresse (facultatif)
-                    </label>
-                    <input
-                      type="text"
-                      id="adresseLigne2"
-                      value={adresseLigne2}
-                      onChange={(e) => setAdresseLigne2(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                      placeholder="Appartement, étage, bâtiment..."
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex flex-col">
-                      <label htmlFor="codePostal" className="block text-sm font-medium text-gray-200 mb-2">
-                        Code postal *
-                      </label>
-                      <input
-                        type="text"
-                        id="codePostal"
-                        value={codePostal}
-                        onChange={(e) => setCodePostal(e.target.value)}
-                        required
-                        maxLength={5}
-                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                        placeholder="75001"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <label htmlFor="pays" className="block text-sm font-medium text-gray-200 mb-2">
-                        Pays *
-                      </label>
-                      <input
-                        type="text"
-                        id="pays"
-                        value={pays}
-                        onChange={(e) => setPays(e.target.value)}
-                        required
-                        className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                        placeholder="France"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Step>
-
-              {/* Étape 5: Sécurité */}
-              <Step>
-                <div className="space-y-6 p-6">
-                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Sécurité</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="flex flex-col">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-2">
-                          Mot de passe *
-                        </label>
-                        <input
-                          type="password"
-                          id="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                          minLength={12}
-                          className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                          placeholder="••••••••••••"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-200 mb-2">
-                          Confirmer le mot de passe *
-                        </label>
-                        <input
-                          type="password"
-                          id="confirmPassword"
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          required
-                          className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                          placeholder="••••••••••••"
-                        />
-                      </div>
-                    </div>
-                    
-                    {password && (
-                      <div className="mt-3">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs text-gray-400">Force du mot de passe</span>
-                          <span className={`text-xs font-semibold ${passwordStrength >= 80 ? 'text-green-400' : passwordStrength >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
-                            {getStrengthText()}
-                          </span>
-                        </div>
-                        <div className="w-full bg-white/10 rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full transition-all ${getStrengthColor()}`}
-                            style={{ width: `${passwordStrength}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    )}
-                    
-                    <p className="text-xs text-gray-400">
-                      Min 12 caractères, majuscules, minuscules, chiffres et caractères spéciaux
-                    </p>
-                  </div>
-                </div>
-              </Step>
-            </Stepper>
-
-            <div className="mt-4 sm:mt-6 text-center">
-              <p className="text-gray-300 text-xs sm:text-sm">
-                Déjà un compte?{' '}
-                <Link href="/connexion" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">
-                  Se connecter
-                </Link>
-              </p>
-            </div>
-            </div>
-          </AnimatedContent>
-
-          <AnimatedContent distance={20} duration={0.5} delay={0.8}>
-            <div className="mt-6 sm:mt-8 text-center">
-              <Link href="/" className="text-gray-400 hover:text-white text-xs sm:text-sm transition-colors">
-                ← Retour à l&apos;accueil
-              </Link>
-            </div>
-          </AnimatedContent>
+      {/* System status badge */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <div className="flex items-center gap-2 bg-surface-container-highest rounded-full px-4 py-2 text-xs font-medium text-on-surface-variant">
+          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          SYSTÈME : OPÉRATIONNEL
         </div>
       </div>
     </div>

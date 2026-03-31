@@ -1,16 +1,22 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { signIn } from '@/lib/supabase';
-import Image from 'next/image';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { signIn, signOut, supabase } from '@/lib/supabase';
 
-export default function AdminLogin() {
+function AdminLoginInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('reason') === 'unauthorized') {
+      setError('ACCÈS REFUSÉ — Session invalide ou expirée');
+    }
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,99 +24,188 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const { data, error } = await signIn(email, password);
-      
-      if (error) {
-        setError('Identifiants incorrects');
+      // Step 1 — Authenticate with Supabase
+      const { data, error: authError } = await signIn(email, password);
+      if (authError || !data.user) {
+        setError('ACCÈS REFUSÉ — Identifiants invalides');
         setLoading(false);
         return;
       }
 
-      if (data.user) {
-        router.push('/netcy-secure-access/dashboard');
+      // Step 2 — Get the access token from the current session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        await signOut();
+        setError('ERREUR SYSTÈME — Session introuvable');
+        setLoading(false);
+        return;
       }
-    } catch (err: any) {
-      setError('Une erreur est survenue');
+
+      // Step 3 — Verify admin role server-side (sets secure HTTP-only cookie)
+      const verifyRes = await fetch('/api/admin-verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessToken: session.access_token }),
+      });
+
+      if (!verifyRes.ok) {
+        // Not admin — sign out immediately and deny access
+        await signOut();
+        setError('ACCÈS REFUSÉ — Droits administrateur requis');
+        setLoading(false);
+        return;
+      }
+
+      // Step 4 — Cookie set, proceed to dashboard
+      router.push('/netcy-secure-access/dashboard');
+
+    } catch {
+      await signOut();
+      setError('ERREUR SYSTÈME — Réessayer');
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-[#0A061E]">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#6F3FFF]/20 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#43209E]/20 rounded-full blur-[100px] pointer-events-none"></div>
+    <div className="min-h-screen flex flex-col bg-[#0E0F12] relative overflow-hidden font-mono">
 
-      <div className="w-full max-w-md p-6 relative z-10">
-        <div className="backdrop-blur-xl bg-white/[0.02] border border-white/[0.05] rounded-2xl p-8 sm:p-10 shadow-2xl relative overflow-hidden group">
-          {/* Subtle border glow effect on hover */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#6F3FFF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-          
-          <div className="relative">
-            {/* Logo/Icon placeholder */}
-            <div className="w-16 h-16 mx-auto rounded-xl flex items-center justify-center mb-6 overflow-hidden shadow-lg shadow-[#6F3FFF]/30">
-              <Image src="/images/logo_tab.png" alt="Netcy Logo" width={64} height={64} className="object-contain" />
+      {/* Background diagonal lines — top-right */}
+      <div className="absolute top-0 right-0 w-80 h-80 pointer-events-none opacity-20"
+        style={{
+          background: 'repeating-linear-gradient(135deg, transparent, transparent 18px, #1CF0C1 18px, #1CF0C1 19px)',
+        }}
+      />
+      {/* Background diagonal lines — bottom-left */}
+      <div className="absolute bottom-0 left-0 w-80 h-80 pointer-events-none opacity-20"
+        style={{
+          background: 'repeating-linear-gradient(135deg, transparent, transparent 18px, #1CF0C1 18px, #1CF0C1 19px)',
+        }}
+      />
+
+      {/* Top header */}
+      <div className="text-center pt-10 pb-6 relative z-10">
+        <p className="text-white font-extrabold text-2xl tracking-[0.25em] uppercase">NETCY</p>
+        <p className="text-[#1CF0C1] text-[10px] tracking-[0.4em] uppercase mt-1">COMMAND CENTER</p>
+      </div>
+
+      {/* Card */}
+      <div className="flex-1 flex items-start justify-center px-4 relative z-10 pt-8">
+        <div className="w-full max-w-md bg-[#16181D] rounded-2xl overflow-hidden">
+
+          {/* Card inner */}
+          <div className="p-8 sm:p-10">
+            {/* Status */}
+            <div className="flex items-center gap-2 mb-8">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#1CF0C1] animate-pulse" />
+              <span className="text-[#1CF0C1] text-[10px] tracking-[0.3em] uppercase font-semibold">System Online</span>
             </div>
 
-            <h1 className="text-3xl font-bold text-white mb-2 text-center tracking-tight">Espace Admin</h1>
-            <p className="text-gray-400 text-center mb-10 text-sm">Gestion sécurisée de la plateforme</p>
+            <h1 className="text-3xl font-bold text-white mb-1 tracking-tight" style={{ fontFamily: 'var(--font-manrope)' }}>
+              Authorize Access
+            </h1>
+            <p className="text-[#5A5D6B] text-sm mb-8">Secure Entry Protocol Required</p>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6 backdrop-blur-sm animate-in fade-in slide-in-from-top-2">
-                <p className="text-red-400 text-sm text-center font-medium">{error}</p>
+              <div className="border border-red-500/40 bg-red-500/10 rounded-xl px-4 py-3 mb-6 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                <p className="text-red-400 text-xs tracking-wider">{error}</p>
               </div>
             )}
 
             <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-1">
-                <label htmlFor="email" className="block text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">
-                  Email Administrateur
+              {/* Email */}
+              <div className="space-y-2">
+                <label className="block text-[10px] tracking-[0.25em] text-[#5A5D6B] uppercase">
+                  Administrator Protocol ID
                 </label>
-                <div className="relative">
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.1] rounded-xl text-white placeholder-gray-500 focus:border-[#6F3FFF] focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-[#6F3FFF] transition-all duration-300"
-                    placeholder="admin@netcy.fr"
-                  />
-                </div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="CR-098-ALPHA"
+                  className="w-full bg-[#1E2028] border border-[#2A2D38] rounded-xl px-4 py-3.5 text-white text-sm placeholder-[#3A3D4A] focus:outline-none focus:border-[#1CF0C1]/40 focus:bg-[#20222A] transition-all"
+                />
               </div>
 
-              <div className="space-y-1">
-                <label htmlFor="password" className="block text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">
-                  Mot de passe
+              {/* Password */}
+              <div className="space-y-2">
+                <label className="block text-[10px] tracking-[0.25em] text-[#5A5D6B] uppercase">
+                  Neural Security Key
                 </label>
-                <div className="relative">
-                  <input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.1] rounded-xl text-white placeholder-gray-500 focus:border-[#6F3FFF] focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-[#6F3FFF] transition-all duration-300"
-                    placeholder="••••••••"
-                  />
-                </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="••••••••••••"
+                  className="w-full bg-[#1E2028] border border-[#2A2D38] rounded-xl px-4 py-3.5 text-white text-sm placeholder-[#3A3D4A] focus:outline-none focus:border-[#1CF0C1]/40 focus:bg-[#20222A] transition-all"
+                />
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full relative group/btn mt-8 overflow-hidden rounded-xl bg-gradient-to-r from-[#6F3FFF] to-[#43209E] p-[1px] transition-all duration-300 hover:shadow-[0_0_20px_rgba(111,63,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
-              >
-                <div className="relative flex items-center justify-center gap-2 rounded-xl bg-[#0A061E]/50 px-4 py-3 transition-all duration-300 group-hover/btn:bg-transparent">
-                  <span className="font-semibold text-white tracking-wide">
-                    {loading ? 'Authentification...' : 'Accéder au panel'}
-                  </span>
-                </div>
-              </button>
+              {/* Submit */}
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full relative rounded-xl overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    background: 'linear-gradient(135deg, #C084FC 0%, #F9A8D4 50%, #FCA5A5 100%)',
+                    padding: '1px',
+                  }}
+                >
+                  <div
+                    className="rounded-xl px-4 py-3.5 flex items-center justify-center transition-all"
+                    style={{
+                      background: loading
+                        ? 'transparent'
+                        : 'linear-gradient(135deg, #C084FC 0%, #F9A8D4 50%, #FCA5A5 100%)',
+                    }}
+                  >
+                    <span className="text-[#1A0A2E] font-bold text-sm tracking-[0.2em] uppercase">
+                      {loading ? 'Authentification...' : 'Authorize Access'}
+                    </span>
+                  </div>
+                </button>
+              </div>
             </form>
+          </div>
+
+          {/* Card footer */}
+          <div className="border-t border-[#1E2028] px-8 sm:px-10 py-4 flex items-center justify-between">
+            <div>
+              <p className="text-[9px] tracking-[0.2em] text-[#3A3D4A] uppercase">Encryption</p>
+              <p className="text-[10px] text-[#5A5D6B] font-semibold tracking-wider">AES-256-XTS</p>
+            </div>
+            <div className="text-right">
+              <p className="text-[9px] tracking-[0.2em] text-[#3A3D4A] uppercase">Node ID</p>
+              <p className="text-[10px] text-[#5A5D6B] font-semibold tracking-wider">NV-77-CMD-01</p>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Bottom footer */}
+      <footer className="relative z-10 flex flex-col sm:flex-row items-center justify-between px-8 py-6 gap-3">
+        <p className="text-[9px] tracking-[0.2em] text-[#3A3D4A] uppercase">
+          © {new Date().getFullYear()} NETCY Architect. All rights reserved.
+        </p>
+        <div className="flex items-center gap-4 text-[9px] tracking-[0.15em] text-[#3A3D4A] uppercase">
+          <a href="/politique-confidentialite" className="hover:text-[#5A5D6B] transition-colors">Security Protocol</a>
+          <span>·</span>
+          <a href="/cgu" className="hover:text-[#5A5D6B] transition-colors">Encryption Standards</a>
+          <span>·</span>
+          <a href="#" className="hover:text-[#5A5D6B] transition-colors">System Status</a>
+        </div>
+      </footer>
     </div>
+  );
+}
+
+export default function AdminLogin() {
+  return (
+    <Suspense>
+      <AdminLoginInner />
+    </Suspense>
   );
 }

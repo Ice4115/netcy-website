@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import './ProfileCard.css';
 
@@ -30,9 +28,9 @@ const ProfileCardComponent = ({
   enableMobileTilt = false,
   mobileTiltSensitivity = 5,
   miniAvatarUrl,
-  name="Jean-Marie Jung",
-  title="Étudiant BTS SIO",
-  handle = 'jeanmarie_jung',
+  name = 'Javi A. Torres',
+  title = 'Software Engineer',
+  handle = 'javicodes',
   status = 'Online',
   contactText = 'Contact',
   showUserInfo = true,

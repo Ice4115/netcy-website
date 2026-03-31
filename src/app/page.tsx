@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import HomeClient from './HomeClient';
+import HomeClientWrapper from './HomeClientWrapper';
 import StructuredData from '@/components/StructuredData';
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <>
       <StructuredData />
-      <HomeClient />
+      <HomeClientWrapper />
     </>
   );
 }

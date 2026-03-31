@@ -1,128 +1,70 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import LiquidEther from "@/components/LiquidEther";
-import TextType from "@/components/TextType";
-import GradientText from "@/components/GradientText";
-import MetallicLogo from "@/components/MetallicLogo";
-import StarBorder from "@/components/StarBorder";
-import LoadingScreen from "@/components/LoadingScreen";
 import Link from 'next/link';
-
-
-
-const isMobileDevice = () => {
-  if (typeof window === 'undefined') return false;
-  const ua = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isSmallScreen = window.innerWidth <= 1024;
-  return ua || isSmallScreen;
-};
+import { LogoNetcy } from '@/components/LogoNetcy';
+import Image from 'next/image';
+import { ArrowRight, MessageCircle } from 'lucide-react';
 
 export default function QRLandingPage() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(isMobileDevice());
-  }, []);
-
-  useEffect(() => {
-    const criticalImages = [
-      '/images/logo_tab.png'
-    ];
-
-    const preloadImages = () => {
-      const promises = criticalImages.map(src => {
-        return new Promise((resolve) => {
-          const img = new window.Image();
-          img.src = src;
-          img.onload = resolve;
-          img.onerror = resolve;
-        });
-      });
-
-      return Promise.all(promises);
-    };
-
-    const handleLoad = async () => {
-      await preloadImages();
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 300);
-    };
-
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-      return () => window.removeEventListener('load', handleLoad);
-    }
-  }, []);
-
   return (
-    <>
-      <LoadingScreen isLoading={isLoading} />
-      <div className="w-full text-white overflow-x-hidden relative">
-      <div className="fixed inset-0 w-full h-full z-0">
-        <LiquidEther 
-          colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
-          mouseForce={isMobile ? 80 : 20}
-          cursorSize={isMobile ? 250 : 100}
-          autoDemo={!isMobile}
-          autoSpeed={0.5}
-          autoIntensity={2.2}
-          autoResumeDelay={1000}
-          resolution={isMobile ? 0.35 : 0.5}
-        />
-      </div>
-      
-      <div className="relative z-10">
-        <section className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
-          <div className="flex flex-col items-center justify-center text-center z-10 px-4">
-            <MetallicLogo 
-              logoPath="/images/logo_tab.png"
-              className="w-32 h-32 md:w-48 md:h-48 mb-6"
-            />
-            
-            <TextType 
-              text="NETCY"
-              className="text-4xl md:text-6xl font-bold mb-8"
-              typingSpeed={500}
-              cursorCharacter="_"
-            />
-            
-            <div className="text-2xl md:text-3xl mb-8 max-w-2xl">
-              <GradientText>Création de Sites Internet Sécurisé</GradientText>
-            </div>
-            
-            <p className="text-gray-200 text-xl md:text-2xl max-w-xl mb-12 leading-relaxed font-medium">
-              Un projet web ? Discutons-en.
+    <div className="min-h-screen bg-surface flex flex-col">
+      {/* Logo top center */}
+      <header className="pt-8 flex justify-center">
+        <Link href="/" className="flex items-center">
+          <LogoNetcy className="h-[44px] w-auto" />
+        </Link>
+      </header>
+
+      {/* Center content */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6 text-center">
+        {/* Decorative dots grid */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: 'radial-gradient(circle at 1px 1px, #191C1D 1px, transparent 0)',
+              backgroundSize: '28px 28px',
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 space-y-8 max-w-lg animate-fade-up">
+          <span className="chip inline-block">DIGITAL ARCHITECTURE</span>
+
+          <div className="space-y-3">
+            <h1 className="font-display font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-on-surface leading-[1.05] tracking-tight">
+              L'avenir se construit{' '}
+              <span className="text-[#0052FF]">maintenant.</span>
+            </h1>
+            <p className="text-on-surface-variant text-lg leading-relaxed">
+              Concevoir des expériences numériques à la pointe de l'innovation.
             </p>
-            
-            <div className="flex flex-col md:flex-row gap-4 items-center">
-              <Link 
-                href="/#contact" 
-                className="inline-flex items-center justify-center bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] rounded-lg font-semibold transition shadow-lg shadow-violet-500/30"
-                style={{ width: '85px', height: '35px', padding: '10px 15px', boxSizing: 'content-box', fontSize: '17px' }}
-              >
-                Contact
-              </Link>
-              <Link href="/">
-                <StarBorder
-                  as="span"
-                  color="white"
-                  speed="3s"
-                  thickness={3}
-                >
-                  Voir le site
-                </StarBorder>
-              </Link>
-            </div>
           </div>
-        </section>
-      </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/"
+              className="btn-primary px-8 py-4 text-base flex items-center gap-2"
+            >
+              Accéder au site <ArrowRight size={16} />
+            </Link>
+            <a
+              href="/#contact"
+              className="btn-ghost px-8 py-4 text-base flex items-center gap-2"
+            >
+              <MessageCircle size={16} strokeWidth={1.5} />
+              Nous contacter
+            </a>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="pb-8 text-center">
+        <p className="text-xs text-outline-variant uppercase tracking-widest">
+          © {new Date().getFullYear()} NETCY DIGITAL ARCHITECTURE
+        </p>
+      </footer>
     </div>
-    </>
   );
 }

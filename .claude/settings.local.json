@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm add:*)",
+      "Bash(pnpm dlx:*)",
+      "Bash(rm -f bot.tsx chart-line.tsx chevron-down.tsx circle-check-big.tsx clipboard-list.tsx folder.tsx folder-open.tsx home.tsx layout-dashboard.tsx monitor.tsx move-down.tsx percent.tsx phone-call.tsx search.tsx send.tsx settings.tsx trending-up.tsx)",
+      "Bash(ls *.tsx)",
+      "Bash(rm -f Aurora.css CardNav.css CardNavMobile.css Dock.css ElasticSlider.css LoadingScreen.css LogoLoop.css MagicBento.css MetallicPaint.css PillNav.css ProfileCard.css ReflectiveCard.css ScrollFloat.css ShinyText.css StarBorder.css TextType.css TrueFocus.css)",
+      "Bash(ls *.css)",
+      "Bash(pnpm tsc:*)",
+      "Bash(grep -rl \"from ''''@/components/ui/\" src/app/)",
+      "Bash(grep -rh \"from ''''@/components/ui/\" src/app/)",
+      "Bash(npx shadcn@latest add @animate-ui/components-radix-checkbox)",
+      "Bash(npx shadcn@latest add @animate-ui/components-community-notification-list --yes)",
+      "Bash(npx shadcn@latest add @animate-ui/components-community-management-bar --yes)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
