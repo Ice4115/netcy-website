@@ -19,7 +19,7 @@ import { BotIcon } from '@/components/animate-ui/icons/bot';
 import {
   LayoutDashboard, FolderOpen, FileText, Users, MessageSquare,
   BarChart2, HelpCircle, LogOut, Plus, Edit2, Trash2,
-  Send, Search, Zap, Filter, Bell,
+  Send, Search, Filter, Bell,
   ChevronLeft, ChevronRight, X as XIcon,
 } from 'lucide-react';
 
@@ -770,7 +770,6 @@ export default function AdminDashboard() {
                 : <div className="w-full h-full bg-surface-container-high flex items-center justify-center text-on-surface text-xs font-bold">JM</div>
               }
             </button>
-            <button className="btn-primary px-4 py-2.5 text-sm flex items-center gap-2"><Zap size={14} /> Nouvelle Action</button>
           </div>
         </div>
 
