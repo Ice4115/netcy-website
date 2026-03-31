@@ -195,7 +195,7 @@ function FeaturesSection() {
       desc: 'Des interfaces qui s\'adaptent parfaitement à tous les écrans, du mobile au 4K.',
     },
     {
-      icon: <HeartIcon size={22} animate={true} animation="default-loop" loop={true} loopDelay={800} />,
+      icon: <HeartIcon size={22} animate={true} animation="default" loop={true} loopDelay={800} />,
       title: 'Design Émotionnel',
       desc: 'Nous créons des expériences qui marquent l\'esprit de vos utilisateurs.',
     },
@@ -229,7 +229,7 @@ function FeaturesSection() {
             {/* Big blue card */}
             <div className="bg-[#0052FF] dark:bg-gradient-to-br dark:from-[#d0bcff] dark:to-[#ffb0cd] rounded-2xl p-4 sm:p-6 text-white dark:text-[#1D1B20]">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                <SearchIcon size={20} className="text-white dark:text-[#1D1B20]" animate={true} animation="default-loop" loop={true} loopDelay={1000} />
+                <SearchIcon size={20} className="text-white dark:text-[#1D1B20]" animate={true} animation="default" loop={true} loopDelay={1000} />
               </div>
               <h3 className="font-display font-bold text-xl mb-1">Performance Native</h3>
               <p className="text-blue-100 dark:text-[#1D1B20]/70 text-sm leading-relaxed">
@@ -372,11 +372,11 @@ function AboutSection() {
 
             <div className="flex flex-wrap gap-3 pt-2">
               <div className="flex items-center gap-2 bg-surface-container-lowest rounded-xl px-4 py-2.5 shadow-sm">
-                <TerminalIcon size={16} className="text-[#0052FF]" animate={true} animation="default-loop" loop={true} loopDelay={1200} />
+                <TerminalIcon size={16} className="text-[#0052FF]" animate={true} animation="default" loop={true} loopDelay={1200} />
                 <span className="text-sm font-medium text-on-surface">Next.js / React</span>
               </div>
               <div className="flex items-center gap-2 bg-surface-container-lowest rounded-xl px-4 py-2.5 shadow-sm">
-                <SearchIcon size={16} className="text-[#0052FF]" animate={true} animation="default-loop" loop={true} loopDelay={1200} />
+                <SearchIcon size={16} className="text-[#0052FF]" animate={true} animation="default" loop={true} loopDelay={1200} />
                 <span className="text-sm font-medium text-on-surface">SEO & Performance</span>
               </div>
             </div>
