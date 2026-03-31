@@ -30,7 +30,9 @@ function ToggleSwitch({ checked, onChange, disabled = false }: ToggleSwitchProps
       className={`
         relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 ease-in-out
         ${disabled ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'}
-        ${checked ? 'bg-[#0052FF]' : 'bg-white/20 border border-white/30'}
+        ${checked
+          ? 'bg-[#0052FF]'
+          : 'bg-gray-200 dark:bg-white/20 border border-gray-300 dark:border-white/30'}
       `}
     >
       <span
@@ -133,18 +135,18 @@ export default function CookieBanner() {
       >
         {!showSettings ? (
           /* ── Banner simple ── */
-          <div className="bg-[#1A1C1E] border border-white/10 rounded-2xl p-5 md:p-6 shadow-2xl">
+          <div className="bg-white dark:bg-[#1A1C1E] border border-gray-200 dark:border-white/10 rounded-2xl p-5 md:p-6 shadow-2xl">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
               {/* Icon + texte */}
               <div className="flex items-start gap-4 flex-1 min-w-0">
-                <div className="w-10 h-10 bg-[#0052FF]/15 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-[#0052FF]/10 dark:bg-[#0052FF]/15 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Cookie size={18} className="text-[#0052FF]" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-white font-display font-semibold text-sm mb-1">
+                  <p className="text-gray-900 dark:text-white font-display font-semibold text-sm mb-1">
                     Gestion des cookies
                   </p>
-                  <p className="text-white/55 text-xs leading-relaxed">
+                  <p className="text-gray-500 dark:text-white/55 text-xs leading-relaxed">
                     Nous utilisons des cookies pour le bon fonctionnement du site et la mesure d&apos;audience.{' '}
                     <Link href="/cookies" className="text-[#0052FF] hover:text-[#3D7BFF] underline underline-offset-2 transition-colors">
                       Gérer mes préférences
@@ -157,13 +159,13 @@ export default function CookieBanner() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full md:w-auto flex-shrink-0">
                 <button
                   onClick={rejectAll}
-                  className="px-4 py-2 text-white/70 hover:text-white text-xs font-medium rounded-xl border border-white/15 hover:border-white/30 transition-all"
+                  className="px-4 py-2 text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-xl border border-gray-200 dark:border-white/15 hover:border-gray-400 dark:hover:border-white/30 transition-all"
                 >
                   Refuser
                 </button>
                 <button
                   onClick={openSettings}
-                  className="px-4 py-2 text-white/70 hover:text-white text-xs font-medium rounded-xl border border-white/15 hover:border-white/30 transition-all flex items-center justify-center gap-1.5"
+                  className="px-4 py-2 text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-xl border border-gray-200 dark:border-white/15 hover:border-gray-400 dark:hover:border-white/30 transition-all flex items-center justify-center gap-1.5"
                 >
                   Personnaliser <ChevronDown size={12} />
                 </button>
@@ -178,18 +180,18 @@ export default function CookieBanner() {
           </div>
         ) : (
           /* ── Panneau personnalisation ── */
-          <div className="bg-[#1A1C1E] border border-white/10 rounded-2xl p-5 md:p-6 shadow-2xl">
+          <div className="bg-white dark:bg-[#1A1C1E] border border-gray-200 dark:border-white/10 rounded-2xl p-5 md:p-6 shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-[#0052FF]/15 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-[#0052FF]/10 dark:bg-[#0052FF]/15 rounded-lg flex items-center justify-center">
                   <Cookie size={15} className="text-[#0052FF]" />
                 </div>
-                <h3 className="text-white font-display font-bold text-base">Préférences des cookies</h3>
+                <h3 className="text-gray-900 dark:text-white font-display font-bold text-base">Préférences des cookies</h3>
               </div>
               <button
                 onClick={closeSettings}
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 dark:text-white/40 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all"
               >
                 <X size={14} />
               </button>
@@ -198,13 +200,13 @@ export default function CookieBanner() {
             {/* Cookie rows */}
             <div className="space-y-2.5 mb-5">
               {/* Nécessaires */}
-              <div className="bg-white/5 rounded-xl px-4 py-3.5 border border-white/8">
+              <div className="bg-gray-50 dark:bg-white/5 rounded-xl px-4 py-3.5 border border-gray-200 dark:border-white/8">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3 min-w-0">
                     <ShieldCheck size={15} className="text-[#0052FF] flex-shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-white text-xs font-semibold">Nécessaires</p>
-                      <p className="text-white/45 text-xs leading-relaxed hidden sm:block">
+                      <p className="text-gray-900 dark:text-white text-xs font-semibold">Nécessaires</p>
+                      <p className="text-gray-500 dark:text-white/45 text-xs leading-relaxed hidden sm:block">
                         Fonctionnement du site, mémorisation du consentement. Toujours actifs.
                       </p>
                     </div>
@@ -214,13 +216,13 @@ export default function CookieBanner() {
               </div>
 
               {/* Analytics */}
-              <div className="bg-white/5 rounded-xl px-4 py-3.5 border border-white/8 hover:bg-white/8 transition-colors">
+              <div className="bg-gray-50 dark:bg-white/5 rounded-xl px-4 py-3.5 border border-gray-200 dark:border-white/8 hover:bg-gray-100 dark:hover:bg-white/8 transition-colors">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3 min-w-0">
                     <BarChart2 size={15} className="text-[#0052FF] flex-shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-white text-xs font-semibold">Performance & Analytics</p>
-                      <p className="text-white/45 text-xs leading-relaxed hidden sm:block">
+                      <p className="text-gray-900 dark:text-white text-xs font-semibold">Performance & Analytics</p>
+                      <p className="text-gray-500 dark:text-white/45 text-xs leading-relaxed hidden sm:block">
                         Mesure d&apos;audience via Google Analytics. IP anonymisées.
                       </p>
                     </div>
@@ -233,13 +235,13 @@ export default function CookieBanner() {
               </div>
 
               {/* Marketing */}
-              <div className="bg-white/5 rounded-xl px-4 py-3.5 border border-white/8 hover:bg-white/8 transition-colors">
+              <div className="bg-gray-50 dark:bg-white/5 rounded-xl px-4 py-3.5 border border-gray-200 dark:border-white/8 hover:bg-gray-100 dark:hover:bg-white/8 transition-colors">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3 min-w-0">
                     <Target size={15} className="text-[#0052FF] flex-shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-white text-xs font-semibold">Targeting & Marketing</p>
-                      <p className="text-white/45 text-xs leading-relaxed hidden sm:block">
+                      <p className="text-gray-900 dark:text-white text-xs font-semibold">Targeting & Marketing</p>
+                      <p className="text-gray-500 dark:text-white/45 text-xs leading-relaxed hidden sm:block">
                         Contenus personnalisés et mesure de campagnes publicitaires.
                       </p>
                     </div>
@@ -256,7 +258,7 @@ export default function CookieBanner() {
             <div className="flex flex-col sm:flex-row gap-2.5">
               <button
                 onClick={rejectAll}
-                className="flex-1 px-4 py-2.5 text-white/70 hover:text-white text-xs font-medium rounded-xl border border-white/15 hover:border-white/30 transition-all"
+                className="flex-1 px-4 py-2.5 text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-xl border border-gray-200 dark:border-white/15 hover:border-gray-400 dark:hover:border-white/30 transition-all"
               >
                 Tout refuser
               </button>
@@ -268,7 +270,7 @@ export default function CookieBanner() {
               </button>
               <button
                 onClick={acceptAll}
-                className="flex-1 px-4 py-2.5 bg-white text-[#191C1D] text-xs font-semibold rounded-xl hover:bg-[#F3F4F5] transition-all"
+                className="flex-1 px-4 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-[#191C1D] text-xs font-semibold rounded-xl hover:bg-gray-700 dark:hover:bg-[#F3F4F5] transition-all"
               >
                 Tout accepter
               </button>
