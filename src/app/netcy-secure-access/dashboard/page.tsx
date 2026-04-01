@@ -20,13 +20,13 @@ import {
   LayoutDashboard, FolderOpen, FileText, Users, MessageSquare,
   BarChart2, HelpCircle, LogOut, Plus, Edit2, Trash2,
   Send, Search, Filter, Bell,
-  ChevronLeft, ChevronRight, X as XIcon,
+  ChevronLeft, ChevronRight, X as XIcon, Eye, Upload,
 } from 'lucide-react';
 
 /* ── Types ── */
 interface Client  { id: string; nom: string; prenom?: string; email: string; type: string; role: string; entreprise?: string; created_at: string; }
 interface Project { id: string; titre: string; description: string; status: string; progress: number; client_id: string; created_at: string; clients?: { nom: string; prenom?: string }; }
-interface Invoice { id: string; numero_facture?: string; montant: number; statut: string; description?: string; client_id: string; created_at: string; clients?: { nom: string }; }
+interface Invoice { id: string; numero_facture?: string; montant: number; statut: string; description?: string; client_id: string; created_at: string; pdf_url?: string; clients?: { nom: string }; }
 interface Message { id: string; project_id: string; auteur: 'admin' | 'client'; message: string; created_at: string; }
 interface AdminNotif { id: string; clientName: string; preview: string; time: string; clientId: string; }
 
@@ -133,6 +133,30 @@ function Modal({ open, onClose, title, children }: { open: boolean; onClose: () 
           </button>
         </div>
         <div className="px-6 py-5">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function PdfViewerModal({ url, title, onClose }: { url: string; title: string; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+      <div className="bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-container-low flex-shrink-0">
+          <h2 className="font-display font-bold text-lg text-on-surface truncate">{title}</h2>
+          <div className="flex items-center gap-2">
+            <a href={url} target="_blank" rel="noopener noreferrer"
+              className="px-3 py-1.5 text-xs btn-ghost rounded-xl flex items-center gap-1.5">
+              <Eye size={12} /> Ouvrir dans un onglet
+            </a>
+            <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-surface-container-low transition-colors">
+              <XIcon size={16} className="text-outline" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 p-4 overflow-hidden">
+          <iframe src={url} className="w-full h-full rounded-xl border border-surface-container-low" title={title} />
+        </div>
       </div>
     </div>
   );
@@ -246,6 +270,10 @@ export default function AdminDashboard() {
   /* Forms */
   const [pForm, setPForm] = useState({ titre: '', description: '', status: 'en_attente', progress: 0, client_id: '' });
   const [iForm, setIForm] = useState({ numero_facture: '', montant: 0, statut: 'en_attente', description: '', client_id: '' });
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfUploading, setPdfUploading] = useState(false);
+  const [pdfViewUrl, setPdfViewUrl] = useState<string | null>(null);
+  const [pdfViewTitle, setPdfViewTitle] = useState('');
   const [cForm, setCForm] = useState({ nom: '', prenom: '', email: '', entreprise: '', type: 'particulier', role: 'client' });
 
   /* Filters */
@@ -417,17 +445,33 @@ export default function AdminDashboard() {
   const saveInvoice = async () => {
     if (!iForm.client_id || iForm.montant <= 0) return;
     const num = iForm.numero_facture.trim() || `INV-${Date.now().toString(36).toUpperCase()}`;
+
+    let pdf_url: string | undefined;
+    if (pdfFile) {
+      setPdfUploading(true);
+      const filePath = `${num}_${Date.now()}.pdf`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('invoices')
+        .upload(filePath, pdfFile, { upsert: true, contentType: 'application/pdf' });
+      if (!uploadError && uploadData) {
+        const { data: { publicUrl } } = supabase.storage.from('invoices').getPublicUrl(uploadData.path);
+        pdf_url = publicUrl;
+      }
+      setPdfUploading(false);
+    }
+
     if (invoiceModal.mode === 'add') {
       const { data } = await supabase.from('invoices')
-        .insert({ numero_facture: num, montant: iForm.montant, statut: iForm.statut, description: iForm.description, client_id: iForm.client_id })
+        .insert({ numero_facture: num, montant: iForm.montant, statut: iForm.statut, description: iForm.description, client_id: iForm.client_id, ...(pdf_url ? { pdf_url } : {}) })
         .select('*, clients(nom)').single();
       if (data) setInvoices(prev => [data, ...prev]);
     } else if (selInvoiceId) {
       const { data } = await supabase.from('invoices')
-        .update({ numero_facture: num, montant: iForm.montant, statut: iForm.statut, description: iForm.description })
+        .update({ numero_facture: num, montant: iForm.montant, statut: iForm.statut, description: iForm.description, ...(pdf_url ? { pdf_url } : {}) })
         .eq('id', selInvoiceId).select('*, clients(nom)').single();
       if (data) setInvoices(prev => prev.map(i => i.id === selInvoiceId ? data : i));
     }
+    setPdfFile(null);
     setInvoiceModal({ open: false, mode: 'add' }); setSelInvoiceId(null);
   };
 
@@ -573,8 +617,8 @@ export default function AdminDashboard() {
   /* Modal open helpers */
   const openAddProject  = () => { setPForm({ titre: '', description: '', status: 'en_attente', progress: 0, client_id: nonAdminClients[0]?.id ?? '' }); setSelProjectId(null); setProjectModal({ open: true, mode: 'add' }); };
   const openEditProject = () => { if (!selProject) return; setPForm({ titre: selProject.titre, description: selProject.description ?? '', status: selProject.status, progress: selProject.progress, client_id: selProject.client_id }); setProjectModal({ open: true, mode: 'edit' }); };
-  const openAddInvoice  = () => { setIForm({ numero_facture: '', montant: 0, statut: 'en_attente', description: '', client_id: nonAdminClients[0]?.id ?? '' }); setSelInvoiceId(null); setInvoiceModal({ open: true, mode: 'add' }); };
-  const openEditInvoice = () => { if (!selInvoice) return; setIForm({ numero_facture: selInvoice.numero_facture ?? '', montant: selInvoice.montant, statut: selInvoice.statut, description: selInvoice.description ?? '', client_id: selInvoice.client_id }); setInvoiceModal({ open: true, mode: 'edit' }); };
+  const openAddInvoice  = () => { setIForm({ numero_facture: '', montant: 0, statut: 'en_attente', description: '', client_id: nonAdminClients[0]?.id ?? '' }); setPdfFile(null); setSelInvoiceId(null); setInvoiceModal({ open: true, mode: 'add' }); };
+  const openEditInvoice = () => { if (!selInvoice) return; setIForm({ numero_facture: selInvoice.numero_facture ?? '', montant: selInvoice.montant, statut: selInvoice.statut, description: selInvoice.description ?? '', client_id: selInvoice.client_id }); setPdfFile(null); setInvoiceModal({ open: true, mode: 'edit' }); };
   const openAddClient   = () => { setCForm({ nom: '', prenom: '', email: '', entreprise: '', type: 'particulier', role: 'client' }); setSelClientId(null); setClientModal({ open: true, mode: 'add' }); };
   const openEditClient  = () => { if (!selClient) return; setCForm({ nom: selClient.nom, prenom: selClient.prenom ?? '', email: selClient.email, entreprise: selClient.entreprise ?? '', type: selClient.type, role: selClient.role }); setClientModal({ open: true, mode: 'edit' }); };
 
@@ -633,9 +677,21 @@ export default function AdminDashboard() {
             </Field>
           </div>
           <Field label="Description"><textarea className={inputCls + ' resize-none'} rows={2} value={iForm.description} onChange={e => setIForm(s => ({ ...s, description: e.target.value }))} placeholder="Description optionnelle" /></Field>
+          <Field label="Fichier PDF (optionnel)">
+            <label className={`${inputCls} flex items-center gap-2 cursor-pointer`}>
+              <Upload size={14} className="text-outline shrink-0" />
+              <span className="text-outline truncate text-xs">{pdfFile ? pdfFile.name : 'Choisir un PDF…'}</span>
+              <input type="file" accept="application/pdf" className="hidden" onChange={e => setPdfFile(e.target.files?.[0] ?? null)} />
+            </label>
+            {pdfFile && (
+              <button type="button" onClick={() => setPdfFile(null)} className="text-xs text-red-500 hover:underline mt-1">Retirer le fichier</button>
+            )}
+          </Field>
           <div className="flex gap-2 pt-2">
-            <button onClick={() => setInvoiceModal(s => ({ ...s, open: false }))} className="flex-1 btn-ghost py-2.5 text-sm rounded-xl">Annuler</button>
-            <button onClick={saveInvoice} className="flex-1 btn-primary py-2.5 text-sm rounded-xl">{invoiceModal.mode === 'add' ? 'Créer la facture' : 'Enregistrer'}</button>
+            <button onClick={() => { setInvoiceModal(s => ({ ...s, open: false })); setPdfFile(null); }} className="flex-1 btn-ghost py-2.5 text-sm rounded-xl">Annuler</button>
+            <button onClick={saveInvoice} disabled={pdfUploading} className="flex-1 btn-primary py-2.5 text-sm rounded-xl disabled:opacity-60">
+              {pdfUploading ? 'Upload PDF…' : invoiceModal.mode === 'add' ? 'Créer la facture' : 'Enregistrer'}
+            </button>
           </div>
         </div>
       </Modal>
@@ -669,6 +725,15 @@ export default function AdminDashboard() {
           </div>
         </div>
       </Modal>
+
+      {/* ═══ PDF VIEWER ═══ */}
+      {pdfViewUrl && (
+        <PdfViewerModal
+          url={pdfViewUrl}
+          title={pdfViewTitle}
+          onClose={() => setPdfViewUrl(null)}
+        />
+      )}
 
       {/* ═══ SIDEBAR ═══ */}
       <aside className="hidden lg:flex w-56 flex-col bg-surface-container-lowest fixed inset-y-0 left-0 z-30 border-r border-surface-container-low">
@@ -730,10 +795,16 @@ export default function AdminDashboard() {
               )}
             </button>
           ))}
+          <button
+            onClick={handleSignOut}
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap text-red-500 hover:bg-red-50 dark:hover:bg-[#450A0A] transition-all ml-auto"
+          >
+            <LogOut size={14} /> Déconnexion
+          </button>
         </div>
       </div>
 
-      <main className="flex-1 lg:ml-56 p-4 pt-16 sm:p-6 sm:pt-6 lg:p-10 lg:pt-10 space-y-6">
+      <main className="flex-1 lg:ml-56 p-4 pt-14 sm:p-6 sm:pt-14 lg:p-10 lg:pt-10 space-y-6">
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1035,7 +1106,7 @@ export default function AdminDashboard() {
               <Table>
                 <TableHeader>
                   <TableRow className="border-b border-surface-container-low hover:bg-transparent">
-                    {['N° FACTURE', 'CLIENT', 'MONTANT', 'STATUT', 'DATE'].map(h => <TableHead key={h} className="px-6 py-3 text-[10px] font-semibold text-outline uppercase tracking-widest">{h}</TableHead>)}
+                    {['N° FACTURE', 'CLIENT', 'MONTANT', 'STATUT', 'DATE', ''].map(h => <TableHead key={h} className="px-6 py-3 text-[10px] font-semibold text-outline uppercase tracking-widest">{h}</TableHead>)}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1050,8 +1121,18 @@ export default function AdminDashboard() {
                       <TableCell className="px-6 py-4"><p className="font-display font-bold text-sm text-on-surface">{inv.montant.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</p></TableCell>
                       <TableCell className="px-6 py-4">{invoiceBadge(inv.statut)}</TableCell>
                       <TableCell className="px-6 py-4 text-xs text-outline">{new Date(inv.created_at).toLocaleDateString('fr-FR')}</TableCell>
+                      <TableCell className="px-6 py-4">
+                        {inv.pdf_url && (
+                          <button
+                            onClick={e => { e.stopPropagation(); setPdfViewUrl(inv.pdf_url!); setPdfViewTitle(inv.numero_facture ?? `INV-${inv.id.slice(0, 8).toUpperCase()}`); }}
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-blue-50 dark:bg-[#1a1f3d] text-primary dark:text-[#d0bcff] hover:bg-blue-100 dark:hover:bg-[#1e2450] transition-colors"
+                          >
+                            <Eye size={12} /> PDF
+                          </button>
+                        )}
+                      </TableCell>
                     </TableRow>
-                  )) : <TableRow><TableCell colSpan={5} className="px-6 py-12 text-center text-sm text-outline">Aucune facture · cliquez sur &quot;Nouvelle facture&quot; pour commencer</TableCell></TableRow>}
+                  )) : <TableRow><TableCell colSpan={6} className="px-6 py-12 text-center text-sm text-outline">Aucune facture · cliquez sur &quot;Nouvelle facture&quot; pour commencer</TableCell></TableRow>}
                 </TableBody>
               </Table>
               {selInvoiceId && (

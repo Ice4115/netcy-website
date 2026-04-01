@@ -33,7 +33,20 @@ function LegalNav() {
             </Link>
           ))}
         </nav>
-        <Link href="/#contact" className="btn-primary px-5 py-2.5 text-sm">Démarrer un projet</Link>
+        <Link href="/#contact" className="btn-primary px-5 py-2.5 text-sm hidden md:inline-flex">Démarrer un projet</Link>
+        <Link href="/" className="md:hidden text-xs font-medium text-on-surface-variant hover:text-on-surface transition-colors">← Accueil</Link>
+      </div>
+      {/* Mobile legal links */}
+      <div className="md:hidden overflow-x-auto border-t border-surface-container">
+        <div className="flex gap-1 px-3 py-2">
+          {links.map((l) => (
+            <Link key={l.label} href={l.href}
+              className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors
+                ${pathname === l.href ? 'bg-[#EEF2FF] dark:bg-[#1a1f3d] text-[#0052FF]' : 'text-outline hover:text-on-surface hover:bg-surface-container-low'}`}>
+              {l.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </header>
   );

@@ -91,9 +91,9 @@ export default function ConnexionPage() {
   const isLocked = !!(lockoutUntil && Date.now() < lockoutUntil);
 
   return (
-    <div className="h-screen overflow-hidden flex bg-surface">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-surface">
       {/* ── Left panel ── */}
-      <div className="hidden lg:flex lg:w-1/2 bg-surface-container flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-surface-container flex-col justify-between p-12 relative overflow-hidden flex-shrink-0">
         {/* Decorative blur */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#0052FF]/8 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#0052FF]/5 rounded-full blur-3xl pointer-events-none" />
@@ -138,7 +138,7 @@ export default function ConnexionPage() {
       </div>
 
       {/* ── Right panel – form ── */}
-      <div className="flex-1 flex flex-col justify-between p-6 lg:p-10 bg-surface-container-lowest dark:bg-[#0E0E0F] overflow-hidden">
+      <div className="flex-1 flex flex-col justify-between p-6 lg:p-10 bg-surface-container-lowest dark:bg-[#0E0E0F] overflow-y-auto min-h-screen lg:min-h-0">
         <div className="flex justify-between items-center">
           <Link href="/" className="lg:hidden font-display font-bold text-xl text-on-surface">NETCY</Link>
           <div className="hidden lg:block" />

@@ -21,7 +21,7 @@ export default function HeroSection() {
       <div className="absolute top-1/2 left-1/3 w-64 h-64 rounded-full blur-[90px] opacity-10 pointer-events-none"
         style={{ background: 'radial-gradient(circle, #059669, transparent)' }} />
 
-      <div className="max-w-5xl mx-auto px-6 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+      <div className="max-w-5xl mx-auto px-4 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
 
         {/* Text */}
         <div className="lg:col-span-7 flex flex-col items-start text-left">
@@ -35,7 +35,7 @@ export default function HeroSection() {
           </div>
 
           {/* Main heading */}
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6 animate-fade-up animation-delay-100">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6 animate-fade-up animation-delay-100">
             <span className="text-on-surface">Ingénierie des </span>
             <span
               className="text-transparent bg-clip-text"
@@ -69,7 +69,7 @@ export default function HeroSection() {
           </div>
 
           {/* Stats */}
-          <div className="mt-14 flex flex-wrap items-center gap-8 animate-fade-up animation-delay-400">
+          <div className="mt-8 md:mt-14 flex flex-wrap items-center gap-6 md:gap-8 animate-fade-up animation-delay-400">
             {STATS.map((stat, i) => (
               <React.Fragment key={i}>
                 {i > 0 && <div className="w-px h-10 bg-outline-variant hidden sm:block" />}

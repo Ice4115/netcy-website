@@ -30,7 +30,7 @@ export default function PortfolioClient() {
       <main>
         <HeroSection />
 
-        <div className="max-w-5xl mx-auto px-6 md:px-12 py-24 space-y-40">
+        <div className="max-w-5xl mx-auto px-4 md:px-12 py-12 md:py-24 space-y-20 md:space-y-40">
           <AnimatedContent distance={40} duration={0.7}>
             <ExpertiseSection />
           </AnimatedContent>

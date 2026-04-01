@@ -125,6 +125,13 @@ function Navbar() {
           >
             Portfolio
           </Link>
+          <Link
+            href="/connexion"
+            onClick={() => setOpen(false)}
+            className="block text-sm font-medium text-on-surface-variant py-2"
+          >
+            Connexion
+          </Link>
           <a href="#contact" onClick={() => setOpen(false)} className="btn-primary block text-center px-5 py-3 text-sm mt-2">
             Démarrer un projet
           </a>
@@ -580,13 +587,13 @@ function ContactSection() {
                   id="contact-cgu"
                   checked={acceptCGU}
                   onCheckedChange={(v) => { setAcceptCGU(!!v); setCgError(false); }}
-                  className="mt-0.5"
+                  className="mt-0.5 flex-shrink-0"
                 />
                 <Label htmlFor="contact-cgu" className="text-sm text-on-surface-variant leading-snug cursor-pointer font-normal">
                   J'accepte les{' '}
-                  <Link href="/cgu" className="text-[#0052FF] hover:underline">Conditions d'utilisation</Link>
+                  <Link href="/cgu" className="text-[#0052FF] hover:underline whitespace-nowrap">Conditions d'utilisation</Link>
                   {' '}et la{' '}
-                  <Link href="/politique-confidentialite" className="text-[#0052FF] hover:underline">Politique de Confidentialité</Link>
+                  <Link href="/politique-confidentialite" className="text-[#0052FF] hover:underline whitespace-nowrap">Politique de Confidentialité</Link>
                   {' '}de NETCY.
                 </Label>
               </div>

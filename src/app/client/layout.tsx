@@ -327,6 +327,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               )}
             </Link>
           ))}
+          <button
+            onClick={handleSignOut}
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap text-red-500 hover:bg-red-50 dark:hover:bg-[#450A0A] transition-all ml-auto"
+          >
+            <LogOut size={14} /> Déconnexion
+          </button>
         </div>
 
         <div className="flex-1">
