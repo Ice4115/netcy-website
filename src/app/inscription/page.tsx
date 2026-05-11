@@ -387,13 +387,7 @@ export default function InscriptionPage() {
                   onCheckedChange={(v) => setAcceptTerms(!!v)}
                   className="mt-0.5 flex-shrink-0"
                 />
-                <span className="text-sm text-on-surface-variant leading-relaxed select-none">
-                  J'accepte les{' '}
-                  <Link href="/cgu" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium whitespace-nowrap">Conditions d'utilisation</Link>
-                  {' '}et la{' '}
-                  <Link href="/politique-confidentialite" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium whitespace-nowrap">Politique de Confidentialité</Link>
-                  {' '}de NETCY.
-                </span>
+                <span className="text-sm text-on-surface-variant leading-relaxed select-none">J'accepte les <Link href="/cgu" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium">Conditions d'utilisation</Link> et la <Link href="/politique-confidentialite" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium">Politique de Confidentialité</Link> de NETCY.</span>
               </label>
             </div>
           )}
@@ -422,19 +416,18 @@ export default function InscriptionPage() {
 
         {/* Footer */}
         <div className="max-w-md mx-auto w-full">
-          <div className="flex items-center justify-between text-xs text-outline-variant pt-6">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-outline-variant pt-6 pr-14">
             <Link href="/#contact" className="hover:text-outline transition-colors underline underline-offset-2">Centre d'aide</Link>
             <span>·</span>
             <Link href="/politique-confidentialite" className="hover:text-outline transition-colors underline underline-offset-2">Confidentialité</Link>
-            <span className="ml-auto flex items-center gap-1">
-              🌐 FR (FR)
-            </span>
+            <span>·</span>
+            <span className="flex items-center gap-1">🌐 FR (FR)</span>
           </div>
         </div>
       </div>
 
       {/* System status badge */}
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="hidden sm:block fixed bottom-4 right-4 z-50">
         <div className="flex items-center gap-2 bg-surface-container-highest rounded-full px-4 py-2 text-xs font-medium text-on-surface-variant">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
           SYSTÈME : OPÉRATIONNEL

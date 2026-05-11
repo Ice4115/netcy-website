@@ -258,7 +258,7 @@
     font-family: var(--font-manrope), system-ui, sans-serif;
   }
 
-  img { max-width: none !important; }
+  img { max-width: 100%; }
   [id] { scroll-margin-top: 100px; }
 
   /* Autofill — light */

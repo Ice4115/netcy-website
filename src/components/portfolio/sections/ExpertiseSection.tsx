@@ -84,7 +84,7 @@ export default function ExpertiseSection() {
         {EXPERTISE.map((exp, i) => (
           <div
             key={i}
-            className="group relative bg-surface-container-low border border-outline-variant rounded-2xl p-8 overflow-hidden hover:bg-surface-container transition-all duration-300 hover:-translate-y-1 hover:shadow-lg animate-fade-up"
+            className="group relative bg-surface-container-low border border-outline-variant rounded-2xl p-5 md:p-8 overflow-hidden hover:bg-surface-container transition-all duration-300 hover:-translate-y-1 hover:shadow-lg animate-fade-up"
             style={{
               animationDelay: exp.delay,
               borderTopColor: exp.color,
@@ -99,7 +99,7 @@ export default function ExpertiseSection() {
 
             {/* Icon */}
             <div
-              className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center mb-4 md:mb-6 transition-transform duration-300 group-hover:scale-110"
               style={{ background: exp.colorLight, color: exp.color }}
             >
               {exp.icon}

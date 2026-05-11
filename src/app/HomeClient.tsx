@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { motion, useScroll, useSpring } from 'motion/react';
 import { Menu, X, ArrowRight, Github, Linkedin } from 'lucide-react';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { LayersIcon } from '@/components/animate-ui/icons/layers';
@@ -12,11 +12,11 @@ import { CogIcon } from '@/components/animate-ui/icons/cog';
 import { SearchIcon } from '@/components/animate-ui/icons/search';
 import { TerminalIcon } from '@/components/animate-ui/icons/terminal';
 import { Checkbox } from '@/components/animate-ui/components/radix/checkbox';
-import { Label } from '@/components/ui/label';
 import { Select } from 'radix-ui';
+import ImmersiveHero from '@/components/immersive/ImmersiveHero';
+import SectionReveal from '@/components/immersive/SectionReveal';
 
 const ProfileCard = dynamic(() => import('@/components/ProfileCard'), { ssr: false });
-import PublicBackground from '@/components/PublicBackground';
 
 /* ──────────────────────────────────────────
    Navbar
@@ -100,7 +100,11 @@ function Navbar() {
         </div>
 
         {/* Mobile toggle */}
-        <button className="md:hidden p-2 text-on-surface" onClick={() => setOpen(!open)}>
+        <button
+          className="md:hidden p-2 text-on-surface bg-surface-container-low/80 backdrop-blur-sm rounded-lg border border-outline-variant/30 hover:bg-surface-container transition-colors"
+          onClick={() => setOpen(!open)}
+          aria-label="Menu"
+        >
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
@@ -142,52 +146,20 @@ function Navbar() {
 }
 
 /* ──────────────────────────────────────────
-   Hero Section
+   Scroll Progress Bar (coherence indicator)
 ────────────────────────────────────────── */
-function HeroSection() {
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
   return (
-    <section className="pt-24 pb-16 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
-        {/* Left */}
-        <div className="space-y-7 animate-fade-up">
-          <span className="chip">WEB AGENCY 2.0</span>
-
-          <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.08] tracking-tight text-on-surface">
-            NETCY – La Conception de Sites Internet de{' '}
-            <em className="italic text-[#0052FF] font-extrabold">Demain.</em>
-          </h1>
-
-          <p className="text-on-surface-variant text-lg leading-relaxed max-w-lg">
-            Nous transformons vos visions les plus complexes en expériences numériques
-            fluides, performantes et esthétiquement irréprochables.
-          </p>
-
-          <div className="flex flex-wrap gap-4">
-            <a href="#contact" className="btn-primary px-7 py-3.5 text-base flex items-center gap-2">
-              Démarrer un projet
-            </a>
-            <a href="#services" className="btn-ghost px-7 py-3.5 text-base">
-              Nos réalisations
-            </a>
-          </div>
-        </div>
-
-        {/* Right – visual */}
-        <div className="relative animate-fade-up animation-delay-200 hidden md:block">
-          <div className="relative rounded-2xl overflow-hidden aspect-[4/3]">
-            <Image
-              src="/images/hero_right.png"
-              alt="NETCY – Développeur web"
-              fill
-              className="object-cover object-center"
-              priority
-            />
-          </div>
-          {/* Decorative blur dot */}
-          <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-[#0052FF]/10 rounded-full blur-3xl pointer-events-none" />
-        </div>
-      </div>
-    </section>
+    <motion.div
+      aria-hidden
+      className="fixed top-0 left-0 right-0 h-[3px] z-[60] origin-left"
+      style={{
+        scaleX,
+        background: 'linear-gradient(90deg, #0052FF 0%, #6F3FFF 50%, #F97316 100%)',
+      }}
+    />
   );
 }
 
@@ -340,7 +312,7 @@ function AboutSection() {
 
           {/* ProfileCard */}
           <div className="flex justify-center lg:justify-start animate-slide-in-left">
-            <div className="animate-float">
+            <div className="animate-float w-full max-w-[300px] sm:max-w-sm lg:max-w-none">
               <ProfileCard
                 avatarUrl="/images/profile.png"
                 miniAvatarUrl="/images/profile.png"
@@ -488,7 +460,7 @@ function ContactSection() {
           </p>
         </div>
 
-        <div className="bg-surface-container-lowest rounded-3xl p-4 sm:p-8 lg:p-12 shadow-sm animate-fade-up animation-delay-200">
+        <div className="bg-surface-container-lowest rounded-3xl p-5 sm:p-8 lg:p-12 shadow-sm animate-fade-up animation-delay-200">
           {status === 'success' ? (
             <div className="text-center py-8">
               <div className="w-14 h-14 bg-[#DCFCE7] dark:bg-[#14532D] rounded-full flex items-center justify-center mx-auto mb-4">
@@ -589,13 +561,7 @@ function ContactSection() {
                   onCheckedChange={(v) => { setAcceptCGU(!!v); setCgError(false); }}
                   className="mt-0.5 flex-shrink-0"
                 />
-                <Label htmlFor="contact-cgu" className="text-sm text-on-surface-variant leading-snug cursor-pointer font-normal">
-                  J'accepte les{' '}
-                  <Link href="/cgu" className="text-[#0052FF] hover:underline whitespace-nowrap">Conditions d'utilisation</Link>
-                  {' '}et la{' '}
-                  <Link href="/politique-confidentialite" className="text-[#0052FF] hover:underline whitespace-nowrap">Politique de Confidentialité</Link>
-                  {' '}de NETCY.
-                </Label>
+                <label htmlFor="contact-cgu" className="text-sm text-on-surface-variant leading-snug cursor-pointer">J'accepte les <Link href="/cgu" className="text-[#0052FF] hover:underline">Conditions d'utilisation</Link> et la <Link href="/politique-confidentialite" className="text-[#0052FF] hover:underline">Politique de Confidentialité</Link> de NETCY.</label>
               </div>
               {cgError && (
                 <p className="text-[#BF3003] text-xs -mt-2">Vous devez accepter les conditions pour continuer.</p>
@@ -655,15 +621,23 @@ function Footer() {
 export default function HomeClient() {
   return (
     <div className="min-h-screen">
-      <PublicBackground />
+      <ScrollProgress />
       <div className="relative z-10">
         <Navbar />
         <main>
-          <HeroSection />
-          <FeaturesSection />
-          <StackSection />
-          <AboutSection />
-          <ContactSection />
+          <ImmersiveHero />
+          <SectionReveal intensity="default">
+            <FeaturesSection />
+          </SectionReveal>
+          <SectionReveal intensity="soft">
+            <StackSection />
+          </SectionReveal>
+          <SectionReveal intensity="default">
+            <AboutSection />
+          </SectionReveal>
+          <SectionReveal intensity="default">
+            <ContactSection />
+          </SectionReveal>
         </main>
         <Footer />
       </div>

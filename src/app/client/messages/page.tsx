@@ -88,7 +88,7 @@ export default function MessagesPage() {
         </div>
 
         {messages.length === 0 ? (
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-12 text-center">
+          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-6 sm:p-8 md:p-12 text-center">
             <Mail className="mx-auto mb-4 text-gray-400" size={48} animate={true} loop={true} loopDelay={5000} />
             <p className="text-gray-400 text-lg">Aucun message pour le moment</p>
           </div>
@@ -171,7 +171,7 @@ export default function MessagesPage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-12 flex flex-col items-center justify-center h-full">
+                <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-6 sm:p-8 md:p-12 flex flex-col items-center justify-center h-full">
                   <Mail className="text-gray-400 mb-4" size={64} animate={true} loop={true} loopDelay={5000} />
                   <p className="text-gray-400 text-lg">Sélectionnez un message pour le lire</p>
                 </div>

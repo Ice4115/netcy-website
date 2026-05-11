@@ -63,7 +63,7 @@ export default function Error({
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
         <div className="flex flex-col items-center text-center max-w-2xl w-full gap-6">
 
-          <h1 className="text-9xl md:text-[12rem] font-bold leading-none">
+          <h1 className="text-7xl sm:text-9xl md:text-[12rem] font-bold leading-none">
             <GradientText colors={['#FF3F3F', '#FF9A5F', '#FF3F3F', '#FF7A3F', '#FF3F3F']}>
               500
             </GradientText>
@@ -90,17 +90,17 @@ export default function Error({
               <span className="w-3 h-3 rounded-full bg-green-500/80" />
               <span className="ml-2 text-gray-500 text-xs">netcy — stack trace</span>
             </div>
-            <div className="p-4 space-y-1 min-h-[120px]">
+            <div className="p-4 space-y-1 min-h-[120px] overflow-x-auto">
               {stackTrace.slice(0, visibleLines).map((line, i) => (
                 <p
                   key={i}
-                  className={
+                  className={`break-all ${
                     line.startsWith('>')
                       ? 'text-yellow-400 pl-2'
                       : line.startsWith('Error')
                       ? 'text-red-400 font-bold'
                       : 'text-gray-400'
-                  }
+                  }`}
                 >
                   {line}
                 </p>
@@ -120,15 +120,13 @@ export default function Error({
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={reset}
-              className="inline-flex items-center justify-center bg-gradient-to-r from-[#FF3F3F] to-[#FF7A3F] hover:from-[#FF5050] hover:to-[#FF8A50] rounded-lg font-semibold transition shadow-lg shadow-red-500/30"
-              style={{ width: '200px', height: '50px', fontSize: '16px' }}
+              className="inline-flex items-center justify-center px-8 py-3.5 text-base w-full sm:w-auto bg-gradient-to-r from-[#FF3F3F] to-[#FF7A3F] hover:from-[#FF5050] hover:to-[#FF8A50] rounded-lg font-semibold transition shadow-lg shadow-red-500/30"
             >
               ↺ Réessayer (avec espoir)
             </button>
             <a
               href="/"
-              className="inline-flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg font-semibold transition"
-              style={{ width: '200px', height: '50px', fontSize: '16px' }}
+              className="inline-flex items-center justify-center px-8 py-3.5 text-base w-full sm:w-auto bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg font-semibold transition"
             >
               ← Fuir vers l'accueil
             </a>

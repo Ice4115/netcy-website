@@ -40,15 +40,15 @@ function PremiumModal({
           <X size={16} />
         </button>
 
-        <div className="p-6 md:p-10">
-          <div className="mb-8 pr-8">
-            <h2 className="text-2xl font-bold text-on-surface tracking-tight mb-2">{title}</h2>
+        <div className="p-5 md:p-10">
+          <div className="mb-5 md:mb-8 pr-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-on-surface tracking-tight mb-2">{title}</h2>
             {subtitle && (
               <p className="text-xs font-mono text-outline uppercase tracking-widest">{subtitle}</p>
             )}
           </div>
 
-          <div className="space-y-8">{children}</div>
+          <div className="space-y-5 md:space-y-8">{children}</div>
         </div>
       </div>
     </div>

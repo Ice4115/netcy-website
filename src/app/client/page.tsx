@@ -426,7 +426,7 @@ function ClientDashboardInner() {
           {/* Projet actif */}
           {!loading && activeProject && (
             <Card className="border-0 shadow-sm rounded-2xl overflow-hidden">
-              <CardContent className="p-6 lg:p-8">
+              <CardContent className="p-4 sm:p-6 lg:p-8">
                 <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
                   <div className="space-y-4 flex-1">
                     <div>
@@ -524,7 +524,7 @@ function ClientDashboardInner() {
             <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-32 w-full rounded-2xl" />)}</div>
           ) : projects.length === 0 ? (
             <Card className="border-0 shadow-sm rounded-2xl">
-              <CardContent className="p-16 text-center">
+              <CardContent className="p-6 sm:p-10 md:p-16 text-center">
                 <FolderOpen size={40} className="text-outline-variant mx-auto mb-4" />
                 <p className="font-display font-bold text-lg text-on-surface">Aucun projet pour le moment</p>
                 <p className="text-sm text-outline mt-1">Contactez-nous pour démarrer votre premier projet</p>
@@ -600,7 +600,7 @@ function ClientDashboardInner() {
             <div className="space-y-3">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-20 w-full rounded-2xl" />)}</div>
           ) : invoices.length === 0 ? (
             <Card className="border-0 shadow-sm rounded-2xl">
-              <CardContent className="p-16 text-center">
+              <CardContent className="p-6 sm:p-10 md:p-16 text-center">
                 <FileText size={40} className="text-outline-variant mx-auto mb-4" />
                 <p className="font-display font-bold text-lg text-on-surface">Aucune facture</p>
                 <p className="text-sm text-outline mt-1">Vos factures apparaîtront ici</p>

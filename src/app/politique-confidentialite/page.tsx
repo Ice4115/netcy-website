@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import PublicBackground from '@/components/PublicBackground';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { usePathname } from 'next/navigation';
 import { Download, Shield, Cookie, Lock } from 'lucide-react';
@@ -80,8 +79,6 @@ export default function PolitiqueConfidentialitePage() {
 
   return (
     <div className="min-h-screen">
-      <PublicBackground />
-      <div className="relative z-10">
       <LegalNav />
 
       {/* Hero */}
@@ -116,7 +113,7 @@ export default function PolitiqueConfidentialitePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pb-16">
         <div className="grid sm:grid-cols-3 gap-5">
           <Card className="border-0 shadow-sm rounded-2xl">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-5 md:p-6">
               <div className="w-10 h-10 bg-[#EEF2FF] rounded-xl flex items-center justify-center mb-4">
                 <Shield size={18} className="text-[#0052FF]" />
               </div>
@@ -125,7 +122,7 @@ export default function PolitiqueConfidentialitePage() {
             </CardContent>
           </Card>
           <Card className="border-0 shadow-sm rounded-2xl bg-[#0052FF]">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-5 md:p-6">
               <div className="w-10 h-10 bg-surface-container-lowest/20 rounded-xl flex items-center justify-center mb-4">
                 <Cookie size={18} className="text-white" />
               </div>
@@ -134,7 +131,7 @@ export default function PolitiqueConfidentialitePage() {
             </CardContent>
           </Card>
           <Card className="border-0 shadow-sm rounded-2xl">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-5 md:p-6">
               <div className="w-10 h-10 bg-[#EEF2FF] rounded-xl flex items-center justify-center mb-4">
                 <Lock size={18} className="text-[#0052FF]" />
               </div>
@@ -178,7 +175,7 @@ export default function PolitiqueConfidentialitePage() {
                 Nous collectons uniquement les informations nécessaires à la création et à la gestion de votre compte client :
               </p>
               <Card className="border-0 shadow-sm rounded-2xl">
-                <CardContent className="p-6 space-y-3">
+                <CardContent className="p-4 sm:p-5 md:p-6 space-y-3">
                   {[
                     'Identifiants de compte : nom, prénom, email, mot de passe (haché), téléphone facultatif.',
                     'Données de profil et de facturation : coordonnées professionnelles, références de factures et historique des paiements.',
@@ -233,7 +230,7 @@ export default function PolitiqueConfidentialitePage() {
               </blockquote>
               <p className="text-on-surface-variant leading-relaxed">Elles peuvent être traitées par :</p>
               <Card className="border-0 shadow-sm rounded-2xl">
-                <CardContent className="p-6 space-y-3">
+                <CardContent className="p-4 sm:p-5 md:p-6 space-y-3">
                   {[
                     'Nos prestataires techniques (hébergement, authentification, messagerie) pour fournir le service.',
                     'Google Analytics pour les mesures d\'audience si vous avez accepté les cookies statistiques.',
@@ -338,7 +335,6 @@ export default function PolitiqueConfidentialitePage() {
       </div>
 
       <LegalFooter />
-      </div>
     </div>
   );
 }

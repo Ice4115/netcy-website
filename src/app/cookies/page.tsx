@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import PublicBackground from '@/components/PublicBackground';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { usePathname } from 'next/navigation';
 import { Download, ShieldCheck, BarChart2, Target, Save, Fingerprint } from 'lucide-react';
@@ -89,8 +88,6 @@ export default function CookiesPage() {
 
   return (
     <div className="min-h-screen">
-      <PublicBackground />
-      <div className="relative z-10">
       <LegalNav />
 
       {/* Hero */}
@@ -119,7 +116,7 @@ export default function CookiesPage() {
 
           {/* Strictly necessary — always on */}
           <Card className="border-0 shadow-sm rounded-2xl">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-5 md:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-[#EEF2FF] dark:bg-[#1a1f3d] rounded-xl flex items-center justify-center flex-shrink-0">
@@ -148,7 +145,7 @@ export default function CookiesPage() {
 
           {/* Performance & Analytics */}
           <Card className="border-0 shadow-sm rounded-2xl">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-5 md:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-[#EEF2FF] dark:bg-[#1a1f3d] rounded-xl flex items-center justify-center flex-shrink-0">
@@ -187,7 +184,7 @@ export default function CookiesPage() {
 
           {/* Targeting & Marketing */}
           <Card className="border-0 shadow-sm rounded-2xl">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-5 md:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-[#EEF2FF] dark:bg-[#1a1f3d] rounded-xl flex items-center justify-center flex-shrink-0">
@@ -243,8 +240,8 @@ export default function CookiesPage() {
 
       {/* Dark sovereignty banner */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pb-20">
-        <div className="bg-[#1A1C1E] rounded-3xl p-10 md:p-12">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+        <div className="bg-[#1A1C1E] rounded-3xl p-6 sm:p-8 md:p-12">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 sm:gap-6 lg:gap-8">
             <div className="flex-1 max-w-lg">
               <span className="inline-block text-[10px] font-semibold text-[#0052FF] uppercase tracking-widest mb-4 bg-[#0052FF]/15 px-3 py-1.5 rounded-full">
                 DIGITAL SOVEREIGNTY
@@ -277,7 +274,6 @@ export default function CookiesPage() {
       </div>
 
       <LegalFooter />
-      </div>
     </div>
   );
 }

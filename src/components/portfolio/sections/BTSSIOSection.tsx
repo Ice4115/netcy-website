@@ -55,7 +55,7 @@ export default function BTSSIOSection() {
         {OPTIONS.map((opt) => (
           <div
             key={opt.sigle}
-            className={`group relative rounded-2xl p-8 overflow-hidden transition-all duration-300 border ${opt.chosen
+            className={`group relative rounded-2xl p-5 md:p-8 overflow-hidden transition-all duration-300 border ${opt.chosen
                 ? 'bg-surface-container border-[#0052FF]/40 shadow-lg hover:-translate-y-1 hover:shadow-xl'
                 : 'bg-surface-container-lowest border-outline-variant/40 opacity-50 hover:opacity-60'
               }`}
@@ -81,7 +81,7 @@ export default function BTSSIOSection() {
 
             {/* Icon */}
             <div
-              className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 ${opt.chosen ? 'group-hover:scale-110' : ''}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center mb-4 md:mb-6 transition-transform duration-300 ${opt.chosen ? 'group-hover:scale-110' : ''}`}
               style={{
                 background: opt.chosen ? opt.colorLight : 'rgba(128,128,128,0.08)',
                 color: opt.chosen ? opt.color : 'var(--color-outline)',
@@ -113,7 +113,7 @@ export default function BTSSIOSection() {
       </div>
 
       {/* Pourquoi SISR */}
-      <div className="relative bg-surface-container-low border border-outline-variant rounded-2xl p-8 overflow-hidden">
+      <div className="relative bg-surface-container-low border border-outline-variant rounded-2xl p-5 md:p-8 overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ background: 'radial-gradient(ellipse at top left, rgba(0,82,255,0.06), transparent 70%)' }}

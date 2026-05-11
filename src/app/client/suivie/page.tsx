@@ -179,7 +179,7 @@ export default function SuiviePage() {
         </div>
 
         {filteredProjects.length === 0 ? (
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-12 text-center">
+          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-6 sm:p-8 md:p-12 text-center">
             <p className="text-gray-400 text-lg">Aucun projet dans cette catégorie</p>
           </div>
         ) : (

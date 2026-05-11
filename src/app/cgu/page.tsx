@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import PublicBackground from '@/components/PublicBackground';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { usePathname } from 'next/navigation';
 import { Download, FileText } from 'lucide-react';
@@ -95,8 +94,6 @@ export default function CGUPage() {
 
   return (
     <div className="min-h-screen">
-      <PublicBackground />
-      <div className="relative z-10">
       <LegalNav />
 
       {/* Hero */}
@@ -161,7 +158,7 @@ export default function CGUPage() {
             {/* 01 */}
             <section id="objet" className="space-y-5">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-6xl text-outline select-none">01</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-outline select-none">01</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Objet et champ d'application</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -170,7 +167,7 @@ export default function CGUPage() {
                 « le Site ») ainsi qu'à l'espace client sécurisé, exploités par :
               </p>
               <Card className="border-0 shadow-sm rounded-2xl">
-                <CardContent className="p-6 space-y-2 text-on-surface-variant text-sm leading-relaxed">
+                <CardContent className="p-4 sm:p-5 md:p-6 space-y-2 text-on-surface-variant text-sm leading-relaxed">
                   <p><span className="font-semibold text-on-surface">Raison sociale :</span> NETCY — Auto-entrepreneur (Micro-entreprise)</p>
                   <p><span className="font-semibold text-on-surface">Responsable :</span> Jung Jean-Marie</p>
                   <p><span className="font-semibold text-on-surface">Adresse :</span> 145 chemin du pan perdu, 1 clos des mylord, 13160 Châteaurenard, France</p>
@@ -191,7 +188,7 @@ export default function CGUPage() {
             {/* 02 */}
             <section id="acces" className="space-y-5">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-6xl text-outline select-none">02</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-outline select-none">02</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Accès au site et compte utilisateur</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -200,7 +197,7 @@ export default function CGUPage() {
                 personnes physiques majeures ou aux représentants légaux de personnes morales.
               </p>
               <Card className="border-0 shadow-sm rounded-2xl">
-                <CardContent className="p-6 space-y-3">
+                <CardContent className="p-4 sm:p-5 md:p-6 space-y-3">
                   {[
                     'Les informations fournies lors de l\'inscription doivent être exactes, complètes et tenues à jour. Toute information erronée peut entraîner la suspension du compte.',
                     'Les identifiants de connexion (email et mot de passe) sont strictement personnels et confidentiels. Ils ne doivent pas être communiqués à des tiers.',
@@ -215,7 +212,7 @@ export default function CGUPage() {
             {/* 03 */}
             <section id="usage" className="space-y-5">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-6xl text-outline select-none">03</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-outline select-none">03</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Règles d'utilisation acceptable</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -250,7 +247,7 @@ export default function CGUPage() {
             {/* 04 */}
             <section id="pi" className="space-y-5">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-6xl text-outline select-none">04</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-outline select-none">04</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Propriété Intellectuelle</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -260,7 +257,7 @@ export default function CGUPage() {
                 international de la propriété intellectuelle.
               </p>
               <Card className="border-0 shadow-sm rounded-2xl">
-                <CardContent className="p-6 space-y-3">
+                <CardContent className="p-4 sm:p-5 md:p-6 space-y-3">
                   {[
                     'Toute reproduction, représentation, modification, publication, adaptation ou exploitation, totale ou partielle, des éléments du Site, sans autorisation écrite préalable de NETCY, est strictement interdite.',
                     'L\'Utilisateur ne dispose que d\'un droit de consultation non exclusif, non cessible et révocable à tout moment.',
@@ -274,7 +271,7 @@ export default function CGUPage() {
             {/* 05 */}
             <section id="donnees" className="space-y-5">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-6xl text-outline select-none">05</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-outline select-none">05</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Données personnelles et cookies</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -308,7 +305,7 @@ export default function CGUPage() {
             {/* 06 */}
             <section id="dispo" className="space-y-5">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-6xl text-outline select-none">06</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-outline select-none">06</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Disponibilité et sécurité</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -317,7 +314,7 @@ export default function CGUPage() {
                 mise à jour, incidents techniques ou de sécurité.
               </p>
               <Card className="border-0 shadow-sm rounded-2xl">
-                <CardContent className="p-6 space-y-3">
+                <CardContent className="p-4 sm:p-5 md:p-6 space-y-3">
                   {[
                     'Les communications entre le navigateur et le serveur sont chiffrées via TLS (HTTPS). Les mots de passe sont hachés avec un algorithme sécurisé (bcrypt ou équivalent via Supabase Auth).',
                     'NETCY surveille les accès suspects et peut bloquer toute IP ou compte présentant un comportement anormal (tentatives de force brute, injections, etc.).',
@@ -331,7 +328,7 @@ export default function CGUPage() {
             {/* 07 */}
             <section id="respo" className="space-y-5">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-6xl text-outline select-none">07</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-outline select-none">07</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Limitation de responsabilité</h2>
               </div>
               <blockquote className="border-l-4 border-[#0052FF] pl-5 py-2 text-on-surface-variant italic leading-relaxed bg-surface-container-low rounded-r-xl">
@@ -360,7 +357,7 @@ export default function CGUPage() {
             {/* 08 */}
             <section id="final" className="space-y-5">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-6xl text-outline select-none">08</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-outline select-none">08</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Dispositions finales</h2>
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -404,7 +401,6 @@ export default function CGUPage() {
       </div>
 
       <LegalFooter />
-      </div>
     </div>
   );
 }

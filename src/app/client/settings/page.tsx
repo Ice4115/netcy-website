@@ -146,13 +146,13 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-12">
-          <h1 className="text-5xl font-bold text-white mb-2">
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
             <span className="bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] bg-clip-text text-transparent">Paramètres</span>
           </h1>
-          <p className="text-gray-400 text-lg">Gérez vos préférences et votre compte</p>
+          <p className="text-gray-400 text-base sm:text-lg">Gérez vos préférences et votre compte</p>
         </div>
 
         {message && (
@@ -166,7 +166,7 @@ export default function SettingsPage() {
         )}
 
         <div className="space-y-8">
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-8">
+          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-4 sm:p-6 md:p-8">
             <div className="flex items-center gap-3 mb-6">
               <User className="text-[#8FA5FF]" size={24} animate={true} loop={true} loopDelay={5000} />
               <h2 className="text-2xl font-bold text-white">Informations Personnelles</h2>
@@ -221,7 +221,7 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg font-semibold hover:from-[#7A4FFF] hover:to-[#8A9FFF] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg font-semibold hover:from-[#7A4FFF] hover:to-[#8A9FFF] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Save size={20} animate={true} loop={true} loopDelay={5000} />
                 {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
@@ -229,7 +229,7 @@ export default function SettingsPage() {
             </form>
           </div>
 
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-8">
+          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-[#6F3FFF]/30 rounded-2xl p-4 sm:p-6 md:p-8">
             <div className="flex items-center gap-3 mb-6">
               <Lock className="text-[#8FA5FF]" size={24} animate={true} loop={true} loopDelay={5000} />
               <h2 className="text-2xl font-bold text-white">Sécurité</h2>
@@ -278,7 +278,7 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={saving || !passwordData.newPassword || !passwordData.confirmPassword}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg font-semibold hover:from-[#7A4FFF] hover:to-[#8A9FFF] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] text-white rounded-lg font-semibold hover:from-[#7A4FFF] hover:to-[#8A9FFF] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Lock size={20} animate={true} loop={true} loopDelay={5000} />
                 {saving ? 'Mise à jour...' : 'Mettre à jour le mot de passe'}
@@ -286,7 +286,7 @@ export default function SettingsPage() {
             </form>
           </div>
 
-          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-red-500/30 rounded-2xl p-8">
+          <div className="bg-gradient-to-br from-[#0f0a20] to-[#1a0f3a] border border-red-500/30 rounded-2xl p-4 sm:p-6 md:p-8">
             <div className="flex items-center gap-3 mb-6">
               <LogOut className="text-red-400" size={24} animate={true} loop={true} loopDelay={5000} />
               <h2 className="text-2xl font-bold text-white">Déconnexion</h2>

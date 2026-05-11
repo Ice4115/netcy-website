@@ -35,7 +35,7 @@ export default function HeroSection() {
           </div>
 
           {/* Main heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6 animate-fade-up animation-delay-100">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-5 md:mb-6 animate-fade-up animation-delay-100">
             <span className="text-on-surface">Ingénierie des </span>
             <span
               className="text-transparent bg-clip-text"
@@ -54,7 +54,7 @@ export default function HeroSection() {
             <span className="text-on-surface">.</span>
           </h1>
 
-          <p className="text-lg text-on-surface-variant mb-10 max-w-xl leading-relaxed animate-fade-up animation-delay-200">
+          <p className="text-base sm:text-lg text-on-surface-variant mb-6 md:mb-10 max-w-xl leading-relaxed animate-fade-up animation-delay-200">
             Je conçois, déploie et sécurise des réseaux d&apos;entreprise robustes. Étudiant <strong className="text-on-surface font-semibold">Major de promotion</strong> en BTS SIO (SISR), je suis prêt à intégrer vos équipes pour des missions à fort impact.
           </p>
 
@@ -68,8 +68,24 @@ export default function HeroSection() {
             </a>
           </div>
 
+          {/* Mobile profile image */}
+          <div className="lg:hidden flex justify-center mt-6 animate-fade-up animation-delay-300">
+            <div
+              className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shadow-xl"
+              style={{ border: '2px solid rgba(0,82,255,0.2)' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-surface/60 via-transparent to-transparent z-10" />
+              <Image
+                src="/images/profile.png"
+                alt="Jung Jean-Marie"
+                fill
+                className="object-cover object-top grayscale"
+              />
+            </div>
+          </div>
+
           {/* Stats */}
-          <div className="mt-8 md:mt-14 flex flex-wrap items-center gap-6 md:gap-8 animate-fade-up animation-delay-400">
+          <div className="mt-6 md:mt-14 flex flex-wrap items-center gap-5 md:gap-8 animate-fade-up animation-delay-400">
             {STATS.map((stat, i) => (
               <React.Fragment key={i}>
                 {i > 0 && <div className="w-px h-10 bg-outline-variant hidden sm:block" />}

@@ -4,13 +4,13 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig = {
-  turbopack: {
-    root: __dirname,
-  },
+  output: 'standalone',
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
-  output: 'standalone',
+  turbopack: {
+    root: __dirname,
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -32,54 +32,37 @@ const nextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
+  webpack: (config) => {
+    config.externals = [...(config.externals || []), { canvas: 'canvas' }];
+    return config;
+  },
   async headers() {
     return [
       {
         source: '/',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, s-maxage=3600, stale-while-revalidate=86400',
-          },
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
+          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
         ],
       },
       {
         source: '/:path*',
         headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
         ],
       },
       {
         source: '/images/:path*',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {
         source: '/_next/static/:path*',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
     ];

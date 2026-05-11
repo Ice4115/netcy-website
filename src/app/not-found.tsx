@@ -73,15 +73,15 @@ export default function NotFound() {
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
         <div className="flex flex-col items-center text-center max-w-2xl w-full gap-6">
 
-          <h1 className="text-9xl md:text-[12rem] font-bold leading-none">
+          <h1 className="text-7xl sm:text-9xl md:text-[12rem] font-bold leading-none">
             <GradientText colors={['#6F3FFF', '#8FA5FF', '#6F3FFF', '#7A8FFF', '#6F3FFF']}>
               404
             </GradientText>
           </h1>
 
-          <h2 className="text-2xl md:text-4xl font-bold">
+          <h2 className="text-xl sm:text-2xl md:text-4xl font-bold leading-snug">
             Cette page a fait un{' '}
-            <code className="bg-white/10 rounded px-2 py-0.5 text-[#8FA5FF] font-mono text-xl md:text-2xl">
+            <code className="bg-white/10 rounded px-2 py-0.5 text-[#8FA5FF] font-mono text-base sm:text-xl md:text-2xl break-all">
               git push --delete
             </code>
           </h2>
@@ -101,11 +101,11 @@ export default function NotFound() {
               <span className="w-3 h-3 rounded-full bg-green-500/80" />
               <span className="ml-2 text-gray-500 text-xs">netcy — bash</span>
             </div>
-            <div className="p-4 space-y-1 min-h-[120px]">
+            <div className="p-4 space-y-1 min-h-[120px] overflow-x-auto">
               {fakeLines.slice(0, visibleLines).map((line, i) => (
                 <p
                   key={i}
-                  className={line.startsWith('>') ? 'text-red-400 pl-2' : 'text-[#8FA5FF]'}
+                  className={`break-all ${line.startsWith('>') ? 'text-red-400 pl-2' : 'text-[#8FA5FF]'}`}
                 >
                   {line}
                 </p>
@@ -124,8 +124,7 @@ export default function NotFound() {
 
           <Link
             href="/"
-            className="inline-flex items-center justify-center bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] rounded-lg font-semibold transition shadow-lg shadow-violet-500/30"
-            style={{ width: '200px', height: '50px', fontSize: '16px' }}
+            className="inline-flex items-center justify-center px-8 py-3.5 text-base w-full sm:w-auto max-w-xs bg-gradient-to-r from-[#6F3FFF] to-[#7A8FFF] hover:from-[#7A4FFF] hover:to-[#8A9FFF] rounded-lg font-semibold transition shadow-lg shadow-violet-500/30"
           >
             ← Retour à la réalité
           </Link>

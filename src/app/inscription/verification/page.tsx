@@ -104,7 +104,7 @@ function VerificationInner() {
       </div>
 
       {/* ── Right panel ── */}
-      <div className="flex-1 flex flex-col justify-between p-8 lg:p-16 bg-surface-container-lowest">
+      <div className="flex-1 flex flex-col justify-between p-4 sm:p-8 lg:p-16 bg-surface-container-lowest">
         <div className="flex justify-between items-center">
           <Link href="/" className="lg:hidden">
             <img src="/images/logo_netcy_t.svg" alt="NETCY" className="h-12 w-auto" />
@@ -235,21 +235,18 @@ function VerificationInner() {
 
         {/* Footer */}
         <div className="max-w-md mx-auto w-full">
-          <div className="flex items-center justify-between text-xs text-outline-variant pt-6">
-            <Link href="/#contact" className="hover:text-outline transition-colors underline underline-offset-2">
-              Centre d'aide
-            </Link>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-outline-variant pt-6 pr-14">
+            <Link href="/#contact" className="hover:text-outline transition-colors underline underline-offset-2">Centre d'aide</Link>
             <span>·</span>
-            <Link href="/politique-confidentialite" className="hover:text-outline transition-colors underline underline-offset-2">
-              Confidentialité
-            </Link>
-            <span className="ml-auto flex items-center gap-1">🌐 FR (FR)</span>
+            <Link href="/politique-confidentialite" className="hover:text-outline transition-colors underline underline-offset-2">Confidentialité</Link>
+            <span>·</span>
+            <span className="flex items-center gap-1">🌐 FR (FR)</span>
           </div>
         </div>
       </div>
 
       {/* System status badge */}
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="hidden sm:block fixed bottom-4 right-4 z-50">
         <div className="flex items-center gap-2 bg-[#1A1C1E] rounded-full px-4 py-2 text-xs font-medium text-white">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
           SYSTÈME : OPÉRATIONNEL

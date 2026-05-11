@@ -212,7 +212,7 @@ export default function ContactSection() {
             <button
               type="submit"
               disabled={status === 'loading' || !privacyAccepted}
-              className="btn-primary px-8 py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary w-full sm:w-auto px-8 py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {status === 'loading' ? 'Envoi en cours...' : 'Envoyer le message'}
             </button>

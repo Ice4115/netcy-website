@@ -22,7 +22,7 @@ export default function ContactSuccess() {
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       {/* Logo */}
-      <header className="pt-8 px-8">
+      <header className="pt-6 sm:pt-8 px-4 sm:px-8">
         <Link href="/" className="font-display font-bold text-xl text-on-surface">NETCY</Link>
       </header>
 
@@ -46,7 +46,7 @@ export default function ContactSuccess() {
           {/* Text */}
           <div className="space-y-3">
             <span className="chip text-[#0052FF] bg-[#EEF2FF] dark:bg-[#1a1f3d]">VÉRIFICATION ENVOYÉE</span>
-            <h1 className="font-display font-extrabold text-4xl text-on-surface">Email envoyé</h1>
+            <h1 className="font-display font-extrabold text-2xl sm:text-3xl md:text-4xl text-on-surface">Email envoyé</h1>
             <p className="text-on-surface-variant leading-relaxed">
               Nous avons envoyé un lien de confirmation sécurisé à votre adresse email. Veuillez vérifier votre boîte de réception pour activer votre compte et commencer avec NETCY.
             </p>
@@ -74,7 +74,7 @@ export default function ContactSuccess() {
       </main>
 
       {/* Footer */}
-      <footer className="pb-8 text-center space-y-3">
+      <footer className="pb-6 sm:pb-8 px-4 text-center space-y-3">
         <p className="text-xs font-semibold text-outline uppercase tracking-widest">SUPPORT DIGITAL ARCHITECTURE</p>
         <div className="flex items-center justify-center gap-3 text-xs text-outline-variant">
           <Link href="/politique-confidentialite" className="hover:text-outline transition-colors">Protocole de confidentialité</Link>

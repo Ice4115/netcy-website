@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import PublicBackground from '@/components/PublicBackground';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { usePathname } from 'next/navigation';
 import { Check, ArrowRight, FileText, Download } from 'lucide-react';
@@ -82,8 +81,6 @@ export default function CGVPage() {
 
   return (
     <div className="min-h-screen">
-      <PublicBackground />
-      <div className="relative z-10">
       <LegalNav />
 
       {/* Hero */}
@@ -155,7 +152,7 @@ export default function CGVPage() {
             {/* 01 — Informations légales du vendeur */}
             <section id="vendeur" className="space-y-6">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-5xl text-outline">01</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl text-outline">01</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Informations légales du vendeur</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -163,7 +160,7 @@ export default function CGVPage() {
                 auprès de NETCY) et le prestataire suivant :
               </p>
               <Card className="border border-surface-container shadow-none rounded-2xl">
-                <CardContent className="p-6 grid sm:grid-cols-2 gap-4 text-sm">
+                <CardContent className="p-4 sm:p-5 md:p-6 grid sm:grid-cols-2 gap-4 text-sm">
                   {[
                     ['Dénomination', 'NETCY'],
                     ['Forme juridique', 'Auto-entrepreneur (Micro-entreprise)'],
@@ -193,7 +190,7 @@ export default function CGVPage() {
             {/* 02 — Services & Processus de commande */}
             <section id="services" className="space-y-6">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-5xl text-outline">02</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl text-outline">02</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Services proposés & Processus de commande</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -252,7 +249,7 @@ export default function CGVPage() {
             {/* 03 — Prix, Devis & TVA */}
             <section id="prix" className="space-y-6">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-5xl text-outline">03</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl text-outline">03</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Prix, Devis & TVA</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -299,7 +296,7 @@ export default function CGVPage() {
             {/* 04 — Paiement & Acomptes */}
             <section id="paiement" className="space-y-6">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-5xl text-outline">04</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl text-outline">04</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Modalités de paiement & Acomptes</h2>
               </div>
 
@@ -365,7 +362,7 @@ export default function CGVPage() {
             {/* 05 — Délais & Livraison */}
             <section id="delais" className="space-y-6">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-5xl text-outline">05</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl text-outline">05</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Délais d'exécution & Livraison</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -395,7 +392,7 @@ export default function CGVPage() {
             {/* 06 — Propriété Intellectuelle & Cession de droits */}
             <section id="pi" className="space-y-6">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-5xl text-outline">06</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl text-outline">06</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Propriété Intellectuelle & Cession de droits</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -455,7 +452,7 @@ export default function CGVPage() {
             {/* 07 — Garanties & SAV */}
             <section id="garanties" className="space-y-6">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-5xl text-outline">07</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl text-outline">07</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Garanties, SAV & Limitation de responsabilité</h2>
               </div>
               <p className="text-on-surface-variant leading-relaxed">
@@ -511,7 +508,7 @@ export default function CGVPage() {
             {/* 08 — Résiliation, Force majeure & Litiges */}
             <section id="resiliation" className="space-y-6">
               <div className="flex items-baseline gap-4">
-                <span className="font-display font-extrabold text-5xl text-outline">08</span>
+                <span className="font-display font-extrabold text-4xl sm:text-5xl text-outline">08</span>
                 <h2 className="font-display font-bold text-2xl text-on-surface">Résiliation, Force majeure & Règlement des litiges</h2>
               </div>
 
@@ -614,7 +611,6 @@ export default function CGVPage() {
       </div>
 
       <LegalFooter />
-      </div>
     </div>
   );
 }

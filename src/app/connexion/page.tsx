@@ -240,7 +240,7 @@ export default function ConnexionPage() {
 
         {/* Footer links */}
         <div className="max-w-md mx-auto w-full">
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-outline-variant pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-outline-variant pt-2 pr-14 sm:pr-0">
             <Link href="/politique-confidentialite" className="hover:text-outline transition-colors">Politique de Confidentialité</Link>
             <span>·</span>
             <Link href="/cgu" className="hover:text-outline transition-colors">Conditions d'utilisation</Link>
@@ -252,7 +252,7 @@ export default function ConnexionPage() {
       </div>
 
       {/* System status badge */}
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="hidden sm:block fixed bottom-4 right-4 z-50">
         <div className="flex items-center gap-2 bg-surface-container-highest rounded-full px-4 py-2 shadow-md text-xs font-medium text-on-surface-variant">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
           Système : <span className="text-green-600 dark:text-green-400 font-semibold">Opérationnel</span>
