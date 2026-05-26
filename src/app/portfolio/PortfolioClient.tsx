@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/portfolio/Header';
 import HeroSection from '@/components/portfolio/sections/HeroSection';
+import AboutSection from '@/components/portfolio/sections/AboutSection';
 import ExpertiseSection from '@/components/portfolio/sections/ExpertiseSection';
 import BTSSIOSection from '@/components/portfolio/sections/BTSSIOSection';
 import Image from 'next/image';
@@ -31,6 +32,10 @@ export default function PortfolioClient() {
         <HeroSection />
 
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-12 md:py-24 space-y-20 md:space-y-40">
+          <AnimatedContent distance={40} duration={0.7}>
+            <AboutSection />
+          </AnimatedContent>
+
           <AnimatedContent distance={40} duration={0.7}>
             <ExpertiseSection />
           </AnimatedContent>
