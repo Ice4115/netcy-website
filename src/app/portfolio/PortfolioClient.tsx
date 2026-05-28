@@ -19,7 +19,7 @@ const SkillsTableSection = dynamic(() => import('@/components/portfolio/sections
 const ContactSection = dynamic(() => import('@/components/portfolio/sections/ContactSection'));
 const PortfolioModals = dynamic(() => import('@/components/portfolio/PortfolioModals'), { ssr: false });
 
-type ModalKey = 'stage' | 'projet' | 'veille1' | 'veille2' | 'e5projet1' | 'e5projet2' | null;
+type ModalKey = 'stage' | 'projet' | 'veille1' | 'veille2' | null;
 
 export default function PortfolioClient() {
   const [openModal, setOpenModal] = useState<ModalKey>(null);

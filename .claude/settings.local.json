@@ -14,7 +14,13 @@
       "Bash(npx shadcn@latest add @animate-ui/components-community-notification-list --yes)",
       "Bash(npx shadcn@latest add @animate-ui/components-community-management-bar --yes)",
       "Bash(npm run:*)",
-      "Bash(git restore *)"
+      "Bash(git restore *)",
+      "Bash(cp \"Temp/Rapport_Stage_Jean-Marie_Jung_Infoboost.pdf\" \"public/Stages/\")",
+      "Bash(cp \"Temp/Rapport_Stage_Jean-Marie_Jung_Devensys.pdf\" \"public/Stages/\")",
+      "Bash(pdftotext -layout \"Temp/Rapport_Stage_Jean-Marie_Jung_Infoboost.pdf\" -)",
+      "Bash(pdftotext -layout \"Temp/Rapport_Stage_Jean-Marie_Jung_Devensys.pdf\" -)",
+      "Bash(pdftotext -layout \"Temp/Situtation1_Jung_JeanMarie_SISR.pdf\" -)",
+      "Bash(pdftotext -layout \"Temp/Situtation2_Jung_JeanMarie_SISR.pdf\" -)"
     ]
   }
 }

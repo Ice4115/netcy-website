@@ -7,6 +7,8 @@ import Image from 'next/image';
 export default function CVSection() {
   const [showCV, setShowCV] = useState(false);
 
+  const handleToggleCV = () => setShowCV((v) => !v);
+
   const handleDownloadCV = () => {
     const photoUrl = window.location.origin + '/images/profile.png';
     const htmlContent = `<!DOCTYPE html>
@@ -131,7 +133,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
 
         <div className="flex flex-col sm:flex-row gap-4 shrink-0">
           <button
-            onClick={() => setShowCV(!showCV)}
+            onClick={handleToggleCV}
             className="hidden md:flex group items-center justify-center gap-3 px-6 py-3 bg-surface-container border border-outline-variant hover:border-outline hover:bg-surface-container-high text-on-surface font-medium rounded-lg transition-all duration-300"
           >
             {showCV
@@ -151,8 +153,16 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
         </div>
       </div>
 
-      {showCV && (
-        <div className="hidden md:block mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div
+        aria-hidden={!showCV}
+        className={`hidden md:grid duration-500 ease-out ${
+          showCV
+            ? 'grid-rows-[1fr] opacity-100 mt-8'
+            : 'grid-rows-[0fr] opacity-0 mt-0 pointer-events-none'
+        }`}
+        style={{ transitionProperty: 'grid-template-rows, opacity, margin-top' }}
+      >
+        <div className="overflow-hidden min-h-0">
           {/* Inline CV preview — always white/light as it's a print document */}
           <div className="bg-white text-black rounded-xl shadow-2xl border border-outline-variant overflow-hidden" style={{ fontFamily: "'Segoe UI', Arial, sans-serif" }}>
             <div className="max-w-4xl mx-auto flex flex-col min-h-[800px] border border-slate-200">
@@ -302,7 +312,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
             </div>
           </div>
         </div>
-      )}
+      </div>
     </section>
   );
 }

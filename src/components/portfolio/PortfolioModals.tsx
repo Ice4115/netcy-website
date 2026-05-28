@@ -3,7 +3,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 
-type ModalKey = 'stage' | 'projet' | 'veille1' | 'veille2' | 'e5projet1' | 'e5projet2' | null;
+type ModalKey = 'stage' | 'projet' | 'veille1' | 'veille2' | null;
 
 interface PortfolioModalsProps {
   openModal: ModalKey;
@@ -103,56 +103,6 @@ export default function PortfolioModals({ openModal, setOpenModal }: PortfolioMo
               <TechBadge key={i} tech={t} />
             ))}
           </div>
-        </Section>
-      </PremiumModal>
-
-      <PremiumModal
-        isOpen={openModal === 'e5projet1'}
-        onClose={() => setOpenModal(null)}
-        title="Gestion de Parc Informatique"
-        subtitle="Projet E5 — BTS SIO SISR"
-      >
-        <Section title="Contexte & Problématique">
-          <p>
-            Création d&apos;un outil centralisé pour le suivi de l&apos;inventaire matériel et logiciel d&apos;une entreprise, incluant la gestion des interventions techniques (ticketing) et la maintenance préventive.
-          </p>
-        </Section>
-        <Section title="Gouvernance et Service (Compétences)">
-          <ul className="space-y-2 list-none p-0">
-            <li><span className="text-blue-500 mr-2">›</span><strong className="text-on-surface">B1.1 - Gérer le patrimoine informatique :</strong> Audit complet des assets réseau.</li>
-            <li><span className="text-blue-500 mr-2">›</span><strong className="text-on-surface">B1.4 - Travailler en mode projet :</strong> Planification, jalons et livrables.</li>
-            <li><span className="text-blue-500 mr-2">›</span><strong className="text-on-surface">B1.5 - Mettre à disposition un service :</strong> Interface CRUD pour techniciens.</li>
-          </ul>
-        </Section>
-        <Section title="Solution Technique">
-          <p>
-            Application web développée en <strong className="text-on-surface">PHP / MySQL</strong> avec interface <strong className="text-on-surface">Bootstrap</strong>. Module de Ticketing (Ouvert, En cours, Clos), alertes automatiques et fonctionnalités d&apos;export PDF pour les rapports d&apos;interventions.
-          </p>
-        </Section>
-      </PremiumModal>
-
-      <PremiumModal
-        isOpen={openModal === 'e5projet2'}
-        onClose={() => setOpenModal(null)}
-        title="Infrastructure Réseau Sécurisée"
-        subtitle="Projet E5 — BTS SIO SISR"
-      >
-        <Section title="Topologie & Enjeux">
-          <p>
-            Conception et déploiement d&apos;une infrastructure réseau sécurisée pour une PME. L&apos;objectif était d&apos;isoler les flux critiques (Admin, Prod, Invités), de sécuriser l&apos;accès à Internet via pare-feu, et de permettre un télétravail sécurisé.
-          </p>
-        </Section>
-        <Section title="Cybersécurité & Infrastructure (Compétences)">
-          <ul className="space-y-2 list-none p-0">
-            <li><span className="text-emerald-500 mr-2">›</span><strong className="text-on-surface">B1.1 - Gérer le patrimoine :</strong> Configuration routeurs et switchs virtuels.</li>
-            <li><span className="text-emerald-500 mr-2">›</span><strong className="text-on-surface">B1.2 - Répondre aux incidents :</strong> Documentation et procédures de secours.</li>
-            <li><span className="text-emerald-500 mr-2">›</span><strong className="text-on-surface">B3.1 - Protéger les données :</strong> Règles de firewalling et tunnels VPN chiffrés.</li>
-          </ul>
-        </Section>
-        <Section title="Déploiement Technique">
-          <p>
-            Utilisation d&apos;un Firewall <strong className="text-on-surface">pfSense</strong> (Filtrage strict, NAT, DHCP), séparation en <strong className="text-on-surface">VLANs</strong> dédiés, accès distant par VPN <strong className="text-on-surface">OpenVPN</strong> avec certificats PKI locale, et supervision continue grâce à <strong className="text-on-surface">Nagios</strong>. Validation de l&apos;architecture via <strong className="text-on-surface">Packet Tracer</strong>.
-          </p>
         </Section>
       </PremiumModal>
     </>

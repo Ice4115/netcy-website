@@ -97,7 +97,7 @@ export default function ContactSection() {
 
           {/* GitHub card */}
           <a
-            href="https://github.com/jean-marie-jung"
+            href="https://github.com/Ice4115"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-start gap-4 p-5 bg-surface-container-low border border-outline-variant rounded-xl hover:bg-surface-container hover:border-on-surface/40 hover:-translate-y-0.5 transition-all duration-300"

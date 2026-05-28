@@ -2,7 +2,21 @@
 
 import React from 'react';
 
-const CASE_STUDIES = [
+type CaseStudy = {
+  num: string;
+  title: string;
+  context: string;
+  problem: string;
+  solution: string;
+  tech: string[];
+  link?: string;
+  pdf?: string;
+  gradient: string;
+  glow: string;
+  accent: string;
+};
+
+const CASE_STUDIES: CaseStudy[] = [
   {
     num: '01',
     title: 'Hôtel Neptune',
@@ -17,24 +31,24 @@ const CASE_STUDIES = [
   },
   {
     num: '02',
-    title: 'Gestion de Parc Informatique',
-    context: 'Projet E5 (BTS SIO)',
-    problem: "Nécessité d'un outil centralisé pour le suivi du matériel, des tickets d'interventions et la planification de la maintenance préventive.",
-    solution: "Création d'une application web CRUD avec tableau de bord interactif, système de rôles (Utilisateur/Technicien) et export PDF des rapports.",
-    tech: ['PHP', 'MySQL', 'JavaScript', 'Bootstrap', 'HTML/CSS'],
-    link: 'e5projet1',
+    title: 'Infrastructure Web Haute Disponibilité',
+    context: 'Situation Professionnelle N°1 · E6 SISR',
+    problem: "Site web interne hébergé sur un serveur unique : point de défaillance critique (SPOF), aucune redondance, aucune supervision. Toute panne entraînait une interruption totale du service et les équipes IT n'intervenaient qu'en mode réactif.",
+    solution: "Déploiement d'une architecture HA avec deux serveurs Apache redondants, répartition de charge HAProxy, IP virtuelle gérée par Keepalived (VRRP), synchronisation des fichiers via lsyncd + rsync, chiffrement HTTPS (SSL/TLS) et supervision centralisée Zabbix 6.4 avec agents sur tous les nœuds.",
+    tech: ['Apache HTTPD', 'HAProxy', 'Keepalived', 'lsyncd', 'Zabbix 6.4', 'Rocky Linux'],
+    pdf: '/Situations/Situation1_Jung_JeanMarie_SISR.pdf',
     gradient: 'linear-gradient(135deg, #7c3aed, #db2777)',
     glow: 'rgba(124,58,237,0.15)',
     accent: '#7c3aed',
   },
   {
     num: '03',
-    title: 'Infrastructure Réseau Sécurisée PME',
-    context: 'Architecture E5 (BTS SIO)',
-    problem: "Cloisonnement des flux réseaux (Admin, Prod, Invités), accès distant sécurisé et manque de visibilité sur l'état du réseau.",
-    solution: "Déploiement de VLANs dédiés, firewall pfSense avec filtrage strict, VPN OpenVPN pour le télétravail, DHCP/DNS, et supervision via Nagios.",
-    tech: ['pfSense', 'VLANs', 'OpenVPN', 'Nagios', 'Packet Tracer'],
-    link: 'e5projet2',
+    title: 'Refonte SI Local & Sécurisation des Accès',
+    context: 'Situation Professionnelle N°2 · E6 SISR',
+    problem: "Suite à l'agrandissement de NETCY (annexion d'un bâtiment, ~20 nouveaux collaborateurs), l'AD + DNS + DHCP reposait sur un serveur unique. Une panne récente avait coupé le service 2h. Aucune redondance, DNS interne minimal, DHCP non distribué entre VLANs.",
+    solution: "Mise en place d'un Active Directory Windows Server 2022 avec contrôleur de domaine secondaire (réplication multi-maître), DNS interne BIND avec zone dédiée, DHCP en Failover Master/Slave, DHCP Relay sur le pare-feu pour desservir tous les VLANs, et durcissement firewall (iptables + pfSense).",
+    tech: ['Active Directory', 'BIND DNS', 'DHCP Failover', 'pfSense', 'Rocky Linux 9', 'Windows Server'],
+    pdf: '/Situations/Situation2_Jung_JeanMarie_SISR.pdf',
     gradient: 'linear-gradient(135deg, #059669, #0d9488)',
     glow: 'rgba(5,150,105,0.15)',
     accent: '#059669',
@@ -42,6 +56,14 @@ const CASE_STUDIES = [
 ];
 
 export default function CaseStudiesSection({ onOpenModal }: { onOpenModal: (key: string) => void }) {
+  const handleClick = (study: CaseStudy) => {
+    if (study.pdf) {
+      window.open(study.pdf, '_blank', 'noopener,noreferrer');
+    } else if (study.link) {
+      onOpenModal(study.link);
+    }
+  };
+
   return (
     <section id="projets" className="relative scroll-mt-32">
       <div className="mb-16">
@@ -57,7 +79,7 @@ export default function CaseStudiesSection({ onOpenModal }: { onOpenModal: (key:
             key={i}
             className="group relative bg-surface-container-low border border-outline-variant rounded-2xl overflow-hidden hover:bg-surface-container hover:border-outline transition-all duration-300 cursor-pointer hover:-translate-y-0.5 hover:shadow-lg animate-fade-up"
             style={{ animationDelay: `${i * 100}ms` }}
-            onClick={() => onOpenModal(study.link)}
+            onClick={() => handleClick(study)}
           >
             {/* Gradient top bar */}
             <div className="h-1 w-full" style={{ background: study.gradient }} />
@@ -76,7 +98,7 @@ export default function CaseStudiesSection({ onOpenModal }: { onOpenModal: (key:
                     {/* Number */}
                     <div
                       className="text-6xl font-black leading-none mb-3 select-none"
-                      style={{ color: study.accent, opacity: 0.12 }}
+                      style={{ color: study.accent, opacity: 0.4 }}
                     >
                       {study.num}
                     </div>
@@ -130,10 +152,21 @@ export default function CaseStudiesSection({ onOpenModal }: { onOpenModal: (key:
 
               <div className="mt-6 pt-4 border-t border-outline-variant flex justify-end">
                 <span
-                  className="text-xs font-bold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1"
+                  className="text-xs font-bold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1"
                   style={{ color: study.accent }}
                 >
-                  Voir les détails →
+                  {study.pdf ? (
+                    <>
+                      Lire le rapport
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 3h7v7" />
+                        <path d="M10 14L21 3" />
+                        <path d="M21 14v7H3V3h7" />
+                      </svg>
+                    </>
+                  ) : (
+                    'Voir les détails →'
+                  )}
                 </span>
               </div>
             </div>

@@ -173,7 +173,7 @@ th, td { border: 1px solid #cbd5e1; padding: 8px 10px; }
       <div className="hidden md:block bg-surface-container-lowest border border-outline-variant rounded-xl overflow-visible shadow-sm -mx-4 lg:-mx-8">
 
         {/* Table Header Info */}
-        <div className="flex flex-col md:flex-row items-center justify-between p-4 bg-surface-container-low border-b border-outline-variant gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between p-4 bg-surface-container-low border-b border-outline-variant gap-4 rounded-t-xl">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-1">
             <div className="flex flex-col justify-center">
               <span className="text-outline uppercase tracking-widest font-bold mb-1 text-[10px]">Candidat</span>
@@ -246,18 +246,20 @@ th, td { border: 1px solid #cbd5e1; padding: 8px 10px; }
           </thead>
           <tbody>
             {ROWS.map((row, i) => {
+              const isLastRow = i === ROWS.length - 1;
               if (row.section) {
                 return (
-                  <tr key={i} className="bg-surface-container border-y border-outline-variant">
-                    <td colSpan={8} className="px-4 py-2 text-[10px] font-bold text-blue-600 dark:text-blue-500 uppercase tracking-wider">
+                  <tr key={i} className={`bg-surface-container border-y border-outline-variant ${isLastRow ? 'border-b-0' : ''}`}>
+                    <td colSpan={8} className={`px-4 py-2 text-[10px] font-bold text-blue-600 dark:text-blue-500 uppercase tracking-wider ${isLastRow ? 'rounded-b-xl' : ''}`}>
                       {row.section}
                     </td>
                   </tr>
                 );
               }
+              const checksLen = row.checks?.length ?? 0;
               return (
-                <tr key={i} className="border-b border-outline-variant hover:bg-surface-container-low transition-colors group">
-                  <td className="p-3 border-r border-outline-variant">
+                <tr key={i} className={`${isLastRow ? '' : 'border-b border-outline-variant'} hover:bg-surface-container-low transition-colors group`}>
+                  <td className={`p-3 border-r border-outline-variant ${isLastRow ? 'rounded-bl-xl' : ''}`}>
                     <span className="text-xs font-semibold text-on-surface group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug">
                       {row.name}
                     </span>
@@ -265,19 +267,25 @@ th, td { border: 1px solid #cbd5e1; padding: 8px 10px; }
                   <td className="p-3 border-r border-outline-variant text-center">
                     <span className="text-[10px] font-mono text-outline whitespace-nowrap">{row.date}</span>
                   </td>
-                  {row.checks?.map((check, j) => (
-                    <td key={j} className="p-3 border-r border-outline-variant text-center">
-                      {check && (
-                        <div className="flex justify-center">
-                          <div className="w-5 h-5 rounded bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-500">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
+                  {row.checks?.map((check, j) => {
+                    const isLastCol = j === checksLen - 1;
+                    return (
+                      <td
+                        key={j}
+                        className={`p-3 ${isLastCol ? '' : 'border-r border-outline-variant'} text-center ${isLastRow && isLastCol ? 'rounded-br-xl' : ''}`}
+                      >
+                        {check && (
+                          <div className="flex justify-center">
+                            <div className="w-5 h-5 rounded bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-500">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </td>
-                  ))}
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })}

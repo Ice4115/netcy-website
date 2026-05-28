@@ -2,7 +2,21 @@
 
 import React from 'react';
 
-type Doc = {
+type StageDoc = {
+  kind: 'stage';
+  title: string;
+  desc: string;
+  date: string;
+  attestation: string | null;
+  rapport: string | null;
+  gradient: string;
+  color: string;
+  badge?: string;
+  icon: React.ReactNode;
+};
+
+type VeilleDoc = {
+  kind: 'veille';
   title: string;
   desc: string;
   date: string;
@@ -14,12 +28,16 @@ type Doc = {
   icon: React.ReactNode;
 };
 
-const STAGES: Doc[] = [
+type Doc = StageDoc | VeilleDoc;
+
+const STAGES: StageDoc[] = [
   {
+    kind: 'stage',
     title: '1ère Année — InfoBoost',
     desc: "Technicien reconditionnement et accompagnement informatique pour les TPE/PME.",
     date: 'Avril – Juillet 2025',
-    link: '/Stages/Rapport_Stage_Jean-Marie_Jung_Infoboost.pdf',
+    attestation: '/Stages/Attestation_Stage_InfoBoost.pdf',
+    rapport: '/Stages/Rapport_Stage_Jean-Marie_Jung_Infoboost.pdf',
     gradient: 'linear-gradient(135deg, #0052FF, #4f46e5)',
     color: '#0052FF',
     icon: (
@@ -30,14 +48,14 @@ const STAGES: Doc[] = [
     ),
   },
   {
+    kind: 'stage',
     title: '2ème Année — Devensys',
     desc: "Immersion au sein d'une équipe spécialisée en cybersécurité offensive et défensive.",
     date: 'Février – Mars 2026',
-    link: '#',
+    attestation: '/Stages/Attestation_Stage_Devensys.pdf',
+    rapport: '/Stages/Rapport_Stage_Jean-Marie_Jung_Devensys.pdf',
     gradient: 'linear-gradient(135deg, #0052FF, #1e40af)',
     color: '#0052FF',
-    disabled: true,
-    badge: 'Rapport à venir',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -47,12 +65,13 @@ const STAGES: Doc[] = [
   },
 ];
 
-const VEILLES: Doc[] = [
+const VEILLES: VeilleDoc[] = [
   {
+    kind: 'veille',
     title: 'Machine Learning & LLM',
     desc: "Évolution des algorithmes IA et impact sociétal des grands modèles de langage.",
     date: 'Année 2024 – 2025',
-    link: '/Veille/Dossier_Veille_IA_ML_Jung_Jean_Marie.pdf',
+    link: '/Veille/2024-25_SN1-JUNG-JEANMARIE_DocumentVeilleTechno.pdf',
     gradient: 'linear-gradient(135deg, #059669, #0d9488)',
     color: '#059669',
     icon: (
@@ -64,14 +83,13 @@ const VEILLES: Doc[] = [
     ),
   },
   {
+    kind: 'veille',
     title: 'Cybersécurité & Nouveaux Enjeux',
     desc: "Veille axée sur les menaces émergentes en infrastructure SISR (ransomware, supply chain, Zero-Trust).",
     date: 'Année 2025 – 2026',
-    link: '#',
+    link: '/Veille/2025-26_SN2-JUNG-JEANMARIE_DocumentVeilleTechno.pdf',
     gradient: 'linear-gradient(135deg, #059669, #047857)',
     color: '#059669',
-    disabled: true,
-    badge: 'En préparation',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
@@ -81,7 +99,115 @@ const VEILLES: Doc[] = [
   },
 ];
 
-function DocCard({ doc, index, category }: { doc: Doc; index: number; category: string }) {
+function PdfButton({
+  href,
+  label,
+  color,
+  icon,
+  disabled,
+  primary,
+}: {
+  href: string | null;
+  label: string;
+  color: string;
+  icon: React.ReactNode;
+  disabled?: boolean;
+  primary?: boolean;
+}) {
+  const isDisabled = disabled || !href;
+  const baseClasses =
+    'flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 border';
+
+  if (isDisabled) {
+    return (
+      <span
+        className={`${baseClasses} opacity-50 cursor-not-allowed`}
+        style={{
+          background: 'transparent',
+          color: 'var(--color-outline)',
+          borderColor: 'var(--color-outline-variant)',
+        }}
+      >
+        {icon}
+        <span>{href ? label : 'À venir'}</span>
+      </span>
+    );
+  }
+
+  return (
+    <a
+      href={href!}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${baseClasses} hover:-translate-y-0.5 hover:shadow-md`}
+      style={
+        primary
+          ? { background: color, color: '#fff', borderColor: color }
+          : { background: `${color}10`, color, borderColor: `${color}40` }
+      }
+    >
+      {icon}
+      <span>{label}</span>
+    </a>
+  );
+}
+
+function StageCard({ doc, index }: { doc: StageDoc; index: number }) {
+  const FileIcon = (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+      <path d="M14 3v5h5" />
+    </svg>
+  );
+  const SealIcon = (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="6" />
+      <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+    </svg>
+  );
+
+  return (
+    <div
+      className="group relative bg-surface-container-low border border-outline-variant rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:bg-surface-container hover:border-outline hover:-translate-y-1 hover:shadow-lg animate-fade-up"
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
+      <div className="h-1 w-full flex-shrink-0" style={{ background: doc.gradient }} />
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{ background: `radial-gradient(ellipse at top left, ${doc.color}12, transparent 70%)` }}
+      />
+
+      <div className="p-6 flex flex-col flex-1 relative">
+        <div className="flex justify-between items-start mb-6">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+            style={{ background: `${doc.color}18`, color: doc.color }}
+          >
+            {doc.icon}
+          </div>
+          <span
+            className="text-[10px] font-bold uppercase tracking-widest py-1 px-2.5 rounded-full"
+            style={{ background: `${doc.color}14`, color: doc.color, border: `1px solid ${doc.color}30` }}
+          >
+            Stage
+          </span>
+        </div>
+
+        <h3 className="text-base font-bold text-on-surface mb-2">{doc.title}</h3>
+        <p className="text-sm text-on-surface-variant leading-relaxed mb-5 flex-1">{doc.desc}</p>
+
+        <span className="text-xs font-mono text-outline mb-4">{doc.date}</span>
+
+        <div className="flex gap-2 border-t border-outline-variant pt-4">
+          <PdfButton href={doc.attestation} label="Attestation" color={doc.color} icon={SealIcon} />
+          <PdfButton href={doc.rapport} label="Rapport" color={doc.color} icon={FileIcon} primary />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VeilleCard({ doc, index }: { doc: VeilleDoc; index: number }) {
   return (
     <a
       href={doc.link}
@@ -95,10 +221,7 @@ function DocCard({ doc, index, category }: { doc: Doc; index: number; category: 
       }`}
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      {/* Gradient top bar */}
       <div className="h-1 w-full flex-shrink-0" style={{ background: doc.gradient }} />
-
-      {/* Hover glow */}
       {!doc.disabled && (
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
@@ -108,23 +231,17 @@ function DocCard({ doc, index, category }: { doc: Doc; index: number; category: 
 
       <div className="p-6 flex flex-col flex-1 relative">
         <div className="flex justify-between items-start mb-6">
-          {/* Icon */}
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
             style={{ background: `${doc.color}18`, color: doc.color }}
           >
             {doc.icon}
           </div>
-          {/* Category badge */}
           <span
             className="text-[10px] font-bold uppercase tracking-widest py-1 px-2.5 rounded-full"
-            style={{
-              background: `${doc.color}14`,
-              color: doc.color,
-              border: `1px solid ${doc.color}30`,
-            }}
+            style={{ background: `${doc.color}14`, color: doc.color, border: `1px solid ${doc.color}30` }}
           >
-            {doc.badge ?? category}
+            {doc.badge ?? 'Veille'}
           </span>
         </div>
 
@@ -149,7 +266,6 @@ function DocCard({ doc, index, category }: { doc: Doc; index: number; category: 
 
 function Group({
   title,
-  count,
   color,
   description,
   iconBg,
@@ -157,7 +273,6 @@ function Group({
   children,
 }: {
   title: string;
-  count: number;
   color: string;
   description: string;
   iconBg: string;
@@ -173,10 +288,7 @@ function Group({
         >
           {icon}
         </div>
-        <div className="flex items-baseline gap-2">
-          <h3 className="text-xl font-bold text-on-surface">{title}</h3>
-          <span className="text-xs font-mono text-outline">({count})</span>
-        </div>
+        <h3 className="text-xl font-bold text-on-surface">{title}</h3>
       </div>
       <p className="text-sm text-on-surface-variant mb-6 max-w-2xl leading-relaxed">{description}</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">{children}</div>
@@ -197,10 +309,9 @@ export default function StagesVeilleSection() {
       {/* Stages */}
       <Group
         title="Stages en entreprise"
-        count={STAGES.length}
         color="#0052FF"
         iconBg="rgba(0,82,255,0.12)"
-        description="Deux immersions complémentaires : la première en support et reconditionnement TPE/PME, la seconde au cœur d'une équipe spécialisée en cybersécurité."
+        description="Deux immersions complémentaires : la première en support et reconditionnement TPE/PME, la seconde au cœur d'une équipe spécialisée en cybersécurité. Chaque stage dispose de son attestation et de son rapport."
         icon={
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
@@ -209,14 +320,13 @@ export default function StagesVeilleSection() {
         }
       >
         {STAGES.map((doc, i) => (
-          <DocCard key={doc.title} doc={doc} index={i} category="Stage" />
+          <StageCard key={doc.title} doc={doc} index={i} />
         ))}
       </Group>
 
       {/* Veilles */}
       <Group
         title="Veilles technologiques"
-        count={VEILLES.length}
         color="#059669"
         iconBg="rgba(5,150,105,0.12)"
         description="Travaux de recherche et de synthèse réalisés dans le cadre de mon BTS SIO sur des sujets clés de l'IT actuelle."
@@ -228,7 +338,7 @@ export default function StagesVeilleSection() {
         }
       >
         {VEILLES.map((doc, i) => (
-          <DocCard key={doc.title} doc={doc} index={i} category="Veille" />
+          <VeilleCard key={doc.title} doc={doc} index={i} />
         ))}
       </Group>
     </section>
