@@ -20,7 +20,8 @@
       "Bash(pdftotext -layout \"Temp/Rapport_Stage_Jean-Marie_Jung_Infoboost.pdf\" -)",
       "Bash(pdftotext -layout \"Temp/Rapport_Stage_Jean-Marie_Jung_Devensys.pdf\" -)",
       "Bash(pdftotext -layout \"Temp/Situtation1_Jung_JeanMarie_SISR.pdf\" -)",
-      "Bash(pdftotext -layout \"Temp/Situtation2_Jung_JeanMarie_SISR.pdf\" -)"
+      "Bash(pdftotext -layout \"Temp/Situtation2_Jung_JeanMarie_SISR.pdf\" -)",
+      "Bash(grep -n -E '^\\(html|body|:root\\)\\\\s*\\\\{|html\\\\s*,\\\\s*body|^body\\\\s|^html\\\\s|max-width|overflow' src/app/globals.css)"
     ]
   }
 }
