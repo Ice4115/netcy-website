@@ -59,7 +59,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
   <div class="photo-ring"><img class="photo" src="${photoUrl}" alt="Jung Jean-Marie" /></div>
   <div>
     <div class="header-name">Jung Jean-Marie</div>
-    <div class="header-sub">BTS SIO &middot; Option SISR &middot; Major de promotion &middot; 23 ans</div>
+    <div class="header-sub">BTS SIO &middot; Option SISR &middot; Fondateur de NETCY &middot; 23 ans</div>
     <div class="header-badge">En recherche d&apos;une alternance &mdash; BTS SIO SISR</div>
   </div>
 </div>
@@ -88,7 +88,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
   </div>
   <div class="right-col">
     <div class="section"><div class="sec-title">Profil</div>
-      <p class="profile-text">Pratiquant le Viet Vo Dao depuis 9 ans, j&apos;ai d&eacute;velopp&eacute; rigueur, discipline et esprit d&apos;&eacute;quipe.<br/><br/>&Eacute;tudiant en deuxi&egrave;me ann&eacute;e &agrave; l&apos;EPSI en BTS SIO option SISR et major de ma promotion, j&apos;ai choisi cette fili&egrave;re par passion pour la programmation et les technologies. Orient&eacute; vers les r&eacute;seaux et la cybers&eacute;curit&eacute;, je m&apos;int&eacute;resse particuli&egrave;rement au fonctionnement des syst&egrave;mes et &agrave; la circulation s&eacute;curis&eacute;e des donn&eacute;es.<br/><br/>Mon objectif professionnel est de devenir administrateur r&eacute;seau, tout en continuant &agrave; d&eacute;velopper mes comp&eacute;tences en d&eacute;veloppement web, car je ne souhaite pas d&eacute;laisser ma passion pour le code. J&apos;ai d&apos;ailleurs cr&eacute;&eacute; ma micro-entreprise NETCY, sp&eacute;cialis&eacute;e en cr&eacute;ation de sites web s&eacute;curis&eacute;s. Je suis actuellement &agrave; la recherche d&apos;une alternance pour mon BTS SIO SISR, afin de mettre en pratique les comp&eacute;tences acquises au cours de ma formation.</p>
+      <p class="profile-text">Pratiquant le Viet Vo Dao depuis 9 ans, j&apos;ai d&eacute;velopp&eacute; rigueur, discipline et esprit d&apos;&eacute;quipe.<br/><br/>&Eacute;tudiant en deuxi&egrave;me ann&eacute;e &agrave; l&apos;EPSI en BTS SIO option SISR, j&apos;ai choisi cette fili&egrave;re par passion pour la programmation et les technologies. Orient&eacute; vers les r&eacute;seaux et la cybers&eacute;curit&eacute;, je m&apos;int&eacute;resse particuli&egrave;rement au fonctionnement des syst&egrave;mes et &agrave; la circulation s&eacute;curis&eacute;e des donn&eacute;es.<br/><br/>Mon objectif professionnel est de devenir administrateur r&eacute;seau, tout en continuant &agrave; d&eacute;velopper mes comp&eacute;tences en d&eacute;veloppement web, car je ne souhaite pas d&eacute;laisser ma passion pour le code. J&apos;ai d&apos;ailleurs cr&eacute;&eacute; ma micro-entreprise NETCY, sp&eacute;cialis&eacute;e en cr&eacute;ation de sites web s&eacute;curis&eacute;s. Je suis actuellement &agrave; la recherche d&apos;une alternance pour mon BTS SIO SISR, afin de mettre en pratique les comp&eacute;tences acquises au cours de ma formation.</p>
     </div>
     <div class="section"><div class="sec-title">Exp&eacute;riences</div>
       <div class="tl-item"><div class="tl-dot stage"></div><div class="exp-title">Stage &ndash; Technicien Informatique <span class="exp-badge">STAGE</span></div><div class="exp-co">Devensys Cybers&eacute;curit&eacute; &middot; Montpellier</div><div class="exp-date">19 janvier 2026 &ndash; 20 f&eacute;vrier 2026</div><div class="exp-desc">D&eacute;ploiement de PC, journ&eacute;es d&eacute;couverte, mise en place d&apos;un serveur PKI.</div></div>
@@ -176,7 +176,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
                 <div>
                   <h1 className="text-4xl font-extrabold text-white tracking-[0.2em] uppercase mb-1">Jung Jean-Marie</h1>
                   <h2 className="text-blue-200 text-sm font-semibold tracking-widest uppercase mb-3">
-                    BTS SIO &bull; Option SISR &bull; Major de promotion &bull; 23 ans
+                    BTS SIO &bull; Option SISR &bull; Fondateur de NETCY &bull; 23 ans
                   </h2>
                   <span className="inline-block bg-[#6F3FFF] text-white text-xs font-bold px-4 py-1.5 rounded-full">
                     En recherche d&apos;une alternance — BTS SIO SISR

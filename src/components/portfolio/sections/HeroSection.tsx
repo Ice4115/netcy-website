@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 
 const STATS = [
-  { value: 'Major', label: 'de Promotion SIO', color: '#0052FF' },
+  { value: 'NETCY', label: 'Micro-entreprise web', color: '#0052FF' },
   { value: '2', label: 'Stages réalisés', color: '#059669' },
   { value: '3+', label: 'Projets E5 / Académiques', color: '#7c3aed' },
 ];
@@ -55,7 +55,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="text-base sm:text-lg text-on-surface-variant mb-6 md:mb-10 max-w-xl leading-relaxed animate-fade-up animation-delay-200">
-            Je conçois, déploie et sécurise des réseaux d&apos;entreprise robustes. Étudiant <strong className="text-on-surface font-semibold">Major de promotion</strong> en BTS SIO (SISR), je suis prêt à intégrer vos équipes pour des missions à fort impact.
+            Je conçois, déploie et sécurise des réseaux d&apos;entreprise robustes. Étudiant <strong className="text-on-surface font-semibold">passionné de cybersécurité</strong> en BTS SIO (SISR), je suis prêt à intégrer vos équipes pour des missions à fort impact.
           </p>
 
           {/* CTAs */}

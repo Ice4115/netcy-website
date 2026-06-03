@@ -56,7 +56,7 @@ const EXPERIENCE = [
     role: 'Rentrée BTS SIO — EPSI',
     company: 'Études Supérieures',
     type: 'Formation',
-    desc: "Intégration en BTS SIO option SISR. Major de promotion dès la 1ère session.",
+    desc: "Intégration en BTS SIO option SISR. Spécialisation réseaux et cybersécurité.",
     current: false,
   },
   {
