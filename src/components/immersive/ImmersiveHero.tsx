@@ -27,15 +27,11 @@ export default function ImmersiveHero() {
     offset: ['start start', 'end start'],
   });
 
-  const rawY = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const rawScale = useTransform(scrollYProgress, [0, 1], [1, 0.86]);
-  const rawOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0]);
-  const rawTilt = useTransform(scrollYProgress, [0, 1], [0, 8]);
+  const rawY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const rawOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
-  const y = useSpring(rawY, { stiffness: 80, damping: 20, mass: 0.4 });
-  const scale = useSpring(rawScale, { stiffness: 80, damping: 20, mass: 0.4 });
-  const opacity = useSpring(rawOpacity, { stiffness: 120, damping: 24 });
-  const tilt = useSpring(rawTilt, { stiffness: 80, damping: 20 });
+  const y = useSpring(rawY, { stiffness: 60, damping: 32, mass: 0.6 });
+  const opacity = useSpring(rawOpacity, { stiffness: 90, damping: 30 });
 
   return (
     <section
@@ -57,11 +53,11 @@ export default function ImmersiveHero() {
           autoSpeed={0.35}
           autoIntensity={1.2}
           autoResumeDelay={1200}
-          resolution={isMobile ? 0.22 : 0.38}
-          iterationsPoisson={isMobile ? 16 : 24}
-          iterationsViscous={isMobile ? 16 : 24}
+          resolution={isMobile ? 0.16 : 0.28}
+          iterationsPoisson={isMobile ? 10 : 14}
+          iterationsViscous={isMobile ? 10 : 14}
           dt={0.016}
-          BFECC={!isMobile}
+          BFECC={false}
         />
       </div>
 
@@ -176,7 +172,7 @@ export default function ImmersiveHero() {
           {/* Right — Code Window */}
           <motion.div
             className="lg:col-span-7 relative"
-            style={{ y, scale, opacity, rotateX: tilt, transformPerspective: 1200, transformStyle: 'preserve-3d' }}
+            style={{ y, opacity, willChange: 'transform, opacity' }}
           >
             <CodeWindow />
 

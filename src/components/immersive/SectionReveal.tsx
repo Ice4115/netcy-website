@@ -1,7 +1,7 @@
 'use client';
 
-import { ReactNode, useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'motion/react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
 type Props = {
   children: ReactNode;
@@ -10,34 +10,48 @@ type Props = {
   intensity?: 'soft' | 'default' | 'strong';
 };
 
+const Y_MAP = { soft: 20, default: 32, strong: 48 } as const;
+
 export default function SectionReveal({ children, className = '', id, intensity = 'default' }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'center center'],
-  });
+  const [revealed, setRevealed] = useState(false);
 
-  const yMap = { soft: 40, default: 70, strong: 110 }[intensity];
-
-  const rawY = useTransform(scrollYProgress, [0, 1], [yMap, 0]);
-  const rawOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.6, 1]);
-  const rawScale = useTransform(scrollYProgress, [0, 1], [0.96, 1]);
-
-  const y = useSpring(rawY, { stiffness: 90, damping: 22, mass: 0.5 });
-  const opacity = useSpring(rawOpacity, { stiffness: 120, damping: 26 });
-  const scale = useSpring(rawScale, { stiffness: 90, damping: 22, mass: 0.5 });
-
-  if (reduce) {
-    return (
-      <section id={id} ref={ref} className={className}>
-        {children}
-      </section>
+  useEffect(() => {
+    if (reduce) {
+      setRevealed(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setRevealed(true);
+            io.disconnect();
+            break;
+          }
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
     );
-  }
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduce]);
+
+  const yOffset = Y_MAP[intensity];
 
   return (
-    <motion.section id={id} ref={ref} className={className} style={{ y, opacity, scale }}>
+    <motion.section
+      id={id}
+      ref={ref}
+      className={className}
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 800px' } as React.CSSProperties}
+      initial={reduce ? false : { opacity: 0, y: yOffset }}
+      animate={revealed ? { opacity: 1, y: 0 } : undefined}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    >
       {children}
     </motion.section>
   );

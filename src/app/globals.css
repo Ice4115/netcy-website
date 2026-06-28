@@ -403,8 +403,29 @@
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-.animate-scroll-left { animation: scroll-left 32s linear infinite; }
+.animate-scroll-left {
+  animation: scroll-left 32s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
 .animate-scroll-left:hover { animation-play-state: paused; }
+
+/* Skip rendering of off-screen sections — kicks in once layout is established */
+main > section,
+main > [class*="section"] {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 /* ══════════════════════════════════════════
    UTILITY CLASSES

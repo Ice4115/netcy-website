@@ -105,9 +105,10 @@ export default function HeroSection() {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-surface/60 via-transparent to-transparent z-10" />
               <Image
-                src="/images/profile.png"
+                src="/images/profile.webp"
                 alt="Jung Jean-Marie"
                 fill
+                sizes="(max-width: 640px) 128px, 160px"
                 className="object-cover object-top grayscale"
               />
             </div>
@@ -165,10 +166,10 @@ export default function HeroSection() {
             <div className="absolute inset-0 rounded-2xl z-20 pointer-events-none"
               style={{ boxShadow: 'inset 0 0 40px rgba(0,82,255,0.08)' }} />
             <Image
-              src="/images/profile.png"
+              src="/images/profile.webp"
               alt="Jung Jean-Marie"
               fill
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 768px) 100vw, 400px"
               className="object-cover object-top grayscale hover:grayscale-0 transition-all duration-700"
               priority
             />

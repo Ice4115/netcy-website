@@ -21,7 +21,10 @@ import {
   BarChart2, HelpCircle, LogOut, Plus, Edit2, Trash2,
   Send, Search, Filter, Bell,
   ChevronLeft, ChevronRight, X as XIcon, Eye, Upload,
+  Globe, EyeOff, Lock, ExternalLink,
 } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { SITE_PAGES, SITE_PAGE_CATEGORIES, type SitePage } from '@/lib/site-pages';
 
 /* ── Types ── */
 interface Client  { id: string; nom: string; prenom?: string; email: string; type: string; role: string; entreprise?: string; created_at: string; }
@@ -52,6 +55,7 @@ const NAV = [
   { label: 'Factures',  section: 'invoices',  icon: FileText },
   { label: 'Clients',   section: 'clients',   icon: Users },
   { label: 'Messages',  section: 'messages',  icon: MessageSquare },
+  { label: 'Pages',     section: 'pages',     icon: Globe },
 ];
 
 const PAGE_SIZE = 10;
@@ -298,6 +302,11 @@ export default function AdminDashboard() {
   const [adminAvatarUrl, setAdminAvatarUrl] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  /* Visibilité des pages */
+  const [pageStates, setPageStates]     = useState<Record<string, boolean>>({});
+  const [pageSaving, setPageSaving]     = useState<string | null>(null);
+  const [confirmDisable, setConfirmDisable] = useState<SitePage | null>(null);
+
   /* Refs stables pour éviter les closures périmées dans les callbacks real-time */
   const adminIdRef      = useRef('');
   const projectsRef     = useRef<Project[]>([]);
@@ -406,15 +415,42 @@ export default function AdminDashboard() {
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
   const fetchAll = async () => {
-    const [{ data: c }, { data: p }, { data: i }] = await Promise.all([
+    const [{ data: c }, { data: p }, { data: i }, { data: ps }] = await Promise.all([
       supabase.from('clients').select('*').order('created_at', { ascending: false }),
       supabase.from('projects').select('*, clients(nom, prenom)').order('created_at', { ascending: false }),
       supabase.from('invoices').select('*, clients(nom)').order('created_at', { ascending: false }),
+      supabase.from('page_settings').select('path, is_active'),
     ]);
     if (c) setClients(c);
     if (p) setProjects(p);
     if (i) setInvoices(i);
+
+    /* Par défaut toutes les pages sont visibles ; on applique l'état stocké en base. */
+    const map: Record<string, boolean> = {};
+    SITE_PAGES.forEach(pg => { map[pg.path] = true; });
+    (ps as { path: string; is_active: boolean }[] | null)?.forEach(r => { map[r.path] = r.is_active; });
+    setPageStates(map);
+
     setLoading(false);
+  };
+
+  /* ── Visibilité des pages ── */
+  const setPageActive = async (page: SitePage, active: boolean) => {
+    if (page.locked) return;
+    setPageSaving(page.path);
+    setPageStates(prev => ({ ...prev, [page.path]: active })); // optimiste
+    const { error } = await supabase.from('page_settings').upsert(
+      { path: page.path, is_active: active, updated_at: new Date().toISOString(), updated_by: adminId || null },
+      { onConflict: 'path' }
+    );
+    if (error) setPageStates(prev => ({ ...prev, [page.path]: !active })); // rollback
+    setPageSaving(null);
+  };
+
+  const handlePageToggle = (page: SitePage, next: boolean) => {
+    if (page.locked) return;
+    if (!next) { setConfirmDisable(page); return; } // confirmation avant de masquer
+    setPageActive(page, true);
   };
 
   /* ── CRUD Projects ── */
@@ -724,6 +760,32 @@ export default function AdminDashboard() {
             <button onClick={saveClient} className="flex-1 btn-primary py-2.5 text-sm rounded-xl">{clientModal.mode === 'add' ? 'Ajouter le client' : 'Enregistrer'}</button>
           </div>
         </div>
+      </Modal>
+
+      {/* ═══ CONFIRMATION MASQUER PAGE ═══ */}
+      <Modal open={!!confirmDisable} onClose={() => setConfirmDisable(null)} title="Masquer cette page ?">
+        {confirmDisable && (
+          <div className="space-y-4">
+            <div className="flex items-start gap-3 bg-red-50 dark:bg-[#3b0404] rounded-xl p-3">
+              <EyeOff size={18} className="text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+              <p className="text-sm text-on-surface-variant">
+                La page <span className="font-semibold text-on-surface">{confirmDisable.label}</span>
+                {' '}(<code className="text-xs font-mono">{confirmDisable.path}</code>) ne sera plus accessible aux
+                visiteurs. Toute personne tentant d&apos;y accéder verra une page « introuvable » (404).
+              </p>
+            </div>
+            <p className="text-xs text-outline">Vous pourrez la réafficher à tout moment depuis cet écran.</p>
+            <div className="flex gap-2 pt-1">
+              <button onClick={() => setConfirmDisable(null)} className="flex-1 btn-ghost py-2.5 text-sm rounded-xl">Annuler</button>
+              <button
+                onClick={() => { setPageActive(confirmDisable, false); setConfirmDisable(null); }}
+                className="flex-1 py-2.5 text-sm rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+              >
+                Masquer la page
+              </button>
+            </div>
+          </div>
+        )}
       </Modal>
 
       {/* ═══ PDF VIEWER ═══ */}
@@ -1304,6 +1366,97 @@ export default function AdminDashboard() {
                 </>
               )}
             </Card>
+          </div>
+
+        /* ══════════ PAGES (visibilité) ══════════ */
+        ) : activeSection === 'pages' ? (
+          <div className="space-y-6">
+            <Card className="border-0 shadow-sm rounded-2xl">
+              <CardHeader className="px-6 pt-6 pb-0">
+                <CardTitle className="font-display text-lg text-on-surface flex items-center gap-2">
+                  <Globe size={18} className="text-primary dark:text-[#d0bcff]" /> Visibilité des pages
+                </CardTitle>
+                <p className="text-xs text-outline mt-0.5">
+                  Activez ou masquez chaque page publique. Une page masquée renvoie une erreur 404 aux visiteurs —
+                  le contrôle est appliqué côté serveur.
+                </p>
+              </CardHeader>
+              <CardContent className="p-6 pt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {(() => {
+                  const togglable = SITE_PAGES.filter(p => !p.locked);
+                  const visibles = togglable.filter(p => pageStates[p.path] ?? true).length;
+                  const stats = [
+                    { label: 'Pages gérées', value: togglable.length, cls: 'text-on-surface' },
+                    { label: 'Visibles', value: visibles, cls: 'text-green-600 dark:text-green-400' },
+                    { label: 'Masquées', value: togglable.length - visibles, cls: 'text-red-600 dark:text-red-400' },
+                  ];
+                  return stats.map(s => (
+                    <div key={s.label} className="bg-surface rounded-xl p-4">
+                      <p className="text-[10px] text-outline uppercase tracking-wider mb-1">{s.label}</p>
+                      <p className={`font-display font-extrabold text-2xl ${s.cls}`}>{s.value}</p>
+                    </div>
+                  ));
+                })()}
+              </CardContent>
+            </Card>
+
+            {SITE_PAGE_CATEGORIES.map(cat => {
+              const pages = SITE_PAGES.filter(p => p.category === cat);
+              if (pages.length === 0) return null;
+              return (
+                <Card key={cat} className="border-0 shadow-sm rounded-2xl">
+                  <CardHeader className="px-6 pt-6 pb-0">
+                    <CardTitle className="font-display text-base text-on-surface">{cat}</CardTitle>
+                    <p className="text-xs text-outline mt-0.5">{pages.length} page{pages.length > 1 ? 's' : ''}</p>
+                  </CardHeader>
+                  <CardContent className="p-4 sm:p-6 sm:pt-4 space-y-2">
+                    {pages.map(page => {
+                      const active = pageStates[page.path] ?? true;
+                      const saving = pageSaving === page.path;
+                      return (
+                        <div key={page.path} className="flex items-center justify-between gap-3 bg-surface rounded-xl px-3 sm:px-4 py-3">
+                          <div className="flex items-start gap-3 min-w-0">
+                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0
+                              ${page.locked ? 'bg-surface-container-low text-outline'
+                                : active ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                                         : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'}`}>
+                              {page.locked ? <Lock size={15} /> : active ? <Eye size={15} /> : <EyeOff size={15} />}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <p className="font-semibold text-sm text-on-surface">{page.label}</p>
+                                <code className="text-[10px] text-outline font-mono bg-surface-container-low px-1.5 py-0.5 rounded">{page.path}</code>
+                              </div>
+                              <p className="text-xs text-outline mt-0.5 truncate">{page.description}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                            <a href={page.path} target="_blank" rel="noopener noreferrer"
+                              className="text-outline-variant hover:text-primary dark:hover:text-[#d0bcff] transition-colors p-1" title="Aperçu dans un nouvel onglet">
+                              <ExternalLink size={14} />
+                            </a>
+                            {page.locked ? (
+                              <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-surface-container-low text-outline flex items-center gap-1">
+                                <Lock size={10} /> TOUJOURS
+                              </span>
+                            ) : (
+                              <>
+                                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full hidden sm:inline
+                                  ${active ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                                           : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'}`}>
+                                  {active ? 'VISIBLE' : 'MASQUÉE'}
+                                </span>
+                                <Switch checked={active} disabled={saving} onCheckedChange={v => handlePageToggle(page, v)} />
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         ) : null}
 

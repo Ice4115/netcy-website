@@ -27,9 +27,27 @@ function Navbar() {
   const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    let rafId = 0;
+    let ticking = false;
+    let lastScrolled = window.scrollY > 20;
+    setScrolled(lastScrolled);
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      rafId = requestAnimationFrame(() => {
+        const next = window.scrollY > 20;
+        if (next !== lastScrolled) {
+          lastScrolled = next;
+          setScrolled(next);
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
@@ -312,14 +330,14 @@ function AboutSection() {
 
           {/* ProfileCard */}
           <div className="flex justify-center lg:justify-start animate-slide-in-left">
-            <div className="animate-float w-full max-w-[300px] sm:max-w-sm lg:max-w-none">
+            <div className="animate-float w-full max-w-[360px] sm:max-w-md lg:max-w-none">
               <ProfileCard
-                avatarUrl="/images/profile.png"
-                miniAvatarUrl="/images/profile.png"
+                avatarUrl="/images/profile.webp"
+                miniAvatarUrl="/images/profile.webp"
                 iconUrl="/images/iconpattern.png"
                 grainUrl="/images/grain.webp"
                 name="Jean-Marie Jung"
-                title="Développeur & Fondateur NETCY"
+                title="Réseaux & Sécurité · NETCY"
                 handle="jeanmariejung"
                 status="Disponible"
                 contactText="Me contacter"

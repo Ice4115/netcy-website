@@ -10,7 +10,7 @@ export default function CVSection() {
   const handleToggleCV = () => setShowCV((v) => !v);
 
   const handleDownloadCV = () => {
-    const photoUrl = window.location.origin + '/images/profile.png';
+    const photoUrl = window.location.origin + '/images/profile.webp';
     const htmlContent = `<!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><title>CV - Jung Jean-Marie</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
@@ -68,7 +68,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
     <div class="section"><div class="sec-title">Contact</div>
       <div class="contact-row"><span class="c-icon"><i class="fas fa-map-marker-alt"></i></span><span class="c-text">3 Rue des Soldats, 34000 Montpellier</span></div>
       <div class="contact-row"><span class="c-icon"><i class="fas fa-envelope"></i></span><span class="c-text">jeanmarie.jung.pro@gmail.com</span></div>
-      <div class="contact-row"><span class="c-icon"><i class="fas fa-phone"></i></span><span class="c-text">07 49 64 44 78</span></div>
+      <div class="contact-row"><span class="c-icon"><i class="fas fa-phone"></i></span><span class="c-text">07 82 76 54 02</span></div>
       <div class="contact-row"><span class="c-icon"><i class="fas fa-globe"></i></span><span class="c-text">netcy.fr</span></div>
       <div class="contact-row"><span class="c-icon"><i class="fab fa-linkedin"></i></span><span class="c-text">linkedin.com/in/jean-marie-jung-40683b218</span></div>
     </div>
@@ -170,7 +170,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
               <div className="flex items-center gap-8 bg-gradient-to-br from-slate-900 to-blue-900 p-8">
                 <div className="w-28 h-28 shrink-0 border-4 border-[#6F3FFF] rounded-full p-1 bg-white">
                   <div className="w-full h-full rounded-full overflow-hidden relative">
-                    <Image src="/images/profile.png" alt="Jung Jean-Marie" fill className="object-cover object-[center_20%]" />
+                    <Image src="/images/profile.webp" alt="Jung Jean-Marie" fill sizes="112px" className="object-cover object-[center_20%]" />
                   </div>
                 </div>
                 <div>
@@ -196,7 +196,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
                           {[
                             { icon: <MapPin size={16} className="text-[#6F3FFF] shrink-0 mt-0.5" />, text: '3 Rue des Soldats, 34000 Montpellier' },
                             { icon: <Mail size={16} className="text-[#6F3FFF] shrink-0 mt-0.5" />, text: 'jeanmarie.jung.pro@gmail.com' },
-                            { icon: <Phone size={16} className="text-[#6F3FFF] shrink-0 mt-0.5" />, text: '07 49 64 44 78' },
+                            { icon: <Phone size={16} className="text-[#6F3FFF] shrink-0 mt-0.5" />, text: '07 82 76 54 02' },
                             { icon: <Globe size={16} className="text-[#6F3FFF] shrink-0 mt-0.5" />, text: 'netcy.fr' },
                             { icon: <Linkedin size={16} className="text-[#6F3FFF] shrink-0 mt-0.5" />, text: 'linkedin.com/in/jean-marie-jung-40683b218' },
                           ].map((c, i) => (
