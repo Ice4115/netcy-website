@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Checkbox } from '@/components/animate-ui/components/radix/checkbox';
+import NavLink from '@/components/NavLink';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({ nom: '', email: '', entreprise: '', message: '' });
@@ -210,13 +211,13 @@ export default function ContactSection() {
               />
               <label htmlFor="privacy" className="text-sm text-on-surface-variant cursor-pointer hover:text-on-surface transition-colors leading-relaxed">
                 J&apos;accepte les{' '}
-                <a href="/cgu" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-all">
+                <NavLink keepText href="/cgu" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-all">
                   conditions d&apos;utilisation
-                </a>{' '}
+                </NavLink>{' '}
                 et la{' '}
-                <a href="/politique-confidentialite" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-all">
+                <NavLink keepText href="/politique-confidentialite" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-all">
                   politique de confidentialité
-                </a>{' '}
+                </NavLink>{' '}
                 *
               </label>
             </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { Mail, CheckCircle2, RefreshCw, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -110,10 +111,10 @@ function VerificationInner() {
             <img src="/images/logo_netcy_t.svg" alt="NETCY" className="h-12 w-auto" />
           </Link>
           <div className="hidden lg:block" />
-          <Link href="/connexion" className="text-sm font-medium text-on-surface-variant">
+          <NavLink href="/connexion" className="text-sm font-medium text-on-surface-variant">
             Déjà vérifié ?{' '}
             <span className="text-[#0052FF] font-semibold hover:underline">Se connecter</span>
-          </Link>
+          </NavLink>
         </div>
 
         <div className="max-w-md mx-auto w-full space-y-8">
@@ -221,13 +222,13 @@ function VerificationInner() {
                     : 'Renvoyer le mail de confirmation'}
                 </button>
 
-                <Link
+                <NavLink
                   href="/inscription"
                   className="flex items-center justify-center gap-2 text-sm text-outline hover:text-on-surface transition-colors"
                 >
                   <ArrowLeft size={14} />
                   Recommencer l'inscription
-                </Link>
+                </NavLink>
               </div>
             </div>
           )}
@@ -238,7 +239,7 @@ function VerificationInner() {
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-outline-variant pt-6 pr-14">
             <Link href="/#contact" className="hover:text-outline transition-colors underline underline-offset-2">Centre d'aide</Link>
             <span>·</span>
-            <Link href="/politique-confidentialite" className="hover:text-outline transition-colors underline underline-offset-2">Confidentialité</Link>
+            <NavLink href="/politique-confidentialite" className="hover:text-outline transition-colors underline underline-offset-2">Confidentialité</NavLink>
             <span>·</span>
             <span className="flex items-center gap-1">🌐 FR (FR)</span>
           </div>

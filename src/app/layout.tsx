@@ -4,6 +4,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import CookieBanner from "@/components/CookieBanner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PageVisibilityProvider } from "@/components/PageVisibilityProvider";
+import { getDisabledPaths } from "@/lib/page-visibility";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -119,21 +121,25 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const disabledPaths = await getDisabledPaths();
+
   return (
     <html lang="fr" suppressHydrationWarning>
       <body
         className={`${manrope.variable} ${montserrat.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange={false}>
-          {children}
-          <ThemeToggle />
-          <CookieBanner />
-          <SpeedInsights />
+          <PageVisibilityProvider initialDisabled={disabledPaths}>
+            {children}
+            <ThemeToggle />
+            <CookieBanner />
+            <SpeedInsights />
+          </PageVisibilityProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { supabase, getCurrentUser } from '@/lib/supabase';
 import {
   FolderOpen, FileText, MessageSquare, TrendingUp,
@@ -786,8 +787,8 @@ function ClientDashboardInner() {
       <footer className="flex flex-col sm:flex-row items-center justify-between text-xs text-outline-variant pt-4 border-t border-surface-container-low">
         <span>© {new Date().getFullYear()} NETCY — Jean-Marie Jung. Tous droits réservés.</span>
         <div className="flex gap-4 mt-2 sm:mt-0">
-          <a href="/politique-confidentialite" className="hover:text-outline">Confidentialité</a>
-          <a href="/cgu" className="hover:text-outline">CGU</a>
+          <NavLink href="/politique-confidentialite" className="hover:text-outline">Confidentialité</NavLink>
+          <NavLink href="/cgu" className="hover:text-outline">CGU</NavLink>
         </div>
       </footer>
 

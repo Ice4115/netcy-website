@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { Mail, Lock, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { signIn, getCurrentUser, signInWithGoogle } from '@/lib/supabase';
@@ -142,9 +143,9 @@ export default function ConnexionPage() {
         <div className="flex justify-between items-center">
           <Link href="/" className="lg:hidden font-display font-bold text-xl text-on-surface">NETCY</Link>
           <div className="hidden lg:block" />
-          <Link href="/inscription" className="text-sm font-semibold text-[#0052FF] hover:underline">
+          <NavLink href="/inscription" className="text-sm font-semibold text-[#0052FF] hover:underline">
             S'inscrire
-          </Link>
+          </NavLink>
         </div>
 
         <div className="max-w-md mx-auto w-full space-y-5">
@@ -241,11 +242,11 @@ export default function ConnexionPage() {
         {/* Footer links */}
         <div className="max-w-md mx-auto w-full">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-outline-variant pt-2 pr-14 sm:pr-0">
-            <Link href="/politique-confidentialite" className="hover:text-outline transition-colors">Politique de Confidentialité</Link>
+            <NavLink href="/politique-confidentialite" className="hover:text-outline transition-colors">Politique de Confidentialité</NavLink>
             <span>·</span>
-            <Link href="/cgu" className="hover:text-outline transition-colors">Conditions d'utilisation</Link>
+            <NavLink href="/cgu" className="hover:text-outline transition-colors">Conditions d'utilisation</NavLink>
             <span>·</span>
-            <Link href="/cgu" className="hover:text-outline transition-colors">Cookies</Link>
+            <NavLink href="/cookies" className="hover:text-outline transition-colors">Cookies</NavLink>
           </div>
           <p className="text-center text-xs text-outline-variant mt-2">© {new Date().getFullYear()} NETCY DIGITAL</p>
         </div>

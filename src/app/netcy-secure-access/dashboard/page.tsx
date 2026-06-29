@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase, signOut, getCurrentUser } from '@/lib/supabase';
+import NavLink from '@/components/NavLink';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Calendar } from '@/components/ui/calendar';
@@ -1463,7 +1464,7 @@ export default function AdminDashboard() {
         <footer className="flex flex-col sm:flex-row items-center justify-between text-xs text-outline-variant pt-4 border-t border-surface-container-low">
           <span>© {new Date().getFullYear()} NETCY DIGITAL ARCHITECTURE. TOUS DROITS RÉSERVÉS.</span>
           <div className="flex gap-4 mt-2 sm:mt-0">
-            <a href="/politique-confidentialite" className="hover:text-outline">CONFIDENTIALITÉ</a>
+            <NavLink href="/politique-confidentialite" className="hover:text-outline">CONFIDENTIALITÉ</NavLink>
             <span>·</span>
             <a href="#" className="hover:text-outline">STATUT SYSTÈME</a>
           </div>

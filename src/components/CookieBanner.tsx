@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { Cookie, ShieldCheck, BarChart2, Target, X, ChevronDown } from 'lucide-react';
 
 export interface CookiePreferences {
@@ -148,9 +149,9 @@ export default function CookieBanner() {
                   </p>
                   <p className="text-gray-500 dark:text-white/55 text-xs leading-relaxed">
                     Nous utilisons des cookies pour le bon fonctionnement du site et la mesure d&apos;audience.{' '}
-                    <Link href="/cookies" className="text-[#0052FF] hover:text-[#3D7BFF] underline underline-offset-2 transition-colors">
+                    <NavLink keepText href="/cookies" className="text-[#0052FF] hover:text-[#3D7BFF] underline underline-offset-2 transition-colors">
                       Gérer mes préférences
-                    </Link>
+                    </NavLink>
                   </p>
                 </div>
               </div>

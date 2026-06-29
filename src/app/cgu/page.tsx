@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { usePathname } from 'next/navigation';
 import { Download, FileText } from 'lucide-react';
@@ -34,10 +35,10 @@ function LegalNav() {
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           {links.map((l) => (
-            <Link key={l.label} href={l.href}
+            <NavLink key={l.label} href={l.href}
               className={`text-sm font-medium transition-colors relative pb-0.5 ${pathname === l.href ? 'legal-nav-active' : 'text-on-surface-variant hover:text-[#0052FF]'}`}>
               {l.label}
-            </Link>
+            </NavLink>
           ))}
         </nav>
         <Link href="/#contact" className="btn-primary px-5 py-2.5 text-sm hidden md:inline-flex">Démarrer un projet</Link>
@@ -47,11 +48,11 @@ function LegalNav() {
       <div className="md:hidden overflow-x-auto border-t border-surface-container">
         <div className="flex gap-1 px-3 py-2">
           {links.map((l) => (
-            <Link key={l.label} href={l.href}
+            <NavLink key={l.label} href={l.href}
               className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors
                 ${pathname === l.href ? 'bg-[#EEF2FF] dark:bg-[#1a1f3d] text-[#0052FF]' : 'text-outline hover:text-on-surface hover:bg-surface-container-low'}`}>
               {l.label}
-            </Link>
+            </NavLink>
           ))}
         </div>
       </div>
@@ -65,10 +66,10 @@ function LegalFooter() {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <LogoNetcy className="h-8 w-auto" />
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-outline">
-          <Link href="/cgu" className="text-[#0052FF] font-semibold">CGU</Link>
-          <Link href="/cgv" className="hover:text-on-surface transition-colors">CGV</Link>
-          <Link href="/politique-confidentialite" className="hover:text-on-surface transition-colors">Politique de confidentialité</Link>
-          <Link href="/cookies" className="hover:text-on-surface transition-colors">Cookies</Link>
+          <NavLink href="/cgu" className="text-[#0052FF] font-semibold">CGU</NavLink>
+          <NavLink href="/cgv" className="hover:text-on-surface transition-colors">CGV</NavLink>
+          <NavLink href="/politique-confidentialite" className="hover:text-on-surface transition-colors">Politique de confidentialité</NavLink>
+          <NavLink href="/cookies" className="hover:text-on-surface transition-colors">Cookies</NavLink>
         </div>
         <p className="text-xs text-outline-variant">© {new Date().getFullYear()} NETCY — Jean-Marie Jung. Tous droits réservés.</p>
       </div>
@@ -121,7 +122,7 @@ export default function CGUPage() {
             </div>
             <p className="text-xs text-on-surface-variant leading-relaxed">Règles d'usage de la plateforme NETCY, droits d'accès, comportement acceptable, propriété intellectuelle de la plateforme.</p>
           </div>
-          <Link href="/cgv" className="bg-surface-container-lowest rounded-2xl p-5 border border-surface-container hover:border-[#0052FF]/30 hover:shadow-sm transition-all block">
+          <NavLink href="/cgv" className="bg-surface-container-lowest rounded-2xl p-5 border border-surface-container hover:border-[#0052FF]/30 hover:shadow-sm transition-all block">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-7 h-7 bg-surface-container-low rounded-lg flex items-center justify-center">
                 <FileText size={14} className="text-outline" />
@@ -129,7 +130,7 @@ export default function CGUPage() {
               <span className="font-semibold text-sm text-on-surface">CGV — Vente →</span>
             </div>
             <p className="text-xs text-outline leading-relaxed">Conditions d'achat des prestations, prix, devis, paiement, délais, transfert de propriété intellectuelle, garanties et litiges.</p>
-          </Link>
+          </NavLink>
         </div>
       </div>
 
@@ -278,7 +279,7 @@ export default function CGUPage() {
                 NETCY traite vos données personnelles conformément au Règlement Général sur la Protection des Données
                 (RGPD — Règlement UE 2016/679) et à la loi Informatique et Libertés modifiée. Le traitement détaillé
                 est décrit dans notre{' '}
-                <Link href="/politique-confidentialite" className="text-[#0052FF] hover:underline font-medium">Politique de Confidentialité</Link>.
+                <NavLink keepText href="/politique-confidentialite" className="text-[#0052FF] hover:underline font-medium">Politique de Confidentialité</NavLink>.
               </p>
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
@@ -392,7 +393,7 @@ export default function CGUPage() {
                   <Download size={16} /> Télécharger en PDF
                 </button>
                 <Link href="/#contact" className="btn-ghost px-7 py-3.5 text-base">Nous contacter</Link>
-                <Link href="/cgv" className="btn-ghost px-7 py-3.5 text-base">Voir les CGV →</Link>
+                <NavLink href="/cgv" className="btn-ghost px-7 py-3.5 text-base">Voir les CGV →</NavLink>
               </div>
             </section>
 

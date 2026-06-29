@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { ArrowRight, RotateCcw, Asterisk, Terminal } from 'lucide-react';
 
 export default function ContactSuccess() {
@@ -77,9 +78,9 @@ export default function ContactSuccess() {
       <footer className="pb-6 sm:pb-8 px-4 text-center space-y-3">
         <p className="text-xs font-semibold text-outline uppercase tracking-widest">SUPPORT DIGITAL ARCHITECTURE</p>
         <div className="flex items-center justify-center gap-3 text-xs text-outline-variant">
-          <Link href="/politique-confidentialite" className="hover:text-outline transition-colors">Protocole de confidentialité</Link>
+          <NavLink href="/politique-confidentialite" className="hover:text-outline transition-colors">Protocole de confidentialité</NavLink>
           <span>·</span>
-          <Link href="/cgu" className="hover:text-outline transition-colors">Conditions de sécurité</Link>
+          <NavLink href="/cgu" className="hover:text-outline transition-colors">Conditions de sécurité</NavLink>
         </div>
         <p className="text-xs text-outline-variant uppercase tracking-widest">
           © {new Date().getFullYear()} NETCY DIGITAL ARCHITECTURE. TOUS DROITS RÉSERVÉS.

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import dynamic from 'next/dynamic';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { Menu, X, ArrowRight, Github, Linkedin } from 'lucide-react';
@@ -96,19 +97,19 @@ function Navbar() {
               {l.label}
             </a>
           ))}
-          <Link
+          <NavLink
             href="/portfolio"
             className="text-sm font-medium text-on-surface-variant hover:text-[#0052FF] transition-colors"
           >
             Portfolio
-          </Link>
+          </NavLink>
         </nav>
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <Link href="/connexion" className="text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
+          <NavLink href="/connexion" className="text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
             Connexion
-          </Link>
+          </NavLink>
           <a
             href="#contact"
             className="btn-primary px-5 py-2.5 text-sm flex items-center gap-2"
@@ -140,20 +141,20 @@ function Navbar() {
               {l.label}
             </a>
           ))}
-          <Link
+          <NavLink
             href="/portfolio"
             onClick={() => setOpen(false)}
             className="block text-sm font-medium text-on-surface-variant py-2"
           >
             Portfolio
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             href="/connexion"
             onClick={() => setOpen(false)}
             className="block text-sm font-medium text-on-surface-variant py-2"
           >
             Connexion
-          </Link>
+          </NavLink>
           <a href="#contact" onClick={() => setOpen(false)} className="btn-primary block text-center px-5 py-3 text-sm mt-2">
             Démarrer un projet
           </a>
@@ -579,7 +580,7 @@ function ContactSection() {
                   onCheckedChange={(v) => { setAcceptCGU(!!v); setCgError(false); }}
                   className="mt-0.5 flex-shrink-0"
                 />
-                <label htmlFor="contact-cgu" className="text-sm text-on-surface-variant leading-snug cursor-pointer">J'accepte les <Link href="/cgu" className="text-[#0052FF] hover:underline">Conditions d'utilisation</Link> et la <Link href="/politique-confidentialite" className="text-[#0052FF] hover:underline">Politique de Confidentialité</Link> de NETCY.</label>
+                <label htmlFor="contact-cgu" className="text-sm text-on-surface-variant leading-snug cursor-pointer">J'accepte les <NavLink keepText href="/cgu" className="text-[#0052FF] hover:underline">Conditions d'utilisation</NavLink> et la <NavLink keepText href="/politique-confidentialite" className="text-[#0052FF] hover:underline">Politique de Confidentialité</NavLink> de NETCY.</label>
               </div>
               {cgError && (
                 <p className="text-[#BF3003] text-xs -mt-2">Vous devez accepter les conditions pour continuer.</p>
@@ -614,12 +615,12 @@ function Footer() {
             © {new Date().getFullYear()} NETCY – Jean-Marie Jung. Tous droits réservés.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-            <Link href="/cgu" className="text-xs text-outline hover:text-on-surface transition-colors">
+            <NavLink href="/cgu" className="text-xs text-outline hover:text-on-surface transition-colors">
               Mentions Légales
-            </Link>
-            <Link href="/politique-confidentialite" className="text-xs text-outline hover:text-on-surface transition-colors">
+            </NavLink>
+            <NavLink href="/politique-confidentialite" className="text-xs text-outline hover:text-on-surface transition-colors">
               Politique de Confidentialité
-            </Link>
+            </NavLink>
             <a href="https://linkedin.com/in/jean-marie-jung" target="_blank" rel="noopener noreferrer" className="text-outline hover:text-[#0052FF] transition-colors">
               <Linkedin size={16} strokeWidth={1.5} />
             </a>

@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn, signOut, supabase } from '@/lib/supabase';
+import NavLink from '@/components/NavLink';
 
 function AdminLoginInner() {
   const router = useRouter();
@@ -191,9 +192,9 @@ function AdminLoginInner() {
           © {new Date().getFullYear()} NETCY Architect. All rights reserved.
         </p>
         <div className="flex items-center gap-4 text-[9px] tracking-[0.15em] text-[#3A3D4A] uppercase">
-          <a href="/politique-confidentialite" className="hover:text-[#5A5D6B] transition-colors">Security Protocol</a>
+          <NavLink href="/politique-confidentialite" className="hover:text-[#5A5D6B] transition-colors">Security Protocol</NavLink>
           <span>·</span>
-          <a href="/cgu" className="hover:text-[#5A5D6B] transition-colors">Encryption Standards</a>
+          <NavLink href="/cgu" className="hover:text-[#5A5D6B] transition-colors">Encryption Standards</NavLink>
           <span>·</span>
           <a href="#" className="hover:text-[#5A5D6B] transition-colors">System Status</a>
         </div>

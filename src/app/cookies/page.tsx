@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { usePathname } from 'next/navigation';
 import { Download, ShieldCheck, BarChart2, Target, Save, Fingerprint } from 'lucide-react';
@@ -26,10 +27,10 @@ function LegalNav() {
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           {links.map((l) => (
-            <Link key={l.label} href={l.href}
+            <NavLink key={l.label} href={l.href}
               className={`text-sm font-medium transition-colors relative pb-0.5 ${pathname === l.href ? 'legal-nav-active' : 'text-on-surface-variant hover:text-[#0052FF]'}`}>
               {l.label}
-            </Link>
+            </NavLink>
           ))}
         </nav>
         <Link href="/#contact" className="btn-primary px-5 py-2.5 text-sm hidden md:inline-flex">Démarrer un projet</Link>
@@ -39,11 +40,11 @@ function LegalNav() {
       <div className="md:hidden overflow-x-auto border-t border-surface-container">
         <div className="flex gap-1 px-3 py-2">
           {links.map((l) => (
-            <Link key={l.label} href={l.href}
+            <NavLink key={l.label} href={l.href}
               className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors
                 ${pathname === l.href ? 'bg-[#EEF2FF] dark:bg-[#1a1f3d] text-[#0052FF]' : 'text-outline hover:text-on-surface hover:bg-surface-container-low'}`}>
               {l.label}
-            </Link>
+            </NavLink>
           ))}
         </div>
       </div>
@@ -57,10 +58,10 @@ function LegalFooter() {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <LogoNetcy className="h-7 w-auto" />
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-outline">
-          <Link href="/cgu" className="hover:text-on-surface transition-colors">CGU</Link>
-          <Link href="/cgv" className="hover:text-on-surface transition-colors">CGV</Link>
-          <Link href="/politique-confidentialite" className="hover:text-on-surface transition-colors">Privacy Policy</Link>
-          <Link href="/cookies" className="text-[#0052FF] font-semibold">Cookie Settings</Link>
+          <NavLink href="/cgu" className="hover:text-on-surface transition-colors">CGU</NavLink>
+          <NavLink href="/cgv" className="hover:text-on-surface transition-colors">CGV</NavLink>
+          <NavLink href="/politique-confidentialite" className="hover:text-on-surface transition-colors">Privacy Policy</NavLink>
+          <NavLink href="/cookies" className="text-[#0052FF] font-semibold">Cookie Settings</NavLink>
         </div>
         <p className="text-xs text-outline-variant">© {new Date().getFullYear()} NETCY Digital Architecture. All rights reserved.</p>
       </div>
@@ -256,12 +257,12 @@ export default function CookiesPage() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 flex-shrink-0">
-              <Link
+              <NavLink
                 href="/politique-confidentialite"
                 className="px-6 py-3 bg-surface-container-lowest text-on-surface font-semibold text-sm rounded-2xl hover:bg-surface-container-low transition-colors text-center"
               >
                 Politique de confidentialité
-              </Link>
+              </NavLink>
               <a
                 href="mailto:contact@netcy.fr"
                 className="px-6 py-3 border border-white/20 text-white font-semibold text-sm rounded-2xl hover:border-white/50 hover:bg-surface-container-lowest/5 transition-colors text-center"

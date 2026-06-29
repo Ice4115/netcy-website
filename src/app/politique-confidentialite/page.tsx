@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { LogoNetcy } from '@/components/LogoNetcy';
 import { usePathname } from 'next/navigation';
 import { Download, Shield, Cookie, Lock } from 'lucide-react';
@@ -32,10 +33,10 @@ function LegalNav() {
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           {links.map((l) => (
-            <Link key={l.label} href={l.href}
+            <NavLink key={l.label} href={l.href}
               className={`text-sm font-medium transition-colors relative pb-0.5 ${pathname === l.href ? 'legal-nav-active' : 'text-on-surface-variant hover:text-[#0052FF]'}`}>
               {l.label}
-            </Link>
+            </NavLink>
           ))}
         </nav>
         <Link href="/#contact" className="btn-primary px-5 py-2.5 text-sm hidden md:inline-flex">Démarrer un projet</Link>
@@ -45,11 +46,11 @@ function LegalNav() {
       <div className="md:hidden overflow-x-auto border-t border-surface-container">
         <div className="flex gap-1 px-3 py-2">
           {links.map((l) => (
-            <Link key={l.label} href={l.href}
+            <NavLink key={l.label} href={l.href}
               className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors
                 ${pathname === l.href ? 'bg-[#EEF2FF] dark:bg-[#1a1f3d] text-[#0052FF]' : 'text-outline hover:text-on-surface hover:bg-surface-container-low'}`}>
               {l.label}
-            </Link>
+            </NavLink>
           ))}
         </div>
       </div>
@@ -63,10 +64,10 @@ function LegalFooter() {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <LogoNetcy className="h-7 w-auto" />
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-outline">
-          <Link href="/cgu" className="hover:text-on-surface transition-colors">CGU</Link>
-          <Link href="/cgv" className="hover:text-on-surface transition-colors">CGV</Link>
-          <Link href="/politique-confidentialite" className="text-[#0052FF] font-semibold">Privacy Policy</Link>
-          <Link href="/cookies" className="hover:text-on-surface transition-colors">Cookie Settings</Link>
+          <NavLink href="/cgu" className="hover:text-on-surface transition-colors">CGU</NavLink>
+          <NavLink href="/cgv" className="hover:text-on-surface transition-colors">CGV</NavLink>
+          <NavLink href="/politique-confidentialite" className="text-[#0052FF] font-semibold">Privacy Policy</NavLink>
+          <NavLink href="/cookies" className="hover:text-on-surface transition-colors">Cookie Settings</NavLink>
         </div>
         <p className="text-xs text-outline-variant">© {new Date().getFullYear()} NETCY Digital Architecture. All rights reserved.</p>
       </div>
@@ -307,7 +308,7 @@ export default function PolitiqueConfidentialitePage() {
               </p>
               <p className="text-on-surface-variant leading-relaxed">
                 Vous pouvez accepter ou refuser les cookies via la bannière ou le lien{' '}
-                <Link href="/cookies" className="text-[#0052FF] hover:underline">Gérer les cookies</Link>.
+                <NavLink keepText href="/cookies" className="text-[#0052FF] hover:underline">Gérer les cookies</NavLink>.
                 Seuls les cookies nécessaires sont déposés par défaut.
               </p>
 
@@ -317,9 +318,9 @@ export default function PolitiqueConfidentialitePage() {
                   <p className="font-display font-bold text-xl text-white mb-1">Votre sécurité est notre priorité.</p>
                   <p className="text-sm text-white/60">Architecture zero-trust. Données souveraines. Conformité RGPD.</p>
                 </div>
-                <Link href="/cookies" className="flex-shrink-0 px-5 py-2.5 bg-surface-container-lowest text-on-surface font-semibold text-sm rounded-full hover:bg-surface-container-low transition-colors">
+                <NavLink href="/cookies" className="flex-shrink-0 px-5 py-2.5 bg-surface-container-lowest text-on-surface font-semibold text-sm rounded-full hover:bg-surface-container-low transition-colors">
                   Gérer les cookies
-                </Link>
+                </NavLink>
               </div>
             </section>
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import NavLink from '@/components/NavLink';
 import { User, Mail, Lock, Eye, EyeOff, Check, Building2, Users } from 'lucide-react';
 import { signUp, getCurrentUser } from '@/lib/supabase';
 import { Checkbox } from '@/components/animate-ui/components/radix/checkbox';
@@ -272,9 +273,9 @@ export default function InscriptionPage() {
             <img src="/images/logo_netcy_t.svg" alt="NETCY" className="h-12 w-auto" />
           </Link>
           <div className="hidden lg:block" />
-          <Link href="/connexion" className="text-sm font-medium text-on-surface-variant">
+          <NavLink href="/connexion" className="text-sm font-medium text-on-surface-variant">
             Déjà membre ? <span className="text-[#0052FF] font-semibold hover:underline">Se connecter</span>
-          </Link>
+          </NavLink>
         </div>
 
         <div className="max-w-md mx-auto w-full space-y-8">
@@ -387,7 +388,7 @@ export default function InscriptionPage() {
                   onCheckedChange={(v) => setAcceptTerms(!!v)}
                   className="mt-0.5 flex-shrink-0"
                 />
-                <span className="text-sm text-on-surface-variant leading-relaxed select-none">J'accepte les <Link href="/cgu" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium">Conditions d'utilisation</Link> et la <Link href="/politique-confidentialite" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium">Politique de Confidentialité</Link> de NETCY.</span>
+                <span className="text-sm text-on-surface-variant leading-relaxed select-none">J'accepte les <NavLink keepText href="/cgu" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium">Conditions d'utilisation</NavLink> et la <NavLink keepText href="/politique-confidentialite" target="_blank" onClick={(e) => e.stopPropagation()} className="text-[#0052FF] hover:underline font-medium">Politique de Confidentialité</NavLink> de NETCY.</span>
               </label>
             </div>
           )}
@@ -419,7 +420,7 @@ export default function InscriptionPage() {
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-outline-variant pt-6 pr-14">
             <Link href="/#contact" className="hover:text-outline transition-colors underline underline-offset-2">Centre d'aide</Link>
             <span>·</span>
-            <Link href="/politique-confidentialite" className="hover:text-outline transition-colors underline underline-offset-2">Confidentialité</Link>
+            <NavLink href="/politique-confidentialite" className="hover:text-outline transition-colors underline underline-offset-2">Confidentialité</NavLink>
             <span>·</span>
             <span className="flex items-center gap-1">🌐 FR (FR)</span>
           </div>
