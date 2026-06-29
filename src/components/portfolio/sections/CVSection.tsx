@@ -59,8 +59,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
   <div class="photo-ring"><img class="photo" src="${photoUrl}" alt="Jung Jean-Marie" /></div>
   <div>
     <div class="header-name">Jung Jean-Marie</div>
-    <div class="header-sub">BTS SIO &middot; Option SISR &middot; Fondateur de NETCY &middot; 23 ans</div>
-    <div class="header-badge">En recherche d&apos;une alternance &mdash; BTS SIO SISR</div>
+    <div class="header-sub">BTS SIO Dipl&ocirc;m&eacute; &middot; Option SISR &middot; Fondateur de NETCY &middot; 23 ans</div>
+    <div class="header-badge">Recherche d&apos;alternance de 2026 &agrave; 2029</div>
   </div>
 </div>
 <div class="body">
@@ -73,7 +73,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
       <div class="contact-row"><span class="c-icon"><i class="fab fa-linkedin"></i></span><span class="c-text">linkedin.com/in/jean-marie-jung-40683b218</span></div>
     </div>
     <div class="section"><div class="sec-title">Formation</div>
-      <div class="edu-item"><div class="edu-degree">BTS SIO &ndash; SISR</div><div class="edu-school">EPSI Montpellier</div><div class="edu-year">2024 &ndash; 2026 (en cours)</div></div>
+      <div class="edu-item"><div class="edu-degree">BTS SIO &ndash; SISR</div><div class="edu-school">EPSI Montpellier</div><div class="edu-year">2024 &ndash; 2026 (Dipl&ocirc;m&eacute;)</div></div>
       <div class="edu-item"><div class="edu-degree">Baccalaur&eacute;at G&eacute;n&eacute;ral S</div><div class="edu-school">Lyc&eacute;e Polyvalent Philippe de Girard</div><div class="edu-year">2017 &ndash; 2021</div></div>
     </div>
     <div class="section"><div class="sec-title">Comp&eacute;tences</div>
@@ -88,7 +88,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
   </div>
   <div class="right-col">
     <div class="section"><div class="sec-title">Profil</div>
-      <p class="profile-text">Pratiquant le Viet Vo Dao depuis 9 ans, j&apos;ai d&eacute;velopp&eacute; rigueur, discipline et esprit d&apos;&eacute;quipe.<br/><br/>&Eacute;tudiant en deuxi&egrave;me ann&eacute;e &agrave; l&apos;EPSI en BTS SIO option SISR, j&apos;ai choisi cette fili&egrave;re par passion pour la programmation et les technologies. Orient&eacute; vers les r&eacute;seaux et la cybers&eacute;curit&eacute;, je m&apos;int&eacute;resse particuli&egrave;rement au fonctionnement des syst&egrave;mes et &agrave; la circulation s&eacute;curis&eacute;e des donn&eacute;es.<br/><br/>Mon objectif professionnel est de devenir administrateur r&eacute;seau, tout en continuant &agrave; d&eacute;velopper mes comp&eacute;tences en d&eacute;veloppement web, car je ne souhaite pas d&eacute;laisser ma passion pour le code. J&apos;ai d&apos;ailleurs cr&eacute;&eacute; ma micro-entreprise NETCY, sp&eacute;cialis&eacute;e en cr&eacute;ation de sites web s&eacute;curis&eacute;s. Je suis actuellement &agrave; la recherche d&apos;une alternance pour mon BTS SIO SISR, afin de mettre en pratique les comp&eacute;tences acquises au cours de ma formation.</p>
+      <p class="profile-text">Pratiquant le Viet Vo Dao depuis 9 ans, j&apos;ai d&eacute;velopp&eacute; rigueur, discipline et esprit d&apos;&eacute;quipe.<br/><br/>Dipl&ocirc;m&eacute; du BTS SIO option SISR &agrave; l&apos;EPSI Montpellier, j&apos;ai choisi cette fili&egrave;re par passion pour la programmation et les technologies. Orient&eacute; vers les r&eacute;seaux et la cybers&eacute;curit&eacute;, je m&apos;int&eacute;resse particuli&egrave;rement au fonctionnement des syst&egrave;mes et &agrave; la circulation s&eacute;curis&eacute;e des donn&eacute;es.<br/><br/>Mon objectif professionnel est de devenir administrateur r&eacute;seau, tout en continuant &agrave; d&eacute;velopper mes comp&eacute;tences en d&eacute;veloppement web, car je ne souhaite pas d&eacute;laisser ma passion pour le code. J&apos;ai d&apos;ailleurs cr&eacute;&eacute; ma micro-entreprise NETCY, sp&eacute;cialis&eacute;e en cr&eacute;ation de sites web s&eacute;curis&eacute;s. Je suis actuellement &agrave; la recherche d&apos;une alternance (2026 &ndash; 2029) afin de poursuivre mes &eacute;tudes et de mettre en pratique les comp&eacute;tences acquises au cours de ma formation.</p>
     </div>
     <div class="section"><div class="sec-title">Exp&eacute;riences</div>
       <div class="tl-item"><div class="tl-dot stage"></div><div class="exp-title">Stage &ndash; Technicien Informatique <span class="exp-badge">STAGE</span></div><div class="exp-co">Devensys Cybers&eacute;curit&eacute; &middot; Montpellier</div><div class="exp-date">19 janvier 2026 &ndash; 20 f&eacute;vrier 2026</div><div class="exp-desc">D&eacute;ploiement de PC, journ&eacute;es d&eacute;couverte, mise en place d&apos;un serveur PKI.</div></div>
@@ -176,10 +176,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
                 <div>
                   <h1 className="text-4xl font-extrabold text-white tracking-[0.2em] uppercase mb-1">Jung Jean-Marie</h1>
                   <h2 className="text-blue-200 text-sm font-semibold tracking-widest uppercase mb-3">
-                    BTS SIO &bull; Option SISR &bull; Fondateur de NETCY &bull; 23 ans
+                    BTS SIO Diplômé &bull; Option SISR &bull; Fondateur de NETCY &bull; 23 ans
                   </h2>
                   <span className="inline-block bg-[#6F3FFF] text-white text-xs font-bold px-4 py-1.5 rounded-full">
-                    En recherche d&apos;une alternance — BTS SIO SISR
+                    Recherche d&apos;alternance de 2026 à 2029
                   </span>
                 </div>
               </div>
@@ -210,7 +210,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
                       content: (
                         <>
                           {[
-                            { deg: 'BTS SIO – SISR', school: 'EPSI Montpellier', year: '2024 – 2026 (en cours)' },
+                            { deg: 'BTS SIO – SISR', school: 'EPSI Montpellier', year: '2024 – 2026 (Diplômé)' },
                             { deg: 'Baccalauréat Général S', school: 'Lycée Polyvalent Philippe de Girard', year: '2017 – 2021' },
                           ].map((e, i) => (
                             <div key={i} className="mb-4">
@@ -268,8 +268,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:white;}
                     <h3 className="text-xs font-extrabold tracking-widest uppercase text-[#6F3FFF] mb-4 flex items-center gap-2 after:content-[''] after:flex-1 after:h-px after:bg-slate-300">Profil</h3>
                     <p className="text-sm text-slate-600 leading-relaxed text-justify">
                       Pratiquant le Viet Vo Dao depuis 9 ans, j&apos;ai développé rigueur, discipline et esprit d&apos;équipe.<br /><br />
-                      Étudiant en deuxième année à l&apos;EPSI en BTS SIO option SISR et major de ma promotion, j&apos;ai choisi cette filière par passion pour la programmation et les technologies. Orienté vers les réseaux et la cybersécurité, je m&apos;intéresse particulièrement au fonctionnement des systèmes et à la circulation sécurisée des données.<br /><br />
-                      Mon objectif professionnel est de devenir administrateur réseau, tout en continuant à développer mes compétences en développement web, car je ne souhaite pas délaisser ma passion pour le code. J&apos;ai d&apos;ailleurs créé ma micro-entreprise NETCY, spécialisée en création de sites web sécurisés.
+                      Diplômé du BTS SIO option SISR à l&apos;EPSI Montpellier et major de ma promotion, j&apos;ai choisi cette filière par passion pour la programmation et les technologies. Orienté vers les réseaux et la cybersécurité, je m&apos;intéresse particulièrement au fonctionnement des systèmes et à la circulation sécurisée des données.<br /><br />
+                      Mon objectif professionnel est de devenir administrateur réseau, tout en continuant à développer mes compétences en développement web, car je ne souhaite pas délaisser ma passion pour le code. J&apos;ai d&apos;ailleurs créé ma micro-entreprise NETCY, spécialisée en création de sites web sécurisés. Je suis actuellement à la recherche d&apos;une alternance (2026 – 2029) afin de poursuivre mes études et de mettre en pratique les compétences acquises au cours de ma formation.
                     </p>
                   </div>
 
