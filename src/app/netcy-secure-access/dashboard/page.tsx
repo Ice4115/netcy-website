@@ -22,10 +22,11 @@ import {
   BarChart2, HelpCircle, LogOut, Plus, Edit2, Trash2,
   Send, Search, Filter, Bell,
   ChevronLeft, ChevronRight, X as XIcon, Eye, Upload,
-  Globe, EyeOff, Lock, ExternalLink,
+  Globe, EyeOff, Lock, ExternalLink, ScrollText,
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { SITE_PAGES, SITE_PAGE_CATEGORIES, type SitePage } from '@/lib/site-pages';
+import AdminCV from '@/components/admin/AdminCV';
 
 /* ── Types ── */
 interface Client  { id: string; nom: string; prenom?: string; email: string; type: string; role: string; entreprise?: string; created_at: string; }
@@ -56,6 +57,7 @@ const NAV = [
   { label: 'Factures',  section: 'invoices',  icon: FileText },
   { label: 'Clients',   section: 'clients',   icon: Users },
   { label: 'Messages',  section: 'messages',  icon: MessageSquare },
+  { label: 'CV',        section: 'cv',        icon: ScrollText },
   { label: 'Pages',     section: 'pages',     icon: Globe },
 ];
 
@@ -1459,6 +1461,10 @@ export default function AdminDashboard() {
               );
             })}
           </div>
+
+        /* ══════════ CV & LETTRE DE MOTIVATION ══════════ */
+        ) : activeSection === 'cv' ? (
+          <AdminCV />
         ) : null}
 
         <footer className="flex flex-col sm:flex-row items-center justify-between text-xs text-outline-variant pt-4 border-t border-surface-container-low">
