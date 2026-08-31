@@ -101,7 +101,7 @@ function buildAlternanceCV(photoUrl: string, adresse: string) {
   <div>
     <div class="header-name">Jung Jean-Marie</div>
     <div class="header-sub">BTS SIO Dipl&ocirc;m&eacute; &middot; Option SISR &middot; Fondateur de NETCY &middot; 23 ans</div>
-    <div class="header-badge">Recherche d&apos;alternance de 2026 &agrave; 2029</div>
+    
   </div>
 </div>
 <div class="body">
