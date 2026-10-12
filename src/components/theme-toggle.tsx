@@ -32,6 +32,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={handleToggle}
+      data-site-chrome="theme-toggle"
       aria-label={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
       className={`fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full shadow-lg flex items-center justify-center bg-surface-container-highest border border-outline-variant hover:scale-110 active:scale-95 transition-transform duration-200 dark:shadow-[0_0_20px_rgba(208,188,255,0.15)] ${burst ? 'toggle-burst' : ''}`}
       onAnimationEnd={() => setBurst(false)}

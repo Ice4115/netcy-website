@@ -1,0 +1,306 @@
+/* ══════════════════════════════════════════════════════════════════
+   /nos-8-ans — feuille de style dédiée.
+
+   Tout est préfixé (`r-`, `bq-`) ou porté par `.romance-root` : aucune
+   règle ne peut déborder sur le reste du site NETCY.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Palette du bouquet ── */
+.romance-root {
+  --r-red: #b5122a;
+  --r-red-deep: #850d1e;
+  --r-ivory: #fff9f2;
+  --r-ivory-warm: #f7efe4;
+  --r-sage: #7c927d;
+  --r-forest: #183d32;
+  --r-forest-deep: #0d241d;
+  --r-blush: #e8c8cd;
+  --r-beige: #d8c4ad;
+
+  --r-ink: #221a18;
+  --r-ink-soft: #5c4f4a;
+
+  /* Rythme typographique */
+  --r-serif: var(--font-romance-serif), 'Cormorant Garamond', 'Iowan Old Style',
+    'Apple Garamond', Garamond, 'Times New Roman', serif;
+  --r-sans: var(--font-sans), 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+
+  color: var(--r-ink);
+  font-family: var(--r-sans);
+  /* Le fond est peint par le calque fixe `.r-backdrop`. */
+  background: transparent;
+}
+
+/* Masque le mobilier global du site (bouton de thème) : la page doit
+   rester une expérience entière, sans interface NETCY. */
+body[data-romance='1'] [data-site-chrome] {
+  display: none !important;
+}
+
+/* ── Grain de papier : donne de la matière aux fonds ivoire ── */
+.r-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+}
+
+/* ══════════════════ Mise en scène du bouquet ══════════════════ */
+
+.bq-stage {
+  perspective: 1500px;
+  perspective-origin: 50% 42%;
+}
+
+/* 1 · le geste de présentation : une seule rotation, lente, qui se fixe */
+.bq-rotor {
+  transform-style: preserve-3d;
+  animation: bqPresent 3.9s cubic-bezier(0.16, 0.84, 0.26, 1) both;
+}
+
+@keyframes bqPresent {
+  0% {
+    transform: rotateY(-27deg) rotateX(8deg) rotateZ(-3.5deg) scale(0.84);
+  }
+  55% {
+    transform: rotateY(-10deg) rotateX(3deg) rotateZ(-1deg) scale(0.97);
+  }
+  100% {
+    transform: rotateY(-4.5deg) rotateX(1.5deg) rotateZ(0deg) scale(1);
+  }
+}
+
+/* 2 · puis une respiration à peine perceptible, pour que rien ne soit figé */
+.bq-float {
+  transform-style: preserve-3d;
+  animation: bqFloat 11s ease-in-out 3.7s infinite;
+}
+
+@keyframes bqFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotateY(0deg);
+  }
+  50% {
+    transform: translate3d(0, -9px, 0) rotateY(2.4deg);
+  }
+}
+
+/* 3 · chaque fleur s'ouvre à son tour */
+.bq-bloom,
+.bq-bloom-soft,
+.bq-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+.bq-bloom {
+  animation: bqBloom 1.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes bqBloom {
+  from {
+    opacity: 0;
+    transform: scale(0.74) rotate(-5deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* La rose centrale arrive plus lentement, avec un voile qui se dissipe. */
+.bq-bloom-soft {
+  animation: bqBloomSoft 1.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes bqBloomSoft {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: blur(9px);
+  }
+  60% {
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+/* La lumière sur la rose blanche : elle monte, puis respire. */
+.bq-glow {
+  animation: bqGlowIn 1.5s ease-out both, bqGlowPulse 7s ease-in-out 3.8s infinite;
+}
+
+@keyframes bqGlowIn {
+  from {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bqGlowPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.68;
+  }
+}
+
+/* ══════════════════ Indice de défilement ══════════════════ */
+
+.r-scroll-line {
+  animation: rScrollLine 2.4s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@keyframes rScrollLine {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  35% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+/* ══════════════════ Pluie de pétales (un seul moment) ══════════════════ */
+
+.r-petal {
+  position: absolute;
+  top: -6%;
+  width: 14px;
+  height: 14px;
+  border-radius: 62% 8% 62% 8%;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: rPetalFall var(--dur, 9s) cubic-bezier(0.45, 0.05, 0.55, 0.95) var(--delay, 0s) forwards;
+}
+
+@keyframes rPetalFall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(var(--scale, 1));
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  80% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(var(--dx, 40px), 108vh, 0) rotate(var(--spin, 240deg))
+      scale(var(--scale, 1));
+    opacity: 0;
+  }
+}
+
+/* ══════════════════ Détails éditoriaux ══════════════════ */
+
+/* Filet vertical de la chronologie, qui se remplit au défilement. */
+.r-thread {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--r-sage) 55%, transparent) 12%,
+    color-mix(in srgb, var(--r-sage) 55%, transparent) 88%,
+    transparent
+  );
+}
+
+/* Cadre discret des photos. */
+.r-frame {
+  box-shadow:
+    0 1px 2px rgba(34, 26, 24, 0.06),
+    0 10px 24px -12px rgba(34, 26, 24, 0.22),
+    0 30px 60px -40px rgba(34, 26, 24, 0.4);
+}
+
+.r-frame-dark {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 18px 50px -20px rgba(0, 0, 0, 0.6);
+}
+
+/* Petites capitales espacées, utilisées pour les sur-titres. */
+.r-eyebrow {
+  font-family: var(--r-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.r-serif {
+  font-family: var(--r-serif);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+}
+
+/* Chiffre d'année en très grand, en filigrane. */
+.r-ghost-number {
+  font-family: var(--r-serif);
+  font-weight: 300;
+  line-height: 0.78;
+  letter-spacing: -0.04em;
+}
+
+/* ══════════════════ Accessibilité : focus visible ══════════════════ */
+
+.romance-root :focus-visible {
+  outline: 2px solid var(--r-red);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.r-backdrop-dark .romance-root :focus-visible,
+.r-on-dark :focus-visible {
+  outline-color: var(--r-blush);
+}
+
+/* ══════════════════ Mouvement réduit ══════════════════
+   On conserve l'ordre de lecture et les contrastes, on retire le mouvement. */
+
+@media (prefers-reduced-motion: reduce) {
+  .bq-rotor,
+  .bq-float {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .bq-bloom,
+  .bq-bloom-soft,
+  .bq-glow {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .r-petal {
+    display: none !important;
+  }
+
+  .r-scroll-line {
+    animation: none !important;
+    opacity: 0.6;
+  }
+}
