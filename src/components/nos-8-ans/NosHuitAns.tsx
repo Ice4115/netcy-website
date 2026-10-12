@@ -132,7 +132,7 @@ function Timeline() {
       id="album"
       data-tone="ivory"
       ref={ref}
-      className="r-grain relative mx-auto w-full max-w-6xl px-5 pb-10 sm:px-8 lg:px-0 lg:pl-24"
+      className="r-grain relative mx-auto w-full max-w-6xl overflow-x-clip px-5 pb-10 sm:px-8 lg:px-0 lg:pl-24"
     >
       {/* Le fil vertical : discret, et qui se remplit à mesure qu'on lit. */}
       <span

@@ -19,13 +19,26 @@ import { useLightbox } from './Lightbox';
 import WhiteRoseMark from './WhiteRoseMark';
 import { useMounted } from './useMounted';
 
-const ASPECT: Record<PhotoRatio, string> = {
+/** Gabarits nommés. Un `ratio` numérique (largeur / hauteur) les court-circuite. */
+const ASPECT: Record<Exclude<PhotoRatio, number>, string> = {
   portrait: 'aspect-[9/16]',
   tall: 'aspect-[3/4]',
   square: 'aspect-square',
   landscape: 'aspect-[4/3]',
   pano: 'aspect-[2/1]',
 };
+
+/**
+ * Un `ratio` chiffré donne le format exact du fichier : la photo remplit alors
+ * son cadre sans la moindre coupe. Les gabarits nommés restent pratiques pour
+ * une nouvelle photo dont on ne connaît pas encore les dimensions.
+ */
+function aspectOf(ratio: PhotoRatio): { className: string; style?: React.CSSProperties } {
+  if (typeof ratio === 'number' && Number.isFinite(ratio) && ratio > 0) {
+    return { className: '', style: { aspectRatio: String(ratio) } };
+  }
+  return { className: ASPECT[ratio as Exclude<PhotoRatio, number>] ?? ASPECT.tall };
+}
 
 export default function PhotoFrame({
   photo,
@@ -54,6 +67,7 @@ export default function PhotoFrame({
 
   const tilt = photo.tilt ?? 0;
   const isPlaceholder = !photo.src;
+  const aspect = aspectOf(photo.ratio);
 
   return (
     <div className={`relative ${className}`} ref={ref}>
@@ -63,7 +77,10 @@ export default function PhotoFrame({
       >
         {/* Cadre : liseré ivoire, comme un tirage monté sur carton. */}
         <div className="r-frame relative overflow-hidden rounded-[3px] bg-[#fffdf9] p-[6px] sm:p-[9px]">
-          <div className={`relative overflow-hidden rounded-[2px] bg-[#f0e6da] ${ASPECT[photo.ratio]}`}>
+          <div
+            className={`relative overflow-hidden rounded-[2px] bg-[#f0e6da] ${aspect.className}`}
+            style={aspect.style}
+          >
             {isPlaceholder ? (
               <PhotoPlaceholder />
             ) : (

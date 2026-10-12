@@ -17,15 +17,38 @@
  * │    · 'pano' (2/1)                                                   │
  * └─────────────────────────────────────────────────────────────────────┘
  *
- * ATTENTION : les textes livrés ci-dessous sont des EXEMPLES À REMPLACER.
- * Aucun souvenir réel n'a été inventé. Les années marquées
- * `isPlaceholder: true` affichent un discret repère « à personnaliser »
- * en développement uniquement (jamais en production).
+ * ── À propos des textes ──
+ * Les huit textes d'années sont TES mots, repris tels quels : seules
+ * l'orthographe et la ponctuation ont été corrigées, sans rien reformuler.
+ * Les citations entre deux années sont de courts échos de ces mêmes phrases,
+ * pas des ajouts. Aucun souvenir n'a été inventé.
+ *
+ * Deux accords dépendent de qui écrit — vérifie-les :
+ *   · année 1, « je suis tombé »   → « tombée » si tu écris au féminin
+ *   · année 3, « je suis fier »    → « fière »  si tu écris au féminin
+ *
+ * Une année marquée `isPlaceholder: true` affiche un discret repère
+ * « à personnaliser », en développement uniquement (jamais en production).
+ * Aucune des huit années ne l'est aujourd'hui.
  */
 
 /* ───────────────────────── Types ───────────────────────── */
 
-export type PhotoRatio = 'portrait' | 'tall' | 'square' | 'landscape' | 'pano';
+/**
+ * Format de la photo.
+ *
+ * · Un nom de gabarit : 'portrait' (9/16) · 'tall' (3/4) · 'square'
+ *   · 'landscape' (4/3) · 'pano' (2/1). Pratique, mais la photo est recadrée
+ *   si son format réel diffère.
+ * · OU un nombre : largeur / hauteur. C'est ce qui est utilisé ci-dessous,
+ *   avec les dimensions exactes de chaque fichier — ainsi AUCUNE de tes
+ *   photos n'est rognée, pas même d'un pixel.
+ *
+ * Attention : certaines photos de téléphone portent une rotation EXIF. Le
+ * navigateur les redresse, donc le format à indiquer est celui que tu VOIS,
+ * pas celui des pixels stockés. (La photo de l'année 4 est dans ce cas.)
+ */
+export type PhotoRatio = 'portrait' | 'tall' | 'square' | 'landscape' | 'pano' | number;
 
 export interface Photo {
   /** Chemin public de l'image (depuis /public). */
@@ -99,37 +122,35 @@ export const years: Year[] = [
     index: 1,
     period: 'Année 1',
     title: 'Le début de nous',
-    text: 'Exemple à remplacer : le tout début, quand tout était encore à écrire et que chaque moment comptait double.',
-    isPlaceholder: true,
     layout: 'duo',
+    text: "Dès le début, je suis tombé sous ton charme — et j'y suis encore. Dès le début, tu as été extraordinaire : tu m'as apporté du bonheur et de la stabilité, aussi bien émotionnellement que sentimentalement.",
     photos: [
       {
         src: '/images/nos-8-ans/annee-1/photo-1.jpg',
         alt: 'Souvenir de notre première année ensemble',
-        ratio: 'portrait',
+        ratio: 1908 / 4032,
         tilt: -2,
       },
       {
         src: '/images/nos-8-ans/annee-1/photo-2.jpg',
         alt: 'Deuxième souvenir de notre première année ensemble',
-        ratio: 'tall',
-        tilt: 3,
+        ratio: 640 / 853,
+        tilt: 2,
       },
     ],
-    quoteAfter: "Tout a commencé par un oui, et on ne l'a jamais regretté.",
+    quoteAfter: "Dès le début, et j'y suis encore.",
   },
   {
     index: 2,
     period: 'Année 2',
     title: 'Nos petits rituels',
-    text: "Exemple à remplacer : les habitudes qui se sont installées sans qu'on les décide, et qui sont devenues les nôtres.",
-    isPlaceholder: true,
     layout: 'photo-left',
+    text: "J'ai adoré nos petits rituels : prendre le bus avec toi, se retrouver au lycée pendant la récréation. Tous nos rituels, passés comme présents, je les adore.",
     photos: [
       {
         src: '/images/nos-8-ans/annee-2/photo-1.jpg',
         alt: 'Souvenir de notre deuxième année ensemble',
-        ratio: 'square',
+        ratio: 1776 / 1777,
         tilt: 2,
       },
     ],
@@ -138,96 +159,92 @@ export const years: Year[] = [
     index: 3,
     period: 'Année 3',
     title: 'Grandir à deux',
-    text: "Exemple à remplacer : une année où on a appris, changé un peu, et avancé côte à côte.",
-    isPlaceholder: true,
     layout: 'photo-right',
+    text: "Je t'ai vue grandir, seule comme à deux, et je suis fier de ce que nous sommes devenus.",
     photos: [
       {
         src: '/images/nos-8-ans/annee-3/photo-1.jpg',
         alt: 'Souvenir de notre troisième année ensemble',
-        ratio: 'tall',
-        tilt: -3,
+        ratio: 1080 / 1440,
+        tilt: -2,
       },
     ],
-    quoteAfter: 'Rien de spectaculaire. Juste nous, un peu plus forts.',
+    quoteAfter: 'Fier de ce que nous sommes devenus.',
   },
   {
     index: 4,
     period: 'Année 4',
     title: 'Toujours choisir nous',
-    text: "Exemple à remplacer : parce qu'aimer, c'est aussi choisir, encore et encore, la même personne.",
-    isPlaceholder: true,
-    layout: 'wide',
+    layout: 'photo-left',
+    text: "J'ai toujours choisi nous, et je choisirai toujours nous, contre tout. Parce que tous les deux, nous sommes plus forts.",
     photos: [
       {
         src: '/images/nos-8-ans/annee-4/photo-1.jpg',
-        alt: 'Souvenir panoramique de notre quatrième année ensemble',
-        ratio: 'pano',
+        alt: 'Souvenir de notre quatrième année ensemble',
+        // Fichier stocké en 4032 × 1960 avec une rotation EXIF : le navigateur
+        // le redresse en 1960 × 4032. C'est ce format-là qu'il faut déclarer.
+        ratio: 1960 / 4032,
+        tilt: -2,
       },
     ],
   },
   {
     index: 5,
     period: 'Année 5',
-    title: 'Des souvenirs plein les poches',
-    text: 'Exemple à remplacer : cinq ans de petites choses gardées précieusement, sans même y penser.',
-    isPlaceholder: true,
-    layout: 'photo-left',
+    title: 'Gravés pour toujours',
+    layout: 'wide',
+    text: 'Tous nos souvenirs sont gravés dans ma mémoire, pour toujours et à jamais.',
     photos: [
       {
         src: '/images/nos-8-ans/annee-5/photo-1.jpg',
         alt: 'Souvenir de notre cinquième année ensemble',
-        ratio: 'landscape',
-        tilt: -2,
+        ratio: 3648 / 2736,
       },
     ],
-    quoteAfter: "Le temps passe plus vite quand on est bien.",
+    quoteAfter: 'Pour toujours et à jamais.',
   },
   {
     index: 6,
     period: 'Année 6',
     title: 'Une évidence',
-    text: "Exemple à remplacer : plus besoin de se poser la question. C'était devenu simple, calme, évident.",
-    isPlaceholder: true,
     layout: 'photo-right',
+    text: "Après ces six ans, tu restes une évidence pour moi, et je ne vois pas comment vivre sans toi.",
     photos: [
       {
         src: '/images/nos-8-ans/annee-6/photo-1.jpg',
         alt: 'Souvenir de notre sixième année ensemble',
-        ratio: 'portrait',
-        tilt: 3,
+        ratio: 900 / 1600,
+        tilt: 2,
       },
     ],
   },
   {
     index: 7,
     period: 'Année 7',
-    title: 'Encore et toujours',
-    text: "Exemple à remplacer : sept ans, et toujours cette envie de raconter sa journée à la même personne.",
-    isPlaceholder: true,
+    title: 'Unique, à chaque fois',
     layout: 'photo-left',
+    text: "J'adore quand on planifie des petits voyages ou des sorties. Mais quoi que ce soit, chaque moment avec toi est unique et magique.",
     photos: [
       {
         src: '/images/nos-8-ans/annee-7/photo-1.jpg',
         alt: 'Souvenir de notre septième année ensemble',
-        ratio: 'tall',
+        ratio: 720 / 960,
         tilt: -2,
       },
     ],
-    quoteAfter: "Sept ans plus tard, c'est encore toi que je regarde.",
+    quoteAfter: 'Chaque moment avec toi est unique.',
   },
   {
     index: 8,
     period: 'Année 8',
     title: 'Et la suite nous appartient',
-    text: "Exemple à remplacer : huit ans derrière nous, et surtout tout ce qu'il nous reste à écrire.",
-    isPlaceholder: true,
     layout: 'photo-right',
+    text: "Et voilà une année qui recommence. Je compte bien voir ces années défiler encore et encore, car il n'y a que toi dans ma vie. Pour toujours.",
     photos: [
       {
         src: '/images/nos-8-ans/annee-8/photo-1.jpg',
         alt: 'Souvenir de notre huitième année ensemble',
-        ratio: 'tall',
+        ratio: 719 / 1152,
         tilt: 2,
       },
     ],

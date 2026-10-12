@@ -49,13 +49,13 @@ const SIZES: Record<YearLayout, string> = {
   'photo-left': '(max-width: 1024px) 92vw, 600px',
   'photo-right': '(max-width: 1024px) 92vw, 600px',
   duo: '(max-width: 640px) 88vw, (max-width: 1024px) 44vw, 340px',
-  wide: '(max-width: 1024px) 94vw, 1152px',
+  wide: '(max-width: 1024px) 94vw, 896px',
 };
 
 export default function TimelineYear({ year }: { year: Year }) {
   const layout: YearLayout = year.layout ?? 'photo-left';
   const slots = SLOTS[layout];
-  const ghostRight = layout === 'photo-left' || layout === 'duo';
+  const ghostRight = layout !== 'photo-left';
 
   return (
     <section
@@ -67,8 +67,8 @@ export default function TimelineYear({ year }: { year: Year }) {
       {/* Chiffre en filigrane — repère visuel propre à chaque année. */}
       <span
         aria-hidden="true"
-        className={`r-ghost-number pointer-events-none absolute -top-4 select-none text-[28vw] text-[color:var(--r-forest)] opacity-[0.055] lg:text-[13rem] ${
-          ghostRight ? 'right-0 lg:-right-4' : 'left-0 lg:-left-4'
+        className={`r-ghost-number pointer-events-none absolute -top-10 select-none text-[28vw] text-[color:var(--r-forest)] opacity-[0.055] lg:-top-24 lg:text-[13rem] ${
+          ghostRight ? 'right-0' : 'left-0'
         }`}
       >
         {year.index}
@@ -84,7 +84,10 @@ export default function TimelineYear({ year }: { year: Year }) {
         </span>
       </div>
 
-      <div className="relative grid grid-cols-1 gap-y-8 lg:grid-cols-12 lg:grid-rows-[auto_auto] lg:gap-x-14 lg:gap-y-6">
+      {/* `auto_1fr` + `items-start` : sans cela, une photo qui occupe les deux
+            lignes redistribue sa hauteur sur chacune, et le texte se retrouve
+            décroché très bas sous le titre. */}
+      <div className="relative grid grid-cols-1 items-start gap-y-8 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-14 lg:gap-y-6">
         {/* ── Titre ── */}
         <header className={`order-1 lg:order-none ${slots.header}`}>
           <Reveal y={16}>
@@ -174,5 +177,13 @@ function PhotoGroup({ year, layout }: { year: Year; layout: YearLayout }) {
   const [only] = year.photos;
   if (!only) return null;
 
-  return <PhotoFrame photo={only} sizes={sizes} priority={priority} parallax={layout === 'wide' ? 16 : 26} />;
+  return (
+    <PhotoFrame
+      photo={only}
+      sizes={sizes}
+      priority={priority}
+      parallax={layout === 'wide' ? 16 : 26}
+      className={layout === 'wide' ? 'mx-auto max-w-4xl' : ''}
+    />
+  );
 }
