@@ -8,7 +8,7 @@
  * cela évite de se verrouiller dehors (accueil, espaces protégés, etc.).
  */
 
-export type SitePageCategory = 'Public' | 'Compte' | 'Légal';
+export type SitePageCategory = 'Public' | 'Compte' | 'Légal' | 'Personnel';
 
 export interface SitePage {
   /** Chemin exact de la route (sans slash final). */
@@ -29,6 +29,11 @@ export const SITE_PAGES: SitePage[] = [
   { path: '/portfolio', label: 'Portfolio', description: 'Réalisations et projets',          category: 'Public' },
   { path: '/qr',        label: 'QR Code',   description: 'Page de redirection / carte QR',   category: 'Public' },
 
+  // ── Personnel ────────────────────────────────────────────
+  // Page privée, hors du site professionnel : volontairement non verrouillée
+  // afin de pouvoir la garder masquée jusqu'au jour J, puis la révéler.
+  { path: '/nos-8-ans', label: 'Nos 8 ans', description: 'Page anniversaire privée (hors moteurs de recherche)', category: 'Personnel' },
+
   // ── Compte ───────────────────────────────────────────────
   { path: '/inscription', label: 'Inscription', description: 'Création de compte client',     category: 'Compte' },
   { path: '/connexion',   label: 'Connexion',   description: 'Connexion à l’espace client',   category: 'Compte' },
@@ -41,7 +46,7 @@ export const SITE_PAGES: SitePage[] = [
 ];
 
 /** Ordre d'affichage des catégories dans l'admin. */
-export const SITE_PAGE_CATEGORIES: SitePageCategory[] = ['Public', 'Compte', 'Légal'];
+export const SITE_PAGE_CATEGORIES: SitePageCategory[] = ['Public', 'Compte', 'Légal', 'Personnel'];
 
 /** Chemins réellement désactivables (exclut les pages verrouillées). */
 export const TOGGLEABLE_PATHS = SITE_PAGES.filter((p) => !p.locked).map((p) => p.path);
