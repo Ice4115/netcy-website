@@ -71,6 +71,17 @@ export default function CodeWindow({ className = '' }: { className?: string }) {
   const [charIdx, setCharIdx] = useState(0);
   const [phase, setPhase] = useState<'typing' | 'hold' | 'erasing'>('typing');
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  // Pause de l'animation de frappe hors écran : évite ~45 rendus/s pendant le scroll.
+  const [onScreen, setOnScreen] = useState(true);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const snippet = SNIPPETS[snippetIdx];
 
@@ -79,7 +90,7 @@ export default function CodeWindow({ className = '' }: { className?: string }) {
   }, [snippet]);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !onScreen) return;
     const clear = () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
@@ -116,7 +127,7 @@ export default function CodeWindow({ className = '' }: { className?: string }) {
       }
     }
     return clear;
-  }, [phase, charIdx, lineIdx, snippet.lines.length, lineText, reduce]);
+  }, [phase, charIdx, lineIdx, snippet.lines.length, lineText, reduce, onScreen]);
 
   const renderLine = (line: Line, i: number) => {
     const isCurrent = i === lineIdx;
@@ -146,6 +157,7 @@ export default function CodeWindow({ className = '' }: { className?: string }) {
 
   return (
     <motion.div
+      ref={rootRef}
       className={`relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 ${className}`}
       style={{
         background: 'linear-gradient(145deg, #0b0b12 0%, #15151f 100%)',

@@ -12,20 +12,20 @@ const TYPE_COLORS: Record<string, { dot: string; badge: string; text: string }> 
 
 const EXPERIENCE = [
   {
-    year: 'Juin → Juil 2026',
-    role: 'Épreuves finales BTS SIO',
-    company: 'Diplôme',
-    type: 'Diplôme',
-    desc: "Passage des épreuves E5 et E6. Préparation pour l'obtention du BTS SIO Option SISR.",
-    current: false,
-  },
-  {
-    year: 'Février 2026',
+    year: 'Depuis Juil. 2026',
     role: "Aujourd'hui",
     company: 'Progression',
     type: 'En cours',
-    desc: "Préparation active de l'examen final et finalisation du portfolio.",
+    desc: "Diplômé et toujours animé par la même passion : coder. Je continue à développer des projets web avec NETCY tout en recherchant une alternance (2026 – 2029) en réseau & cybersécurité.",
     current: true,
+  },
+  {
+    year: 'Juin → Juil 2026',
+    role: 'Obtention du BTS SIO SISR',
+    company: 'Diplôme',
+    type: 'Diplôme',
+    desc: "Réussite des épreuves E5 et E6 : obtention du BTS SIO option SISR (Bac+2) à l'EPSI Montpellier.",
+    current: false,
   },
   {
     year: 'Jan → Fév 2026',
@@ -91,7 +91,7 @@ export default function ExperienceSection() {
       <div className="mb-16">
         <h2 className="text-3xl font-bold text-on-surface mb-4">Parcours & Frise Chronologique</h2>
         <p className="text-on-surface-variant max-w-2xl text-sm leading-relaxed">
-          Retrouvez l&apos;intégralité de mon parcours, depuis mes études secondaires jusqu&apos;à mon implication actuelle en BTS SIO et mes expériences en entreprise.
+          Retrouvez l&apos;intégralité de mon parcours, depuis mes études secondaires jusqu&apos;à l&apos;obtention de mon BTS SIO, en passant par mes expériences en entreprise.
         </p>
       </div>
 

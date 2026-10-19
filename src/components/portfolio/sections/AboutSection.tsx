@@ -44,7 +44,7 @@ export default function AboutSection() {
           À propos de moi
         </span>
         <h2 className="text-3xl font-bold text-on-surface mb-4">
-          Étudiant SISR, passionné par l&apos;infrastructure et la sécurité.
+          Diplômé SISR, passionné par l&apos;infrastructure, la sécurité… et le code.
         </h2>
       </div>
 
@@ -52,13 +52,13 @@ export default function AboutSection() {
         {/* Texte de présentation */}
         <div className="lg:col-span-3 space-y-5 text-sm md:text-base text-on-surface-variant leading-relaxed">
           <p>
-            Je m&apos;appelle <span className="font-semibold text-on-surface">Jung Jean-Marie</span>, j&apos;ai grandi à Montpellier et j&apos;y poursuis aujourd&apos;hui mon <span className="font-semibold text-on-surface">BTS SIO option SISR</span> en tant que <span className="text-[#0052FF] font-semibold">Major de promotion</span>. Mon parcours s&apos;est construit autour d&apos;une seule envie : <span className="text-on-surface font-medium">comprendre comment ça marche, de la prise réseau jusqu&apos;à l&apos;interface utilisateur</span>.
+            Je m&apos;appelle <span className="font-semibold text-on-surface">Jung Jean-Marie</span>, j&apos;ai grandi à Montpellier où j&apos;ai obtenu mon <span className="font-semibold text-on-surface">BTS SIO option SISR</span> en tant que <span className="text-[#0052FF] font-semibold">Major de promotion</span>. Mon parcours s&apos;est construit autour d&apos;une seule envie : <span className="text-on-surface font-medium">comprendre comment ça marche, de la prise réseau jusqu&apos;à l&apos;interface utilisateur</span>.
           </p>
           <p>
             J&apos;ai débuté en autodidacte sur le développement web puis, par curiosité, j&apos;ai voulu maîtriser la couche en dessous : serveurs, routeurs, pare-feux, supervision. Aujourd&apos;hui, je suis aussi à l&apos;aise pour <span className="text-on-surface font-medium">déployer une infrastructure pfSense + VLANs</span> que pour <span className="text-on-surface font-medium">livrer une application Next.js en production</span>.
           </p>
           <p>
-            Mes deux stages — <span className="text-on-surface font-medium">InfoBoost</span> en support et reconditionnement, puis <span className="text-on-surface font-medium">Devensys</span> en cybersécurité — m&apos;ont confirmé que c&apos;est en entreprise que j&apos;apprends le plus vite. Je suis aujourd&apos;hui <span className="text-on-surface font-semibold">en recherche active d&apos;une alternance</span> pour poursuivre cette progression sur le terrain.
+            Mes deux stages — <span className="text-on-surface font-medium">InfoBoost</span> en support et reconditionnement, puis <span className="text-on-surface font-medium">Devensys</span> en cybersécurité — m&apos;ont confirmé que c&apos;est en entreprise que j&apos;apprends le plus vite. Diplôme en poche, l&apos;envie de coder ne m&apos;a jamais quitté : <span className="text-on-surface font-medium">c&apos;est une passion</span> que je continue de nourrir chaque jour à travers NETCY et mes projets personnels. Je suis aujourd&apos;hui <span className="text-on-surface font-semibold">en recherche active d&apos;une alternance</span> pour poursuivre cette progression sur le terrain.
           </p>
         </div>
 

@@ -411,12 +411,8 @@
 }
 .animate-scroll-left:hover { animation-play-state: paused; }
 
-/* Skip rendering of off-screen sections — kicks in once layout is established */
-main > section,
-main > [class*="section"] {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 800px;
-}
+/* Pas de content-visibility:auto sur les sections : tout est rendu dès l'arrivée,
+   aucun calcul de mise en page différé (source de micro-freezes) pendant le scroll. */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -480,9 +476,20 @@ main > [class*="section"] {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
+/* Mobile : flou plus léger (recalculé à chaque frame de scroll sous une barre fixe) */
+@media (max-width: 767px) {
+  .glass-nav {
+    background: rgba(248, 249, 250, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
 .dark .glass-nav {
   background: rgba(19, 19, 20, 0.88);
   border-bottom: 1px solid rgba(73, 69, 79, 0.35);
+}
+@media (max-width: 767px) {
+  .dark .glass-nav { background: rgba(19, 19, 20, 0.94); }
 }
 
 .progress-track {

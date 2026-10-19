@@ -34,7 +34,8 @@ export default function SectionReveal({ children, className = '', id, intensity 
           }
         }
       },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
+      // Déclenche juste avant l'entrée à l'écran : la section n'apparaît jamais vide en scrollant vite.
+      { rootMargin: '0px 0px 8% 0px', threshold: 0 }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -47,7 +48,6 @@ export default function SectionReveal({ children, className = '', id, intensity 
       id={id}
       ref={ref}
       className={className}
-      style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 800px' } as React.CSSProperties}
       initial={reduce ? false : { opacity: 0, y: yOffset }}
       animate={revealed ? { opacity: 1, y: 0 } : undefined}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}

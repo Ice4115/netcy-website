@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import NavLink from '@/components/NavLink';
-import dynamic from 'next/dynamic';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { Menu, X, ArrowRight, Github, Linkedin } from 'lucide-react';
 import { LogoNetcy } from '@/components/LogoNetcy';
@@ -16,8 +15,7 @@ import { Checkbox } from '@/components/animate-ui/components/radix/checkbox';
 import { Select } from 'radix-ui';
 import ImmersiveHero from '@/components/immersive/ImmersiveHero';
 import SectionReveal from '@/components/immersive/SectionReveal';
-
-const ProfileCard = dynamic(() => import('@/components/ProfileCard'), { ssr: false });
+import ProfileCard from '@/components/ProfileCard';
 
 /* ──────────────────────────────────────────
    Navbar
@@ -280,7 +278,7 @@ function StackSection() {
           src={item.src}
           alt={item.label}
           style={{ height: item.h, width: 'auto' }}
-          loading="lazy"
+          loading="eager"
           draggable={false}
         />
       </div>
@@ -330,8 +328,8 @@ function AboutSection() {
         <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* ProfileCard */}
-          <div className="flex justify-center lg:justify-start animate-slide-in-left">
-            <div className="animate-float w-full max-w-[360px] sm:max-w-md lg:max-w-none">
+          <div className="flex justify-center w-full animate-slide-in-left">
+            <div className="animate-float w-fit max-w-full mx-auto">
               <ProfileCard
                 avatarUrl="/images/profile.webp"
                 miniAvatarUrl="/images/profile.webp"
@@ -357,8 +355,9 @@ function AboutSection() {
               Rencontrez<br />Jean-Marie Jung
             </h2>
             <p className="text-on-surface-variant leading-relaxed">
-              Étudiant passionné en <strong className="text-on-surface">BTS SIO (SISR)</strong> et développeur web
-              autodidacte, Jean-Marie est le moteur créatif de <strong className="text-on-surface">NETCY</strong>. Sa double compétence en
+              Diplômé du <strong className="text-on-surface">BTS SIO (SISR)</strong> et développeur web
+              autodidacte, Jean-Marie est le moteur créatif de <strong className="text-on-surface">NETCY</strong>. Le code
+              reste pour lui une véritable passion, qu&apos;il continue de cultiver projet après projet. Sa double compétence en
               infrastructure réseau et en développement d'interfaces lui permet de concevoir des
               solutions web robustes et sécurisées dès leur fondation.
             </p>

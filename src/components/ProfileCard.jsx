@@ -42,6 +42,18 @@ const ProfileCardComponent = ({
   const enterTimerRef = useRef(null);
   const leaveRafRef = useRef(null);
 
+  // Met en pause les animations holographiques (blend modes + filtres, coûteuses) hors écran.
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => wrap.classList.toggle('pc-offscreen', !entry.isIntersecting),
+      { rootMargin: '200px 0px' }
+    );
+    io.observe(wrap);
+    return () => io.disconnect();
+  }, []);
+
   const tiltEngine = useMemo(() => {
     if (!enableTilt) return null;
 
@@ -317,7 +329,7 @@ const ProfileCardComponent = ({
                 className="avatar"
                 src={avatarUrl}
                 alt={`${name || 'User'} avatar`}
-                loading="lazy"
+                loading="eager"
                 decoding="async"
                 onError={e => {
                   const t = e.target;
@@ -331,7 +343,7 @@ const ProfileCardComponent = ({
                       <img
                         src={miniAvatarUrl || avatarUrl}
                         alt={`${name || 'User'} mini avatar`}
-                        loading="lazy"
+                        loading="eager"
                 decoding="async"
                         onError={e => {
                           const t = e.target;

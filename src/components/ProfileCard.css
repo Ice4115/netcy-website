@@ -56,6 +56,8 @@
 }
 
 .pc-card {
+  margin-inline: auto;
+  max-width: 100%;
   height: 80svh;
   max-height: 540px;
   display: grid;
@@ -85,6 +87,14 @@
 .pc-card-shell {
   position: relative;
   z-index: 1;
+}
+
+/* Hors écran : on fige les animations infinies pour libérer le GPU pendant le scroll */
+.pc-offscreen .pc-card,
+.pc-offscreen .pc-shine,
+.pc-offscreen .pc-shine::after,
+.pc-offscreen .pc-glare {
+  animation-play-state: paused !important;
 }
 
 .pc-card * {

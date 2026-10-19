@@ -489,7 +489,7 @@ SIREN: 995 301 546 | SIRET: 99530154600025`;
               <p style="margin:0;color:#e4e4e7;font-size:14px;line-height:1.9;">
                 Cordialement,<br>
                 <strong style="color:#ffffff;font-size:16px;">Jean-Marie Jung</strong><br>
-                <span style="color:rgba(255,255,255,0.4);font-size:12px;">Étudiant BTS SIO option SISR</span>
+                <span style="color:rgba(255,255,255,0.4);font-size:12px;">Diplômé BTS SIO option SISR</span>
               </p>
 
               <p style="margin:16px 0 0;">
@@ -534,7 +534,7 @@ ${'─'.repeat(40)}
 Cordialement,
 
 Jean-Marie Jung
-Étudiant BTS SIO option SISR
+Diplômé BTS SIO option SISR
 
 Portfolio : https://netcy.fr/portfolio
 LinkedIn  : https://linkedin.com/in/jean-marie-jung-40683b218

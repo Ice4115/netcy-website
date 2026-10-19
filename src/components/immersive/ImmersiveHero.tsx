@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { motion, useScroll, useTransform, useReducedMotion, useSpring } from 'motion/react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import CodeWindow from './CodeWindow';
 
 const LiquidEther = dynamic(() => import('@/components/LiquidEther'), { ssr: false });
@@ -17,9 +17,17 @@ export default function ImmersiveHero() {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
+  // Le fondu au scroll n'est appliqué qu'en mise en page desktop (colonnes côte à côte).
+  // Sur mobile la carte est empilée sous le titre : un fondu la ferait disparaître avant lecture.
+  const [isDesktopLayout, setIsDesktopLayout] = useState(false);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const update = () => setIsDesktopLayout(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -27,11 +35,10 @@ export default function ImmersiveHero() {
     offset: ['start start', 'end start'],
   });
 
-  const rawY = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const rawOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
-
-  const y = useSpring(rawY, { stiffness: 60, damping: 32, mass: 0.6 });
-  const opacity = useSpring(rawOpacity, { stiffness: 90, damping: 30 });
+  // Valeurs liées directement au scroll (pas de ressort) : moins de calculs par frame, aucun retard.
+  const y = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const opacity = useTransform(scrollYProgress, [0.45, 0.95], [1, 0]);
+  const scrollFx = isDesktopLayout && !reduce;
 
   return (
     <section
@@ -172,7 +179,7 @@ export default function ImmersiveHero() {
           {/* Right — Code Window */}
           <motion.div
             className="lg:col-span-7 relative"
-            style={{ y, opacity, willChange: 'transform, opacity' }}
+            style={scrollFx ? { y, opacity, willChange: 'transform, opacity' } : undefined}
           >
             <CodeWindow />
 

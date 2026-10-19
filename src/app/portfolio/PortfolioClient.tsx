@@ -2,23 +2,25 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import AnimatedContent from '@/components/AnimatedContent';
 import Header from '@/components/portfolio/Header';
 import HeroSection from '@/components/portfolio/sections/HeroSection';
 import AboutSection from '@/components/portfolio/sections/AboutSection';
 import ExpertiseSection from '@/components/portfolio/sections/ExpertiseSection';
 import BTSSIOSection from '@/components/portfolio/sections/BTSSIOSection';
-import Image from 'next/image';
+// Imports statiques : toutes les sections sont rendues côté serveur et livrées
+// dans le même bundle, rien ne se charge à la volée pendant le scroll.
+import SkillsDataSection from '@/components/portfolio/sections/SkillsDataSection';
+import SkillsTableSection from '@/components/portfolio/sections/SkillsTableSection';
+import CaseStudiesSection from '@/components/portfolio/sections/CaseStudiesSection';
+import StagesSection from '@/components/portfolio/sections/StagesSection';
+import SituationsSection from '@/components/portfolio/sections/SituationsSection';
+import VeillesSection from '@/components/portfolio/sections/VeillesSection';
+import ExperienceSection from '@/components/portfolio/sections/ExperienceSection';
+import CVSection from '@/components/portfolio/sections/CVSection';
+import ContactSection from '@/components/portfolio/sections/ContactSection';
 
-const AnimatedContent = dynamic(() => import('@/components/AnimatedContent'), { ssr: false });
-const SkillsDataSection = dynamic(() => import('@/components/portfolio/sections/SkillsDataSection'));
-const SkillsTableSection = dynamic(() => import('@/components/portfolio/sections/SkillsTableSection'));
-const CaseStudiesSection = dynamic(() => import('@/components/portfolio/sections/CaseStudiesSection'));
-const StagesSection = dynamic(() => import('@/components/portfolio/sections/StagesSection'));
-const SituationsSection = dynamic(() => import('@/components/portfolio/sections/SituationsSection'));
-const VeillesSection = dynamic(() => import('@/components/portfolio/sections/VeillesSection'));
-const ExperienceSection = dynamic(() => import('@/components/portfolio/sections/ExperienceSection'));
-const CVSection = dynamic(() => import('@/components/portfolio/sections/CVSection'));
-const ContactSection = dynamic(() => import('@/components/portfolio/sections/ContactSection'));
 const PortfolioModals = dynamic(() => import('@/components/portfolio/PortfolioModals'), { ssr: false });
 
 export default function PortfolioClient() {
@@ -32,59 +34,59 @@ export default function PortfolioClient() {
         <HeroSection />
 
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-12 md:py-24 space-y-20 md:space-y-40">
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <AboutSection />
           </AnimatedContent>
 
           {/* Parcours (timeline) — directement après la présentation */}
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <ExperienceSection />
           </AnimatedContent>
 
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <ExpertiseSection />
           </AnimatedContent>
 
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <CVSection />
           </AnimatedContent>
 
           {/* 2. Présentation du BTS et option choisie */}
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <BTSSIOSection />
           </AnimatedContent>
 
           {/* 3. Tableau de compétence */}
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <SkillsDataSection />
           </AnimatedContent>
 
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <SkillsTableSection />
           </AnimatedContent>
 
           {/* 4. Projets académiques 1 et 2 (avec GitHub) */}
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <CaseStudiesSection onOpenModal={setProjectModal} />
           </AnimatedContent>
 
           {/* 5. Stages */}
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <StagesSection />
           </AnimatedContent>
 
           {/* 6. Situations professionnelles E6 (anciens "E5 projets") */}
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <SituationsSection />
           </AnimatedContent>
 
           {/* 7. Veille technologique */}
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <VeillesSection />
           </AnimatedContent>
 
           {/* 8. Page contact */}
-          <AnimatedContent distance={40} duration={0.7}>
+          <AnimatedContent distance={40} duration={0.6} threshold={0.02}>
             <ContactSection />
           </AnimatedContent>
         </div>
