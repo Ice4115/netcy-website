@@ -215,7 +215,22 @@
 .logo-adaptive { filter: none; }
 .dark .logo-adaptive { filter: brightness(0) invert(1); }
 
-/* ── Smooth theme transition ─────────────────────
+/* ── Theme switch : révélation circulaire ────────
+   View Transitions : le navigateur capture l'ancien et
+   le nouvel état, seul le clip-path du nouveau est animé
+   (composité GPU, aucun recalcul de style sur le DOM).
+   Scopé par .theme-vt pour ne pas toucher d'autres transitions.
+─────────────────────────────────────────────── */
+:root.theme-vt::view-transition-old(root),
+:root.theme-vt::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+/* Le bouton reste vivant au-dessus des captures : sa scène joue en continu. */
+:root.theme-vt::view-transition-old(theme-toggle) { display: none; }
+:root.theme-vt::view-transition-new(theme-toggle) { animation: none; }
+
+/* ── Smooth theme transition (repli sans View Transitions) ──
    Applied only while switching — avoids slowing
    hover/animation states permanently.
 ─────────────────────────────────────────────── */
@@ -334,13 +349,139 @@
 }
 .moon-glow { animation: moon-rock 3s ease-in-out infinite; }
 
-/* Toggle button burst on click */
-@keyframes toggle-burst {
-  0%   { box-shadow: 0 0 0 0 rgba(208,188,255,0.4); }
-  70%  { box-shadow: 0 0 0 10px rgba(208,188,255,0); }
-  100% { box-shadow: 0 0 0 0 rgba(208,188,255,0); }
+/* ── Theme toggle : scène de ciel ─────────────────
+   Roue soleil/lune pivotant sous l'horizon, ciel en fondu,
+   nuages et lueur d'horizon rejoués à chaque bascule.
+   Uniquement transform/opacity → composité, fluide sur mobile.
+─────────────────────────────────────────────── */
+.sky-toggle {
+  --sky-dur: 1000ms;
+  --sky-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  view-transition-name: theme-toggle;
+  /* Remonte au-dessus du footer visible (voir ThemeToggle) ; scale reste libre pour le hover */
+  translate: 0 calc(-1 * var(--toggle-lift, 0px));
+  transition: scale 200ms ease, translate 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout paint;
+  -webkit-tap-highlight-color: transparent;
 }
-.toggle-burst { animation: toggle-burst 0.5s ease-out forwards; }
+.sky-toggle:focus-visible { outline: 2px solid #a78bfa; outline-offset: 3px; }
+
+.sky-layer { position: absolute; inset: 0; pointer-events: none; }
+.sky-day   { background: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 55%, #fde68a 100%); }
+.sky-night {
+  background: linear-gradient(180deg, #0b1026 0%, #1e1b4b 60%, #312e81 100%);
+  opacity: 0;
+  transition: opacity var(--sky-dur) var(--sky-ease);
+}
+.sky-toggle[data-dark='true'] .sky-night { opacity: 1; }
+
+/* Crépuscule vers la nuit, aube vers le jour */
+.sky-dusk {
+  opacity: 0;
+  background: radial-gradient(120% 75% at 50% 100%, rgba(251,146,60,0.95) 0%, rgba(244,114,182,0.6) 45%, transparent 78%);
+  animation: sky-glow var(--sky-dur) ease-in-out both;
+}
+.sky-toggle[data-dark='false'] .sky-dusk {
+  background: radial-gradient(120% 75% at 50% 100%, rgba(253,186,116,0.95) 0%, rgba(253,224,71,0.5) 45%, transparent 78%);
+}
+@keyframes sky-glow {
+  0%   { opacity: 0; }
+  45%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.sky-stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.sky-toggle[data-dark='true'] .sky-stars { opacity: 1; transition: opacity 600ms ease 450ms; }
+.sky-star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 3px rgba(255,255,255,0.9);
+}
+.sky-toggle[data-dark='true'] .sky-star { animation: sky-twinkle 2.4s ease-in-out infinite alternate; }
+@keyframes sky-twinkle {
+  from { opacity: 1; }
+  to   { opacity: 0.25; }
+}
+
+/* Pivot sous l'horizon (24px, 46px) : soleil en haut, lune en bas, demi-tour par bascule */
+.sky-wheel {
+  position: absolute;
+  inset: 0;
+  transform-origin: 24px 46px;
+  transition: transform var(--sky-dur) var(--sky-ease);
+  will-change: transform;
+}
+.sky-body {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform var(--sky-dur) var(--sky-ease);
+}
+.sky-sun {
+  top: 15px;
+  left: 15px;
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 35% 35%, #fef3c7 0%, #fbbf24 55%, #f59e0b 100%);
+  box-shadow: 0 0 10px 2px rgba(251,191,36,0.65);
+}
+/* Le soleil rougit en se couchant */
+.sky-sun::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fdba74 0%, #f97316 60%, #dc2626 100%);
+  opacity: 0;
+  transition: opacity var(--sky-dur) var(--sky-ease);
+}
+.sky-toggle[data-dark='true'] .sky-sun::after { opacity: 1; }
+.sky-moon {
+  top: 60px;
+  left: 16px;
+  width: 16px;
+  height: 16px;
+  box-shadow: inset -5px -2px 0 0 #fef9c3;
+  filter: drop-shadow(0 0 4px rgba(254,249,195,0.6));
+}
+
+.sky-hills {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 14px;
+}
+.sky-hill-back, .sky-hill-front { transition: fill var(--sky-dur) var(--sky-ease); }
+.sky-hill-back  { fill: #86efac; }
+.sky-hill-front { fill: #4ade80; }
+.sky-toggle[data-dark='true'] .sky-hill-back  { fill: #312e81; }
+.sky-toggle[data-dark='true'] .sky-hill-front { fill: #1e1b4b; }
+
+.sky-clouds { position: absolute; inset: 0; pointer-events: none; }
+.sky-cloud {
+  position: absolute;
+  left: 0;
+  fill: #fff;
+  opacity: 0;
+  animation: sky-cloud-pass 1100ms cubic-bezier(0.3, 0.1, 0.3, 1) both;
+}
+.sky-toggle[data-dark='true'] .sky-cloud { fill: #c7d2fe; }
+.sky-cloud-a { top: 9px; width: 22px; height: 11px; }
+.sky-cloud-b { top: 22px; width: 16px; height: 8px; animation-delay: 140ms; }
+@keyframes sky-cloud-pass {
+  0%   { opacity: 0;    transform: translateX(-26px); }
+  20%  { opacity: 0.95; }
+  80%  { opacity: 0.95; }
+  100% { opacity: 0;    transform: translateX(52px); }
+}
 
 /* Existing animations */
 @keyframes progress {
