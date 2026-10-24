@@ -75,7 +75,7 @@ function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-nav shadow-sm' : 'bg-transparent'
+      className={`nl-reveal-down fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-nav shadow-sm' : 'bg-transparent'
         }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between h-16">
@@ -186,17 +186,17 @@ function ScrollProgress() {
 function FeaturesSection() {
   const features = [
     {
-      icon: <LayersIcon size={22} animate={true} animation="default-loop" loop={true} loopDelay={800} />,
+      icon: <LayersIcon size={22} animateOnView animateOnHover animation="default-loop" />,
       title: 'Multi-plateforme',
       desc: 'Des interfaces qui s\'adaptent parfaitement à tous les écrans, du mobile au 4K.',
     },
     {
-      icon: <HeartIcon size={22} animate={true} animation="default" loop={true} loopDelay={800} />,
+      icon: <HeartIcon size={22} animateOnView animateOnHover animation="default" />,
       title: 'Design Émotionnel',
       desc: 'Nous créons des expériences qui marquent l\'esprit de vos utilisateurs.',
     },
     {
-      icon: <CogIcon size={22} animate={true} animation="default-loop" loop={true} loopDelay={800} />,
+      icon: <CogIcon size={22} animateOnView animateOnHover animation="default-loop" />,
       title: 'Clean Code',
       desc: 'Une architecture technique robuste pour une maintenance simplifiée.',
     },
@@ -225,7 +225,7 @@ function FeaturesSection() {
             {/* Big blue card */}
             <div className="bg-[#0052FF] dark:bg-gradient-to-br dark:from-[#d0bcff] dark:to-[#ffb0cd] rounded-2xl p-4 sm:p-6 text-white dark:text-[#1D1B20]">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                <SearchIcon size={20} className="text-white dark:text-[#1D1B20]" animate={true} animation="default" loop={true} loopDelay={1000} />
+                <SearchIcon size={20} className="text-white dark:text-[#1D1B20]" animateOnView animateOnHover animation="default" />
               </div>
               <h3 className="font-display font-bold text-xl mb-1">Performance Native</h3>
               <p className="text-blue-100 dark:text-[#1D1B20]/70 text-sm leading-relaxed">
@@ -331,9 +331,9 @@ function AboutSection() {
           <div className="flex justify-center w-full animate-slide-in-left">
             <div className="animate-float w-fit max-w-full mx-auto">
               <ProfileCard
-                avatarUrl="/images/profile.webp"
-                miniAvatarUrl="/images/profile.webp"
-                iconUrl="/images/iconpattern.png"
+                avatarUrl="/images/profile-card.webp"
+                miniAvatarUrl="/images/profile-mini.webp"
+                iconUrl="/images/iconpattern-sm.png"
                 grainUrl="/images/grain.webp"
                 name="Jean-Marie Jung"
                 title="Réseaux & Sécurité · NETCY"
@@ -369,11 +369,11 @@ function AboutSection() {
 
             <div className="flex flex-wrap gap-3 pt-2">
               <div className="flex items-center gap-2 bg-surface-container-lowest rounded-xl px-4 py-2.5 shadow-sm">
-                <TerminalIcon size={16} className="text-[#0052FF]" animate={true} animation="default" loop={true} loopDelay={1200} />
+                <TerminalIcon size={16} className="text-[#0052FF]" animateOnView animateOnHover animation="default" />
                 <span className="text-sm font-medium text-on-surface">Next.js / React</span>
               </div>
               <div className="flex items-center gap-2 bg-surface-container-lowest rounded-xl px-4 py-2.5 shadow-sm">
-                <SearchIcon size={16} className="text-[#0052FF]" animate={true} animation="default" loop={true} loopDelay={1200} />
+                <SearchIcon size={16} className="text-[#0052FF]" animateOnView animateOnHover animation="default" />
                 <span className="text-sm font-medium text-on-surface">SEO & Performance</span>
               </div>
             </div>

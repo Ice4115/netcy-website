@@ -1,8 +1,11 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import LiquidEther from "@/components/LiquidEther";
 import GradientText from "@/components/GradientText";
+import dynamic from 'next/dynamic';
+
+// Chargé uniquement si cette page s'affiche : three.js ne pèse plus sur les autres pages.
+const LiquidEther = dynamic(() => import('@/components/LiquidEther'), { ssr: false });
 
 const isMobileDevice = () => {
   if (typeof window === 'undefined') return false;

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import PortfolioClient from './PortfolioClient';
+import SiteLoader from '@/components/loader/SiteLoader';
 
 export const metadata: Metadata = {
   title: 'Portfolio | Jung Jean-Marie - Infrastructure & Cybersécurité',
@@ -21,5 +22,10 @@ export const metadata: Metadata = {
 };
 
 export default function PortfolioPage() {
-  return <PortfolioClient />;
+  return (
+    <>
+      <SiteLoader />
+      <PortfolioClient />
+    </>
+  );
 }

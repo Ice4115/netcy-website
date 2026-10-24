@@ -1,6 +1,15 @@
 import type { Metadata } from 'next';
 import HomeClientWrapper from './HomeClientWrapper';
 import StructuredData from '@/components/StructuredData';
+import SiteLoader from '@/components/loader/SiteLoader';
+
+// Images de la carte photo décodées sous l'écran de chargement (pas de freeze au scroll).
+const PRELOAD_IMAGES = [
+  '/images/profile-card.webp',
+  '/images/profile-mini.webp',
+  '/images/iconpattern-sm.png',
+  '/images/grain.webp',
+];
 
 export const metadata: Metadata = {
   title: 'NETCY - Création de Sites Internet Sécurisés & Cybersécurité',
@@ -24,6 +33,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+      <SiteLoader images={PRELOAD_IMAGES} />
       <StructuredData />
       <HomeClientWrapper />
     </>

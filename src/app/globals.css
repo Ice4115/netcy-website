@@ -326,10 +326,11 @@
 }
 
 /* Moon — gentle rock + glow loop */
+/* transform uniquement : animer un filter forcerait un redessin à chaque frame */
 @keyframes moon-rock {
-  0%   { transform: rotate(-8deg); filter: drop-shadow(0 0 3px rgba(99,102,241,0.5)); }
-  50%  { transform: rotate(8deg);  filter: drop-shadow(0 0 8px rgba(99,102,241,0.9)); }
-  100% { transform: rotate(-8deg); filter: drop-shadow(0 0 3px rgba(99,102,241,0.5)); }
+  0%   { transform: rotate(-8deg); }
+  50%  { transform: rotate(8deg); }
+  100% { transform: rotate(-8deg); }
 }
 .moon-glow { animation: moon-rock 3s ease-in-out infinite; }
 
@@ -561,3 +562,162 @@
   body { background: white !important; }
   .lg\:grid { display: block !important; }
 }
+
+/* ══════════════════════════════════════════
+   ÉCRAN DE CHARGEMENT (SiteLoader)
+   États sur <html> : nl-loading → nl-exit (rideau) → nl-reveal (entrée du contenu)
+   Uniquement transform / opacity : animations gérées par le GPU.
+══════════════════════════════════════════ */
+#nl-loader { display: none; }
+
+html.nl-loading {
+  overflow: hidden;
+  scrollbar-gutter: stable; /* pas de saut de largeur quand la barre de scroll revient */
+}
+
+html.nl-loading #nl-loader {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #F8F9FA;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.28s;
+  will-change: transform;
+}
+.dark #nl-loader { background: #131314; }
+
+/* Liseré dégradé en bas du rideau, visible quand il se lève */
+#nl-loader::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0052FF, #6F3FFF 55%, #F97316);
+}
+
+.nl-loader-glow {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 32% at 48% 46%, rgba(0, 82, 255, 0.16), transparent 70%),
+    radial-gradient(30% 28% at 58% 58%, rgba(111, 63, 255, 0.13), transparent 70%);
+  animation: nl-glow 2.6s ease-in-out infinite alternate;
+}
+.dark .nl-loader-glow {
+  background:
+    radial-gradient(38% 32% at 48% 46%, rgba(208, 188, 255, 0.14), transparent 70%),
+    radial-gradient(30% 28% at 58% 58%, rgba(0, 82, 255, 0.14), transparent 70%);
+}
+
+.nl-loader-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  animation: nl-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nl-loader-logo {
+  height: 54px;
+  width: auto;
+  animation: nl-breathe 1.8s ease-in-out 0.7s infinite;
+}
+
+.nl-loader-bar {
+  position: relative;
+  width: 168px;
+  height: 3px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: rgba(120, 120, 140, 0.18);
+}
+.nl-loader-bar span,
+.nl-loader-bar::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform-origin: left center;
+  background: linear-gradient(90deg, #0052FF, #6F3FFF 55%, #F97316);
+}
+.nl-loader-bar span {
+  display: block;
+  transform: scaleX(0.04);
+  animation: nl-progress 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+/* Barre de complétion superposée, remplie à 100 % au moment de la sortie */
+.nl-loader-bar::after {
+  content: '';
+  transform: scaleX(0);
+  transition: transform 0.28s ease-out;
+}
+
+.nl-loader-caption {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #79747E;
+}
+.dark .nl-loader-caption { color: #938F99; }
+
+/* Sortie : contenu du loader qui s'efface, puis rideau qui monte */
+html.nl-exit .nl-loader-bar::after { transform: scaleX(1); }
+html.nl-exit .nl-loader-inner {
+  animation: none; /* sinon l'animation d'entrée (fill both) bloquerait la transition */
+  opacity: 0;
+  transform: translateY(-16px) scale(0.98);
+  transition-delay: 0.18s;
+}
+html.nl-exit #nl-loader { transform: translate3d(0, -100%, 0); }
+
+/* Pendant le chargement, les animations d'entrée de la page attendent le rideau */
+html.nl-loading:not(.nl-reveal) :is(.animate-fade-up, .animate-fade-in, .animate-slide-in-left, .nl-reveal-down) {
+  animation-play-state: paused;
+}
+html.nl-loading .nl-reveal-down {
+  animation: nl-down 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+@keyframes nl-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes nl-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.045); }
+}
+@keyframes nl-glow {
+  from { opacity: 0.6; transform: scale(0.96); }
+  to   { opacity: 1;   transform: scale(1.04); }
+}
+@keyframes nl-progress {
+  to { transform: scaleX(0.88); }
+}
+@keyframes nl-down {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Hero : décor animé en CSS (compositeur GPU, zéro JS par frame) */
+@keyframes hero-glyph {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(var(--gy, -12px)) rotate(var(--gr, 0deg)); }
+}
+.hero-glyph { animation: hero-glyph 6s ease-in-out infinite; }
+
+@keyframes scroll-hint-mouse { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@keyframes scroll-hint-dot {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50%      { transform: translateY(8px); opacity: 0.3; }
+}
+.scroll-hint-mouse { animation: scroll-hint-mouse 1.5s ease-in-out infinite; }
+.scroll-hint-dot   { animation: scroll-hint-dot 1.5s ease-in-out infinite; }

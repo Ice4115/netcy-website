@@ -57,7 +57,8 @@ export function ThemeToggle() {
           color="#FCD34D"
           strokeWidth={1.75}
           style={{
-            animation: 'rays-spin 6s linear infinite',
+            // Seule l'icône visible est animée.
+            animation: isDark ? 'rays-spin 6s linear infinite' : 'none',
             filter: 'drop-shadow(0 0 5px rgba(252,211,77,0.6))',
           }}
         />
@@ -81,7 +82,10 @@ export function ThemeToggle() {
           size={18}
           color="#6366F1"
           strokeWidth={1.75}
-          style={{ animation: 'moon-rock 3s ease-in-out infinite' }}
+          style={{
+            animation: isDark ? 'none' : 'moon-rock 3s ease-in-out infinite',
+            filter: 'drop-shadow(0 0 5px rgba(99,102,241,0.7))',
+          }}
         />
       </span>
     </button>

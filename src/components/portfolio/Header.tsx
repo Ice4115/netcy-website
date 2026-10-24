@@ -26,7 +26,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+      className={`nl-reveal-down fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
         scrolled
           ? 'bg-surface/80 backdrop-blur-md border-outline-variant/50 py-3 shadow-sm dark:shadow-lg'
           : 'bg-transparent border-transparent py-5'

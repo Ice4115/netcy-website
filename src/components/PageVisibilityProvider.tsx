@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
 
 interface PageVisibilityValue {
   /** Chemins désactivés (normalisés, sans slash final). */
@@ -42,6 +41,8 @@ export function PageVisibilityProvider({
     let active = true;
 
     const refresh = async () => {
+      // Import différé : le client Supabase (~50 Ko) ne pèse plus sur le chargement initial.
+      const { supabase } = await import('@/lib/supabase');
       const { data, error } = await supabase
         .from('page_settings')
         .select('path')
@@ -50,12 +51,17 @@ export function PageVisibilityProvider({
       setDisabledPaths(new Set(data.map((r: { path: string }) => r.path)));
     };
 
-    refresh();
+    // L'état initial vient déjà du serveur : la resynchronisation attend que le navigateur soit libre.
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
+    const initialTimer = w.requestIdleCallback
+      ? (w.requestIdleCallback(() => refresh(), { timeout: 4000 }), 0)
+      : window.setTimeout(refresh, 2500);
     // Re-synchronise quand l'onglet reprend le focus (l'admin a pu basculer une page).
     const onFocus = () => refresh();
     window.addEventListener('focus', onFocus);
     return () => {
       active = false;
+      if (initialTimer) window.clearTimeout(initialTimer);
       window.removeEventListener('focus', onFocus);
     };
   }, []);

@@ -42,18 +42,6 @@ const ProfileCardComponent = ({
   const enterTimerRef = useRef(null);
   const leaveRafRef = useRef(null);
 
-  // Met en pause les animations holographiques (blend modes + filtres, coûteuses) hors écran.
-  useEffect(() => {
-    const wrap = wrapRef.current;
-    if (!wrap || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver(
-      ([entry]) => wrap.classList.toggle('pc-offscreen', !entry.isIntersecting),
-      { rootMargin: '200px 0px' }
-    );
-    io.observe(wrap);
-    return () => io.disconnect();
-  }, []);
-
   const tiltEngine = useMemo(() => {
     if (!enableTilt) return null;
 
@@ -70,13 +58,23 @@ const ProfileCardComponent = ({
     const INITIAL_TAU = 0.6;
     let initialUntil = 0;
 
-    const setVarsFromXY = (x, y) => {
+    // Dimensions mises en cache : lire clientWidth à chaque frame force un recalcul de layout.
+    let cachedW = 0;
+    let cachedH = 0;
+    const measure = () => {
       const shell = shellRef.current;
-      const wrap = wrapRef.current;
-      if (!shell || !wrap) return;
+      if (!shell) return;
+      cachedW = shell.clientWidth || 1;
+      cachedH = shell.clientHeight || 1;
+    };
 
-      const width = shell.clientWidth || 1;
-      const height = shell.clientHeight || 1;
+    const setVarsFromXY = (x, y) => {
+      const wrap = wrapRef.current;
+      if (!wrap) return;
+      if (!cachedW) measure();
+
+      const width = cachedW || 1;
+      const height = cachedH || 1;
 
       const percentX = clamp((100 / width) * x);
       const percentY = clamp((100 / height) * y);
@@ -115,7 +113,9 @@ const ProfileCardComponent = ({
 
       const stillFar = Math.abs(targetX - currentX) > 0.05 || Math.abs(targetY - currentY) > 0.05;
 
-      if (stillFar || document.hasFocus()) {
+      // La boucle s'arrête dès que la carte est stabilisée (avant : elle tournait à l'infini
+      // tant que la page avait le focus, recalculant les styles de la carte à chaque frame).
+      if (stillFar || ts < initialUntil) {
         rafId = requestAnimationFrame(step);
       } else {
         running = false;
@@ -135,6 +135,7 @@ const ProfileCardComponent = ({
     };
 
     return {
+      measure,
       setImmediate(x, y) {
         currentX = x;
         currentY = y;
@@ -186,6 +187,7 @@ const ProfileCardComponent = ({
       const shell = shellRef.current;
       if (!shell || !tiltEngine) return;
 
+      tiltEngine.measure();
       shell.classList.add('active');
       shell.classList.add('entering');
       if (enterTimerRef.current) window.clearTimeout(enterTimerRef.current);
@@ -274,6 +276,10 @@ const ProfileCardComponent = ({
     };
     shell.addEventListener('click', handleClick);
 
+    const onResize = () => tiltEngine.measure();
+    window.addEventListener('resize', onResize, { passive: true });
+    tiltEngine.measure();
+
     const initialX = (shell.clientWidth || 0) - ANIMATION_CONFIG.INITIAL_X_OFFSET;
     const initialY = ANIMATION_CONFIG.INITIAL_Y_OFFSET;
     tiltEngine.setImmediate(initialX, initialY);
@@ -286,6 +292,7 @@ const ProfileCardComponent = ({
       shell.removeEventListener('pointerleave', pointerLeaveHandler);
       shell.removeEventListener('click', handleClick);
       window.removeEventListener('deviceorientation', deviceOrientationHandler);
+      window.removeEventListener('resize', onResize);
       if (enterTimerRef.current) window.clearTimeout(enterTimerRef.current);
       if (leaveRafRef.current) cancelAnimationFrame(leaveRafRef.current);
       tiltEngine.cancel();

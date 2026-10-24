@@ -64,7 +64,7 @@ function TokenSpan({ token }: { token: Token }) {
   return <span className={token.c ?? D}>{token.t}</span>;
 }
 
-export default function CodeWindow({ className = '' }: { className?: string }) {
+export default function CodeWindow({ className = '', ready = true }: { className?: string; ready?: boolean }) {
   const reduce = useReducedMotion();
   const [snippetIdx, setSnippetIdx] = useState(0);
   const [lineIdx, setLineIdx] = useState(0);
@@ -90,7 +90,7 @@ export default function CodeWindow({ className = '' }: { className?: string }) {
   }, [snippet]);
 
   useEffect(() => {
-    if (reduce || !onScreen) return;
+    if (reduce || !onScreen || !ready) return;
     const clear = () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
@@ -127,7 +127,7 @@ export default function CodeWindow({ className = '' }: { className?: string }) {
       }
     }
     return clear;
-  }, [phase, charIdx, lineIdx, snippet.lines.length, lineText, reduce, onScreen]);
+  }, [phase, charIdx, lineIdx, snippet.lines.length, lineText, reduce, onScreen, ready]);
 
   const renderLine = (line: Line, i: number) => {
     const isCurrent = i === lineIdx;
@@ -163,11 +163,12 @@ export default function CodeWindow({ className = '' }: { className?: string }) {
         background: 'linear-gradient(145deg, #0b0b12 0%, #15151f 100%)',
       }}
       initial={{ opacity: 0, y: 24, rotateX: -6 }}
-      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      animate={ready ? { opacity: 1, y: 0, rotateX: 0 } : undefined}
+      transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
     >
       {/* Ambient glow */}
-      <div className="pointer-events-none absolute -inset-24 opacity-60 blur-3xl"
+      {/* Dégradés radiaux déjà diffus : pas de filtre blur (coûteux quand la fenêtre bouge au scroll) */}
+      <div className="pointer-events-none absolute -inset-24 opacity-60"
            style={{ background: 'radial-gradient(circle at 30% 20%, #6F3FFF33, transparent 60%), radial-gradient(circle at 75% 85%, #0052FF33, transparent 55%)' }} />
 
       {/* Titlebar */}

@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+import { useRef, useState, useEffect, type ComponentType } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import CodeWindow from './CodeWindow';
+import { onSiteReady, useSiteReady, whenIdle } from '@/lib/site-ready';
 
-const LiquidEther = dynamic(() => import('@/components/LiquidEther'), { ssr: false });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FluidComponent = ComponentType<any>;
 
 const isMobileDevice = () => {
   if (typeof window === 'undefined') return false;
@@ -20,6 +21,30 @@ export default function ImmersiveHero() {
   // Le fondu au scroll n'est appliqué qu'en mise en page desktop (colonnes côte à côte).
   // Sur mobile la carte est empilée sous le titre : un fondu la ferait disparaître avant lecture.
   const [isDesktopLayout, setIsDesktopLayout] = useState(false);
+  const ready = useSiteReady();
+  // Fond fluide WebGL (three.js) : chargé seulement une fois la page affichée et le
+  // navigateur inactif, pour ne pas ralentir le chargement ni l'entrée du contenu.
+  const [Fluid, setFluid] = useState<FluidComponent | null>(null);
+
+  useEffect(() => {
+    let cancelIdle = () => {};
+    let alive = true;
+    const off = onSiteReady(() => {
+      const t = window.setTimeout(() => {
+        cancelIdle = whenIdle(() => {
+          import('@/components/LiquidEther').then((m) => {
+            if (alive) setFluid(() => m.default as FluidComponent);
+          });
+        });
+      }, 1200);
+      cancelIdle = () => window.clearTimeout(t);
+    });
+    return () => {
+      alive = false;
+      off();
+      cancelIdle();
+    };
+  }, []);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
@@ -50,9 +75,9 @@ export default function ImmersiveHero() {
       <div
         aria-hidden
         className="absolute inset-0 z-0 pointer-events-none"
-        style={{ opacity: isMobile ? 0.28 : 0.22 }}
+        style={{ opacity: Fluid ? (isMobile ? 0.28 : 0.22) : 0, transition: 'opacity 1.6s ease' }}
       >
-        <LiquidEther
+        {Fluid && <Fluid
           colors={['#6F3FFF', '#7A8FFF', '#8FA5FF', '#4A2FFF']}
           mouseForce={isMobile ? 90 : 38}
           cursorSize={isMobile ? 320 : 170}
@@ -60,12 +85,12 @@ export default function ImmersiveHero() {
           autoSpeed={0.35}
           autoIntensity={1.2}
           autoResumeDelay={1200}
-          resolution={isMobile ? 0.16 : 0.28}
-          iterationsPoisson={isMobile ? 10 : 14}
-          iterationsViscous={isMobile ? 10 : 14}
+          resolution={isMobile ? 0.16 : 0.22}
+          iterationsPoisson={isMobile ? 10 : 12}
+          iterationsViscous={isMobile ? 10 : 12}
           dt={0.016}
           BFECC={false}
-        />
+        />}
       </div>
 
       {/* Grid overlay */}
@@ -84,30 +109,27 @@ export default function ImmersiveHero() {
       {/* Floating glyphs */}
       {!reduce && (
         <>
-          <motion.span
+          {/* Animations décoratives infinies en CSS (GPU) : aucun travail JS à chaque frame */}
+          <span
             aria-hidden
-            className="absolute left-[8%] top-[22%] text-5xl font-mono text-[#0052FF]/30 select-none hidden md:block"
-            animate={{ y: [0, -14, 0], rotate: [0, 4, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          >{'</>'}</motion.span>
-          <motion.span
+            className="hero-glyph absolute left-[8%] top-[22%] text-5xl font-mono text-[#0052FF]/30 select-none hidden md:block"
+            style={{ '--gy': '-14px', '--gr': '4deg', animationDuration: '6s' } as React.CSSProperties}
+          >{'</>'}</span>
+          <span
             aria-hidden
-            className="absolute right-[10%] top-[18%] text-4xl font-mono text-[#6F3FFF]/30 select-none hidden md:block"
-            animate={{ y: [0, 12, 0], rotate: [0, -3, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
-          >{'{ }'}</motion.span>
-          <motion.span
+            className="hero-glyph absolute right-[10%] top-[18%] text-4xl font-mono text-[#6F3FFF]/30 select-none hidden md:block"
+            style={{ '--gy': '12px', '--gr': '-3deg', animationDuration: '7s', animationDelay: '0.8s' } as React.CSSProperties}
+          >{'{ }'}</span>
+          <span
             aria-hidden
-            className="absolute left-[12%] bottom-[18%] text-3xl font-mono text-[#F97316]/30 select-none hidden md:block"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-          >const</motion.span>
-          <motion.span
+            className="hero-glyph absolute left-[12%] bottom-[18%] text-3xl font-mono text-[#F97316]/30 select-none hidden md:block"
+            style={{ '--gy': '-10px', animationDuration: '5s', animationDelay: '1.5s' } as React.CSSProperties}
+          >const</span>
+          <span
             aria-hidden
-            className="absolute right-[14%] bottom-[22%] text-4xl font-mono text-[#0052FF]/25 select-none hidden md:block"
-            animate={{ y: [0, 14, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
-          >=&gt;</motion.span>
+            className="hero-glyph absolute right-[14%] bottom-[22%] text-4xl font-mono text-[#0052FF]/25 select-none hidden md:block"
+            style={{ '--gy': '14px', animationDuration: '8s', animationDelay: '0.4s' } as React.CSSProperties}
+          >=&gt;</span>
         </>
       )}
 
@@ -117,7 +139,7 @@ export default function ImmersiveHero() {
           <motion.div
             className="lg:col-span-5 space-y-6 text-center lg:text-left"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={ready ? { opacity: 1, y: 0 } : undefined}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0052FF]/10 text-[#0052FF] dark:bg-[#d0bcff]/10 dark:text-[#d0bcff] text-[11px] font-semibold tracking-wider uppercase ring-1 ring-[#0052FF]/20 dark:ring-[#d0bcff]/20">
@@ -181,26 +203,26 @@ export default function ImmersiveHero() {
             className="lg:col-span-7 relative"
             style={scrollFx ? { y, opacity, willChange: 'transform, opacity' } : undefined}
           >
-            <CodeWindow />
+            <CodeWindow ready={ready} />
 
             {/* Floating badges */}
             {!reduce && (
               <>
                 <motion.div
-                  className="absolute -left-4 sm:-left-8 top-10 px-3 py-2 rounded-xl bg-white/90 dark:bg-[#1c1b1c]/90 backdrop-blur-sm shadow-lg ring-1 ring-black/5 dark:ring-white/10 flex items-center gap-2 text-xs font-semibold"
+                  className="absolute -left-4 sm:-left-8 top-10 px-3 py-2 rounded-xl bg-white/95 dark:bg-[#1c1b1c]/95 shadow-lg ring-1 ring-black/5 dark:ring-white/10 flex items-center gap-2 text-xs font-semibold"
                   initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.2, duration: 0.6 }}
+                  animate={ready ? { opacity: 1, x: 0 } : undefined}
+                  transition={{ delay: 0.6, duration: 0.6 }}
                 >
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-on-surface">Lighthouse 98</span>
                 </motion.div>
 
                 <motion.div
-                  className="absolute -right-4 sm:-right-6 -bottom-2 px-3 py-2 rounded-xl bg-white/90 dark:bg-[#1c1b1c]/90 backdrop-blur-sm shadow-lg ring-1 ring-black/5 dark:ring-white/10 flex items-center gap-2 text-xs font-semibold"
+                  className="absolute -right-4 sm:-right-6 -bottom-2 px-3 py-2 rounded-xl bg-white/95 dark:bg-[#1c1b1c]/95 shadow-lg ring-1 ring-black/5 dark:ring-white/10 flex items-center gap-2 text-xs font-semibold"
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.5, duration: 0.6 }}
+                  animate={ready ? { opacity: 1, y: 0 } : undefined}
+                  transition={{ delay: 0.8, duration: 0.6 }}
                 >
                   <svg className="w-3.5 h-3.5 text-[#F97316]" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>
                   <span className="text-on-surface">Core Web Vitals</span>
@@ -209,8 +231,8 @@ export default function ImmersiveHero() {
                 <motion.div
                   className="absolute right-8 -top-4 px-3 py-2 rounded-xl bg-gradient-to-br from-[#0052FF] to-[#6F3FFF] text-white shadow-lg flex items-center gap-2 text-xs font-semibold"
                   initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.8, duration: 0.6 }}
+                  animate={ready ? { opacity: 1, y: 0 } : undefined}
+                  transition={{ delay: 1, duration: 0.6 }}
                 >
                   <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clipRule="evenodd" /></svg>
                   <span>Sécurisé par design</span>
@@ -225,21 +247,13 @@ export default function ImmersiveHero() {
           <motion.div
             className="absolute left-1/2 -translate-x-1/2 bottom-6 flex flex-col items-center gap-2 text-outline"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2, duration: 0.8 }}
+            animate={ready ? { opacity: 1 } : undefined}
+            transition={{ delay: 1.2, duration: 0.8 }}
           >
             <span className="text-[10px] uppercase tracking-widest font-semibold">Scroll</span>
-            <motion.div
-              className="w-5 h-8 rounded-full border-2 border-current flex items-start justify-center p-1"
-              animate={{ y: [0, 4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <motion.span
-                className="w-1 h-1.5 rounded-full bg-current"
-                animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-              />
-            </motion.div>
+            <div className="scroll-hint-mouse w-5 h-8 rounded-full border-2 border-current flex items-start justify-center p-1">
+              <span className="scroll-hint-dot w-1 h-1.5 rounded-full bg-current" />
+            </div>
           </motion.div>
         )}
       </div>
